@@ -1,15 +1,4 @@
 {
-  "egitimax": "Egitimax",
-  "@egitimax": {
-    "description": "Plateforme d'éducation"
-  },
-  "homePage": "Accueil",
-  "@homePage": {
-    "description": "Page d'accueil"
-  },
-
-
-
   "hello": "Bonjour {userName}",
   "@hello": {
     "description": "Un message avec un seul paramètre",
@@ -38,5 +27,57 @@
         "type": "String"
       }
     }
+  },
+  "egitimax": "Egitimax",
+  "@egitimax": {
+    "description": "Plateforme éducative"
+  },
+  "callServiceTestButton": "Test d'API",
+  "@callServiceTestButton": {
+    "description": "Effectue un test d'API Web."
+  },
+  "changeLanguage": "Changer la langue",
+  "@changeLanguage": {
+    "description": "Change la langue de la plateforme éducative."
+  },
+  "drawerTitle": "Menu",
+  "@drawerTitle": {
+    "description": "Le menu latéral gauche de la plateforme éducative."
+  },
+  "message_showMessage_iconText": "Général",
+  "@message_showMessage_iconText": {
+    "description": "Texte de l'icône pour le panneau de message."
+  },
+  "message_showInformationalMessage_iconText": "Information",
+  "@message_showInformationalMessage_iconText": {
+    "description": "Texte de l'icône pour le panneau d'information."
+  },
+  "message_showWarningMessage_iconText": "Avertissement",
+  "@message_showWarningMessage_iconText": {
+    "description": "Texte de l'icône pour le panneau d'avertissement."
+  },
+  "message_showConfirmationMessage_iconText": "Confirmation",
+  "@message_showConfirmationMessage_iconText": {
+    "description": "Texte de l'icône pour le panneau de confirmation."
+  },
+  "message_showRequestMessage_iconText": "Demande",
+  "@message_showRequestMessage_iconText": {
+    "description": "Texte de l'icône pour le panneau de demande."
+  },
+  "message_showErrorMessage_iconText": "Erreur",
+  "@message_showErrorMessage_iconText": {
+    "description": "Texte de l'icône pour le panneau d'erreur."
+  },
+  "homePage": "Page d'accueil",
+  "@homePage": {
+    "description": "Page principale"
+  },
+  "changeEnhanceStepperType": "Changer le type de l'indicateur de progression",
+  "@changeEnhanceStepperType": {
+    "description": "Bouton pour changer le type de l'indicateur de progression"
+  },
+  "changeEnhanceStepperDirection": "Changer la direction de l'indicateur de progression",
+  "@changeEnhanceStepperDirection": {
+    "description": "Bouton pour changer la direction de l'indicateur de progression"
   }
 }

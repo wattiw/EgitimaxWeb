@@ -1,16 +1,4 @@
 {
-  "egitimax": "Egitimax",
-  "@egitimax": {
-    "description": "Eğitim Platformu"
-  },
-  "homePage": "Ana Sayfa",
-  "@homePage": {
-    "description": "Ana Sayfa"
-  },
-
-
-
-
   "hello": "Merhaba {userName}",
   "@hello": {
     "description": "Tek parametreli bir mesaj",
@@ -39,5 +27,57 @@
         "type": "String"
       }
     }
+  },
+  "egitimax": "Egitimax",
+  "@egitimax": {
+    "description": "Eğitim Platformu"
+  },
+  "callServiceTestButton": "Api Test",
+  "@callServiceTestButton": {
+    "description": "Web api test işlemi yapar."
+  },
+  "changeLanguage": "Dil Değiştir",
+  "@changeLanguage": {
+    "description": "Eğitim Platformu dilini değiştirir."
+  },
+  "drawerTitle": "Menü",
+  "@drawerTitle": {
+    "description": "Eğitim Platformu sol taraf açılan menüdür."
+  },
+  "message_showMessage_iconText": "Genel",
+  "@message_showMessage_iconText": {
+    "description": "Mesaj panosu iconu metnidir."
+  },
+  "message_showInformationalMessage_iconText": "Bilgi",
+  "@message_showInformationalMessage_iconText": {
+    "description": "Mesaj panosu iconu metnidir."
+  },
+  "message_showWarningMessage_iconText": "Uyarı",
+  "@message_showWarningMessage_iconText": {
+    "description": "Mesaj panosu iconu metnidir."
+  },
+  "message_showConfirmationMessage_iconText": "Onay",
+  "@message_showConfirmationMessage_iconText": {
+    "description": "Mesaj panosu iconu metnidir."
+  },
+  "message_showRequestMessage_iconText": "Talep",
+  "@message_showRequestMessage_iconText": {
+    "description": "Mesaj panosu iconu metnidir."
+  },
+  "message_showErrorMessage_iconText": "Hata",
+  "@message_showErrorMessage_iconText": {
+    "description": "Mesaj panosu iconu metnidir."
+  },
+  "homePage": "Ana Sayfa",
+  "@homePage": {
+    "description": "Ana Sayfa"
+  },
+  "changeEnhanceStepperType": "Adımcı Tipini Değiştir",
+  "@changeEnhanceStepperType": {
+    "description": "Adımcı Tipini değiştir buttonudur."
+  },
+  "changeEnhanceStepperDirection": "Adımcı Yönünü Değiştir",
+  "@changeEnhanceStepperDirection": {
+    "description": "Adımcı Yönünü değiştir buttonudur."
   }
 }

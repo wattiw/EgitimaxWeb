@@ -1,7 +1,8 @@
+import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:flutter/material.dart';
 
 class LocaleModel extends ChangeNotifier {
-  Locale _locale = Locale('en');
+  Locale _locale = const Locale(AppConstants.languageDefault);
 
   Locale get locale => _locale;
 

@@ -1,16 +1,4 @@
 {
-  "egitimax": "Egitimax",
-  "@egitimax": {
-    "description": "Bildungsplattform"
-  },
-  "homePage": "Startseite",
-  "@homePage": {
-    "description": "Startseite"
-  },
-
-
-
-
   "hello": "Hallo {userName}",
   "@hello": {
     "description": "Eine Nachricht mit einem einzelnen Parameter",
@@ -39,5 +27,57 @@
         "type": "String"
       }
     }
+  },
+  "egitimax": "Egitimax",
+  "@egitimax": {
+    "description": "Bildungsplattform"
+  },
+  "callServiceTestButton": "API-Test",
+  "@callServiceTestButton": {
+    "description": "Führt einen Web-API-Test durch."
+  },
+  "changeLanguage": "Sprache ändern",
+  "@changeLanguage": {
+    "description": "Ändert die Sprache der Bildungsplattform."
+  },
+  "drawerTitle": "Menü",
+  "@drawerTitle": {
+    "description": "Das linke Seitenmenü der Bildungsplattform."
+  },
+  "message_showMessage_iconText": "Allgemein",
+  "@message_showMessage_iconText": {
+    "description": "Icon-Text für das Nachrichtenfeld."
+  },
+  "message_showInformationalMessage_iconText": "Information",
+  "@message_showInformationalMessage_iconText": {
+    "description": "Icon-Text für das Informationsfeld."
+  },
+  "message_showWarningMessage_iconText": "Warnung",
+  "@message_showWarningMessage_iconText": {
+    "description": "Icon-Text für das Warnungsfeld."
+  },
+  "message_showConfirmationMessage_iconText": "Bestätigung",
+  "@message_showConfirmationMessage_iconText": {
+    "description": "Icon-Text für das Bestätigungsfeld."
+  },
+  "message_showRequestMessage_iconText": "Anfrage",
+  "@message_showRequestMessage_iconText": {
+    "description": "Icon-Text für das Anfragefeld."
+  },
+  "message_showErrorMessage_iconText": "Fehler",
+  "@message_showErrorMessage_iconText": {
+    "description": "Icon-Text für das Fehlerfeld."
+  },
+  "homePage": "Startseite",
+  "@homePage": {
+    "description": "Hauptseite"
+  },
+  "changeEnhanceStepperType": "Ändere den Schritttyp",
+  "@changeEnhanceStepperType": {
+    "description": "Button, um den Schritttyp zu ändern"
+  },
+  "changeEnhanceStepperDirection": "Ändere die Schrittrichtung",
+  "@changeEnhanceStepperDirection": {
+    "description": "Button, um die Schrittrichtung zu ändern"
   }
 }

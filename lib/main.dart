@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final RouteManager routeManager = RouteManager();
-    routeManager.addRoute('/', (context) => const HomePage(title: 'Egitimax Home Page',));
+    routeManager.addRoute('/', (context) =>  const HomePage());
 
     return ChangeNotifierProvider(
       create: (context) => LocaleModel(),

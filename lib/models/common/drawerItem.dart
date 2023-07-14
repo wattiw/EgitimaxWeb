@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class DrawerItem {
   final Widget? leading;
-  final String itemTitle;
+  final Widget? item;
   final void Function(BuildContext)? onTap;
 
-  DrawerItem({required this.leading, required this.itemTitle, this.onTap});
+  DrawerItem({required this.leading, required this.item, this.onTap});
 }

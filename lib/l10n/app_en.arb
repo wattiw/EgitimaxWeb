@@ -1,15 +1,4 @@
 {
-  "egitimax": "Egitimax",
-  "@egitimax": {
-    "description": "Education Platform"
-  },
-  "homePage": "Home",
-  "@homePage": {
-    "description": "Home Page"
-  },
-
-
-
   "hello": "Hello {userName}",
   "@hello": {
     "description": "A message with a single parameter",
@@ -38,5 +27,57 @@
         "type": "String"
       }
     }
+  },
+  "egitimax": "Egitimax",
+  "@egitimax": {
+    "description": "Educational Platform"
+  },
+  "callServiceTestButton": "API Test",
+  "@callServiceTestButton": {
+    "description": "Performs web API testing."
+  },
+  "changeLanguage": "Change Language",
+  "@changeLanguage": {
+    "description": "Changes the language of the educational platform."
+  },
+  "drawerTitle": "Menu",
+  "@drawerTitle": {
+    "description": "The left side menu of the educational platform."
+  },
+  "message_showMessage_iconText": "General",
+  "@message_showMessage_iconText": {
+    "description": "Icon text for the message panel."
+  },
+  "message_showInformationalMessage_iconText": "Information",
+  "@message_showInformationalMessage_iconText": {
+    "description": "Icon text for the informational message panel."
+  },
+  "message_showWarningMessage_iconText": "Warning",
+  "@message_showWarningMessage_iconText": {
+    "description": "Icon text for the warning message panel."
+  },
+  "message_showConfirmationMessage_iconText": "Confirmation",
+  "@message_showConfirmationMessage_iconText": {
+    "description": "Icon text for the confirmation message panel."
+  },
+  "message_showRequestMessage_iconText": "Request",
+  "@message_showRequestMessage_iconText": {
+    "description": "Icon text for the request message panel."
+  },
+  "message_showErrorMessage_iconText": "Error",
+  "@message_showErrorMessage_iconText": {
+    "description": "Icon text for the error message panel."
+  },
+  "homePage": "Home Page",
+  "@homePage": {
+    "description": "Main page"
+  },
+  "changeEnhanceStepperType": "Change Enhance Stepper Type",
+  "@changeEnhanceStepperType": {
+    "description": "Button to change the enhance stepper type"
+  },
+  "changeEnhanceStepperDirection": "Change Enhance Stepper Direction",
+  "@changeEnhanceStepperDirection": {
+    "description": "Button to change the enhance stepper direction"
   }
 }
