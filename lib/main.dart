@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'models/language/localeModel.dart';
 import 'pages/home/homePage.dart';
+import 'utils/widget/deviceInfo.dart';
 import 'utils/helper/routeManager.dart';
 void main() {
   runApp(const MyApp());

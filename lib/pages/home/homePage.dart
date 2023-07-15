@@ -1,7 +1,9 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:egitimax/models/common/drawerItem.dart';
 import 'package:egitimax/models/egitimax/egitimaxEntities.dart';
 import 'package:egitimax/models/language/localeModel.dart';
 import 'package:egitimax/repositories/appRepository.dart';
+import 'package:egitimax/utils/widget/deviceInfo.dart';
 import 'package:egitimax/utils/helper/routeManager.dart';
 import 'package:egitimax/utils/widget/message.dart';
 import 'package:flutter/cupertino.dart';
@@ -157,7 +159,7 @@ class _HomePageState extends State<HomePage> {
 
     tuples = [
       Tuple3(Icons.directions_bike, StepState.indexed, getBody()),
-      Tuple3(Icons.directions_bus, StepState.editing, Container()),
+      Tuple3(Icons.directions_bus, StepState.editing, getDeviceInfo()),
       Tuple3(Icons.directions_railway, StepState.complete, Container()),
       Tuple3(Icons.directions_boat, StepState.disabled, Container()),
       // Tuple2(Icons.directions_car, StepState.error, ),
@@ -209,6 +211,102 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget getDeviceInfo() {
+    return Container(
+      alignment: Alignment.topLeft,
+      height: 300,
+      child: ListView(
+        children: [
+          FutureBuilder<Tuple2<Map<String, dynamic>, DeviceType>>(
+            future: DeviceInfo().getDeviceData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('Hata: ${snapshot.error}'),
+                );
+              } else if (snapshot.hasData) {
+                final deviceData = snapshot.data!.item1;
+                final deviceType = snapshot.data!.item2;
+
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: deviceData.length,
+                  itemBuilder: (context, index) {
+                    final property = deviceData.keys.elementAt(index);
+                    final value = deviceData[property];
+
+                    IconData icon;
+                    switch (deviceType) {
+                      case DeviceType.web:
+                        icon = Icons.language;
+                        break;
+                      case DeviceType.android:
+                        icon = Icons.android;
+                        break;
+                      case DeviceType.ios:
+                        icon = Icons.phone_iphone;
+                        break;
+                      case DeviceType.linux:
+                        icon = Icons.keyboard_command_key;
+                        break;
+                      case DeviceType.windows:
+                        icon = Icons.computer;
+                        break;
+                      case DeviceType.macos:
+                        icon = Icons.desktop_mac;
+                        break;
+                      case DeviceType.fuchsia:
+                        icon = Icons.phone_android;
+                        break;
+                    }
+
+                    return ListTile(
+                      dense: true,
+                      title: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              property,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 5),
+                          Text(
+                            value.toString(),
+                            maxLines: 10,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.blue,
+                        child: Icon(icon),
+                      ),
+                    );
+                  },
+                );
+              }
+              return Container();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   void go(int index) {
     if (index == -1 && _index <= 0) {
       debugPrint("it's first Step!");
@@ -229,7 +327,7 @@ class _HomePageState extends State<HomePage> {
     return Stepper(
         type: _type,
         currentStep: _index,
-        physics: ClampingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         steps: tuples
             .map((e) => Step(
                   state: StepState.values[tuples.indexOf(e)],
@@ -265,19 +363,19 @@ class _HomePageState extends State<HomePage> {
         controlsBuilder: (BuildContext context, ControlsDetails details) {
           return Row(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               ElevatedButton(
                 onPressed: details.onStepContinue,
-                child: Text("Next"),
+                child: const Text("Next"),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 8,
               ),
               TextButton(
                 onPressed: details.onStepCancel,
-                child: Text("Back"),
+                child: const Text("Back"),
               ),
             ],
           );
@@ -291,7 +389,7 @@ class _HomePageState extends State<HomePage> {
         horizontalTitlePosition: HorizontalTitlePosition.bottom,
         horizontalLinePosition: HorizontalLinePosition.top,
         currentStep: _index,
-        physics: ClampingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         steps: tuples
             .map((e) => EnhanceStep(
                   // icon: Icon(
@@ -333,19 +431,19 @@ class _HomePageState extends State<HomePage> {
         controlsBuilder: (BuildContext context, ControlsDetails details) {
           return Row(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               ElevatedButton(
                 onPressed: details.onStepContinue,
-                child: Text("Next"),
+                child: const Text("Next"),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 8,
               ),
               TextButton(
                 onPressed: details.onStepCancel,
-                child: Text("Back"),
+                child: const Text("Back"),
               ),
             ],
           );
