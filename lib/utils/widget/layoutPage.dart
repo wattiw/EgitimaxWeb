@@ -284,6 +284,13 @@ class _LayoutPageState extends State<LayoutPage> {
           _changeLanguage(context);
         },
       ),
+      DrawerItem(
+        leading: const Icon(Icons.home),
+        item:Text(lang.homePage,),
+        onTap: (context) {
+          routeManager.navigateTo('/');
+        },
+      ),
       // Add other DrawerItem objects here
     ];
 

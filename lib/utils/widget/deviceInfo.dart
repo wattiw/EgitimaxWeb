@@ -192,6 +192,296 @@ class DeviceInfo {
     return Tuple2(_deviceData, _getTargetPlatform());
   }
 
+
+  Widget getDeviceInfo()  {
+    return _getDeviceInfoWithScreenHeightAndConstantFixer();
+  }
+
+  DeviceType getDeviceType()  {
+    return _getTargetPlatform();
+  }
+
+  Widget _getDeviceInfoWithScreenHeightAndConstantFixer()  {
+    return FutureBuilder<Tuple2<Map<String, dynamic>, DeviceType>>(
+      future:getDeviceData(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('${snapshot.error}'),
+          );
+        } else if (snapshot.hasData) {
+          final deviceData = snapshot.data!.item1;
+          final deviceType = snapshot.data!.item2;
+
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: deviceData.length,
+            itemBuilder: (context, index) {
+              final property = deviceData.keys.elementAt(index);
+              final value = deviceData[property];
+
+              IconData icon;
+              switch (deviceType) {
+                case DeviceType.web:
+                  icon = Icons.language;
+                  break;
+                case DeviceType.android:
+                  icon = Icons.android;
+                  break;
+                case DeviceType.ios:
+                  icon = Icons.phone_iphone;
+                  break;
+                case DeviceType.linux:
+                  icon = Icons.keyboard_command_key;
+                  break;
+                case DeviceType.windows:
+                  icon = Icons.computer;
+                  break;
+                case DeviceType.macos:
+                  icon = Icons.desktop_mac;
+                  break;
+                case DeviceType.fuchsia:
+                  icon = Icons.phone_android;
+                  break;
+              }
+
+              return ListTile(
+                dense: true,
+                title: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        property,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 5),
+                    Text(
+                      value.toString(),
+                      maxLines: 10,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                leading: CircleAvatar(
+                  backgroundColor: Colors.blue,
+                  child: Icon(icon),
+                ),
+              );
+            },
+          );
+        }
+        return Container();
+      },
+    );
+
+  }
+
+  Widget _getDeviceInfoWithLayoutBuilder()  {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          constraints: BoxConstraints(
+            maxWidth: double.infinity,
+            maxHeight: constraints.maxHeight,
+          ),
+          color: Colors.green,
+          child:FutureBuilder<Tuple2<Map<String, dynamic>, DeviceType>>(
+            future:getDeviceData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('Hata: ${snapshot.error}'),
+                );
+              } else if (snapshot.hasData) {
+                final deviceData = snapshot.data!.item1;
+                final deviceType = snapshot.data!.item2;
+
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: deviceData.length,
+                  itemBuilder: (context, index) {
+                    final property = deviceData.keys.elementAt(index);
+                    final value = deviceData[property];
+
+                    IconData icon;
+                    switch (deviceType) {
+                      case DeviceType.web:
+                        icon = Icons.language;
+                        break;
+                      case DeviceType.android:
+                        icon = Icons.android;
+                        break;
+                      case DeviceType.ios:
+                        icon = Icons.phone_iphone;
+                        break;
+                      case DeviceType.linux:
+                        icon = Icons.keyboard_command_key;
+                        break;
+                      case DeviceType.windows:
+                        icon = Icons.computer;
+                        break;
+                      case DeviceType.macos:
+                        icon = Icons.desktop_mac;
+                        break;
+                      case DeviceType.fuchsia:
+                        icon = Icons.phone_android;
+                        break;
+                    }
+
+                    return ListTile(
+                      dense: true,
+                      title: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              property,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 5),
+                          Text(
+                            value.toString(),
+                            maxLines: 10,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.blue,
+                        child: Icon(icon),
+                      ),
+                    );
+                  },
+                );
+              }
+              return Container();
+            },
+          ),
+        );
+      },
+    );
+
+  }
+
+  Widget _getDeviceInfoWithNeverScrollableScrollPhysics() {
+    return Container(
+      alignment: Alignment.topLeft,
+      child: FutureBuilder<Tuple2<Map<String, dynamic>, DeviceType>>(
+        future: getDeviceData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Hata: ${snapshot.error}'),
+            );
+          } else if (snapshot.hasData) {
+            final deviceData = snapshot.data!.item1;
+            final deviceType = snapshot.data!.item2;
+
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: deviceData.length,
+              itemBuilder: (context, index) {
+                final property = deviceData.keys.elementAt(index);
+                final value = deviceData[property];
+
+                IconData icon;
+                switch (deviceType) {
+                  case DeviceType.web:
+                    icon = Icons.language;
+                    break;
+                  case DeviceType.android:
+                    icon = Icons.android;
+                    break;
+                  case DeviceType.ios:
+                    icon = Icons.phone_iphone;
+                    break;
+                  case DeviceType.linux:
+                    icon = Icons.keyboard_command_key;
+                    break;
+                  case DeviceType.windows:
+                    icon = Icons.computer;
+                    break;
+                  case DeviceType.macos:
+                    icon = Icons.desktop_mac;
+                    break;
+                  case DeviceType.fuchsia:
+                    icon = Icons.phone_android;
+                    break;
+                }
+
+                return ListTile(
+                  dense: true,
+                  title: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          property,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 5),
+                      Text(
+                        value.toString(),
+                        maxLines: 10,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                  contentPadding:
+                  const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.blue,
+                    child: Icon(icon),
+                  ),
+                );
+              },
+            );
+          }
+          return Container();
+        },
+      ),
+    );
+  }
+
   String _getAppBarTitle() => kIsWeb
       ? 'Web Browser info'
       : switch (defaultTargetPlatform) {

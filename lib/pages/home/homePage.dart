@@ -1,45 +1,56 @@
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:egitimax/models/common/drawerItem.dart';
-import 'package:egitimax/models/egitimax/egitimaxEntities.dart';
-import 'package:egitimax/models/language/localeModel.dart';
-import 'package:egitimax/repositories/appRepository.dart';
-import 'package:egitimax/utils/widget/deviceInfo.dart';
 import 'package:egitimax/utils/helper/routeManager.dart';
-import 'package:egitimax/utils/widget/message.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
 import 'package:egitimax/utils/widget/layoutPage.dart';
-import 'package:tuple/tuple.dart';
-import 'package:enhance_stepper/enhance_stepper.dart';
+import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final RouteManager routeManager = RouteManager();
-  final AppRepository appRepository = AppRepository();
+  late RouteManager routeManager;
+  int _counter = 0;
 
-  int groupValue = 0;
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
 
-  StepperType _type = StepperType.horizontal;
-  bool isSwitchedStepperType = false;
-  bool isSwitchedStepperDirection = false;
-
-  List<Tuple3> tuples = List.empty(growable: true);
-  int _index = 1;
+  @override
+  void initState() {
+    super.initState();
+    routeManager=RouteManager();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var lang = AppLocalizations.of(context)!;
-    final localeModel = Provider.of<LocaleModel>(context, listen: false);
-    var theme = Theme.of(context);
 
+    return LayoutPage(
+      title: '',
+      body:Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text(
+              'You have pushed the button this many times:',
+            ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: getFloatingActionButtons(),
+      drawerItems: getDrawerItems(),
+      setState: (value) {},
+    );
+  }
+
+  Padding getFloatingActionButtons() {
     var floatingActionButtons = Padding(
       padding: const EdgeInsets.all(10.0),
       child: Row(
@@ -50,403 +61,30 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             child: FloatingActionButton(
-              heroTag: 'callServiceTestButton',
-              onPressed: () {
-                setState(() {});
-              },
-              tooltip: lang.callServiceTestButton,
-              child: const Icon(
-                Icons.miscellaneous_services,
-                color: Colors.green,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: FloatingActionButton(
-              heroTag: 'message_showMessage_iconText',
-              onPressed: () {
-                Message.showMessage(
-                  context,
-                  title: const Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('User Message'),
-                    ],
-                  ),
-                  content: const Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('This is a test message.'),
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, 'Cancel'),
-                      child: const Icon(Icons.cancel_outlined),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {});
-                      },
-                      child: const Icon(Icons.check_circle_outline),
-                    ),
-                  ],
-                );
-              },
-              tooltip: lang.message_showMessage_iconText,
-              child: const Icon(
-                Icons.join_inner,
-                color: Colors.deepPurple,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: FloatingActionButton(
-              heroTag: 'changeEnhanceStepperType',
-              onPressed: () {
-                setState(() {
-                  _type = _type == StepperType.vertical
-                      ? StepperType.horizontal
-                      : StepperType.vertical;
-                });
-              },
-              tooltip: lang.changeEnhanceStepperType,
-              child: const Icon(
-                Icons.change_circle_outlined,
-                color: Colors.indigo,
-              ),
+              onPressed: _incrementCounter,
+              tooltip: 'Increment',
+              child: const Icon(Icons.add),
             ),
           ),
         ],
       ),
     );
+
+    return floatingActionButtons;
+  }
+
+  List<DrawerItem> getDrawerItems() {
     var drawerItems = [
       DrawerItem(
-        leading: Switch(
-          value: isSwitchedStepperDirection,
-          onChanged: (value) {
-            setState(() {
-              isSwitchedStepperDirection = value;
-              setState(() {
-                _type = isSwitchedStepperDirection
-                    ? StepperType.horizontal
-                    : StepperType.vertical;
-              });
-            });
-          },
-        ),
-        item: Text(lang.changeEnhanceStepperDirection),
-        onTap: (context) {},
-      ),
-      DrawerItem(
-        leading: Switch(
-          value: isSwitchedStepperType,
-          onChanged: (value) {
-            setState(() {
-              isSwitchedStepperType = value;
-            });
-          },
-        ),
-        item: Text(lang.changeEnhanceStepperType),
-        onTap: (context) {},
+        leading:const Icon(Icons.question_mark_outlined),
+        item: const Text('Question'),
+        onTap: (context) {
+          routeManager.navigateTo('/QuestionPage');
+        },
       ),
       // Add other DrawerItem objects here
     ];
 
-    tuples = [
-      Tuple3(Icons.directions_bike, StepState.indexed, getBody()),
-      Tuple3(Icons.directions_bus, StepState.editing, getDeviceInfo()),
-      Tuple3(Icons.directions_railway, StepState.complete, Container()),
-      Tuple3(Icons.directions_boat, StepState.disabled, Container()),
-      // Tuple2(Icons.directions_car, StepState.error, ),
-    ];
-
-    return LayoutPage(
-      title: lang.homePage,
-      body: isSwitchedStepperType
-          ? buildStepper(context)
-          : buildStepperCustom(context),
-      floatingActionButton: floatingActionButtons,
-      drawerItems: drawerItems,
-      setState: (value) {},
-    );
-  }
-
-  Widget getBody() {
-    return Center(
-      child: Column(
-        children: [
-          FutureBuilder<List<WeatherForecast>>(
-            future: appRepository.getWeather(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                if (snapshot.data == null) {
-                  return Container();
-                }
-                return Column(
-                  children: snapshot.data!.map((forecast) {
-                    return Column(
-                      children: [
-                        Text(forecast.date.toString()),
-                        Text(forecast.temperatureC.toString()),
-                        Text(forecast.temperatureF.toString()),
-                        Text(forecast.summary ?? ''),
-                        // Add additional widgets or formatting as needed
-                      ],
-                    );
-                  }).toList(),
-                );
-              } else if (snapshot.hasError) {
-                return Text('${snapshot.error}');
-              }
-              return const CircularProgressIndicator();
-            },
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget getDeviceInfo() {
-    return Container(
-      alignment: Alignment.topLeft,
-      height: 300,
-      child: ListView(
-        children: [
-          FutureBuilder<Tuple2<Map<String, dynamic>, DeviceType>>(
-            future: DeviceInfo().getDeviceData(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('Hata: ${snapshot.error}'),
-                );
-              } else if (snapshot.hasData) {
-                final deviceData = snapshot.data!.item1;
-                final deviceType = snapshot.data!.item2;
-
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: deviceData.length,
-                  itemBuilder: (context, index) {
-                    final property = deviceData.keys.elementAt(index);
-                    final value = deviceData[property];
-
-                    IconData icon;
-                    switch (deviceType) {
-                      case DeviceType.web:
-                        icon = Icons.language;
-                        break;
-                      case DeviceType.android:
-                        icon = Icons.android;
-                        break;
-                      case DeviceType.ios:
-                        icon = Icons.phone_iphone;
-                        break;
-                      case DeviceType.linux:
-                        icon = Icons.keyboard_command_key;
-                        break;
-                      case DeviceType.windows:
-                        icon = Icons.computer;
-                        break;
-                      case DeviceType.macos:
-                        icon = Icons.desktop_mac;
-                        break;
-                      case DeviceType.fuchsia:
-                        icon = Icons.phone_android;
-                        break;
-                    }
-
-                    return ListTile(
-                      dense: true,
-                      title: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              property,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 5),
-                          Text(
-                            value.toString(),
-                            maxLines: 10,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.blue,
-                        child: Icon(icon),
-                      ),
-                    );
-                  },
-                );
-              }
-              return Container();
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  void go(int index) {
-    if (index == -1 && _index <= 0) {
-      debugPrint("it's first Step!");
-      return;
-    }
-
-    if (index == 1 && _index >= tuples.length - 1) {
-      debugPrint("it's last Step!");
-      return;
-    }
-
-    setState(() {
-      _index += index;
-    });
-  }
-
-  Widget buildStepper(BuildContext context) {
-    return Stepper(
-        type: _type,
-        currentStep: _index,
-        physics: const ClampingScrollPhysics(),
-        steps: tuples
-            .map((e) => Step(
-                  state: StepState.values[tuples.indexOf(e)],
-                  isActive: _index == tuples.indexOf(e),
-                  title: Icon(e.item1),
-                  //Text("step ${tuples.indexOf(e)}"),
-                  subtitle: Text(
-                    "${e.item2.toString().split(".").last}",
-                  ),
-                  content: Column(
-                    children: [
-                      e.item3,
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("Content for Step ${tuples.indexOf(e)}"),
-                      ),
-                    ],
-                  ),
-                ))
-            .toList(),
-        onStepCancel: () {
-          go(-1);
-        },
-        onStepContinue: () {
-          go(1);
-        },
-        onStepTapped: (index) {
-          debugPrint(index.toString());
-          setState(() {
-            _index = index;
-          });
-        },
-        controlsBuilder: (BuildContext context, ControlsDetails details) {
-          return Row(
-            children: [
-              const SizedBox(
-                height: 30,
-              ),
-              ElevatedButton(
-                onPressed: details.onStepContinue,
-                child: const Text("Next"),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              TextButton(
-                onPressed: details.onStepCancel,
-                child: const Text("Back"),
-              ),
-            ],
-          );
-        });
-  }
-
-  Widget buildStepperCustom(BuildContext context) {
-    return EnhanceStepper(
-        // stepIconSize: 60,
-        type: _type,
-        horizontalTitlePosition: HorizontalTitlePosition.bottom,
-        horizontalLinePosition: HorizontalLinePosition.top,
-        currentStep: _index,
-        physics: const ClampingScrollPhysics(),
-        steps: tuples
-            .map((e) => EnhanceStep(
-                  // icon: Icon(
-                  //   e.item1,
-                  //   // Icons.add,
-                  //   color: Colors.blue,
-                  //   size: 60,
-                  // ),
-                  state: StepState.values[tuples.indexOf(e)],
-                  isActive: _index == tuples.indexOf(e),
-                  title: Icon(e.item1),
-                  //Text("step ${tuples.indexOf(e)}"),
-                  subtitle: Text(
-                    "${e.item2.toString().split(".").last}",
-                  ),
-                  content: Column(
-                    children: [
-                      e.item3,
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("Content for Step ${tuples.indexOf(e)}"),
-                      ),
-                    ],
-                  ),
-                ))
-            .toList(),
-        onStepCancel: () {
-          go(-1);
-        },
-        onStepContinue: () {
-          go(1);
-        },
-        onStepTapped: (index) {
-          debugPrint(index.toString());
-          setState(() {
-            _index = index;
-          });
-        },
-        controlsBuilder: (BuildContext context, ControlsDetails details) {
-          return Row(
-            children: [
-              const SizedBox(
-                height: 30,
-              ),
-              ElevatedButton(
-                onPressed: details.onStepContinue,
-                child: const Text("Next"),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              TextButton(
-                onPressed: details.onStepCancel,
-                child: const Text("Back"),
-              ),
-            ],
-          );
-        });
+    return drawerItems;
   }
 }
