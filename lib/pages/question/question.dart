@@ -1,3 +1,4 @@
+import 'package:awesome_stepper/awesome_stepper.dart';
 import 'package:egitimax/models/common/drawerItem.dart';
 import 'package:egitimax/repositories/appRepository.dart';
 import 'package:egitimax/utils/constant/appConstants.dart';
@@ -25,8 +26,7 @@ class QuestionPage extends StatefulWidget {
 }
 
 class _QuestionPageState extends State<QuestionPage> {
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  late SharedPreferences prefs;
+  static late SharedPreferences preferences;
   String currentPageName = 'QuestionPage';
 
   late RouteManager routeManager;
@@ -85,28 +85,28 @@ class _QuestionPageState extends State<QuestionPage> {
   }
 
   Future<void> initializePreferences() async {
-   prefs = await _prefs;
+    preferences = await SharedPreferences.getInstance();
 
-    if (prefs != null) {
-      if (prefs.containsKey('$currentPageName.stepperType')) {
+    if (preferences != null) {
+      if (preferences.containsKey('$currentPageName.stepperType')) {
         stepperType = StepperType
-            .values[prefs.getInt('$currentPageName.stepperType') ?? 1];
+            .values[preferences.getInt('$currentPageName.stepperType') ?? 1];
 
         isStepperDirectionVertical =
-        stepperType == StepperType.vertical ? true : false;
+            stepperType == StepperType.vertical ? true : false;
       }
-      if (prefs.containsKey('$currentPageName.stepper')) {
+      if (preferences.containsKey('$currentPageName.stepper')) {
         stepper = StepperList
-            .values[prefs.getInt('$currentPageName.stepper') ?? 2];
+            .values[preferences.getInt('$currentPageName.stepper') ?? 2];
       }
       setState(() {});
     }
   }
 
   Future<void> savePageLayout() async {
-    prefs.clear();
-    prefs.setInt('$currentPageName.stepperType', stepperType.index);
-    prefs.setInt('$currentPageName.stepper', stepper.index);
+    await preferences.clear();
+    await preferences.setInt('$currentPageName.stepperType', stepperType.index);
+    await preferences.setInt('$currentPageName.stepper', stepper.index);
   }
 
   Padding getFloatingActionButtons() {
@@ -183,7 +183,7 @@ class _QuestionPageState extends State<QuestionPage> {
           Icons.directions_bike,
           StepState.indexed,
           true,
-          const Text('Title 1',
+          const Text('Title 1 xxxxxxxxxxxxxxxxxxxxxxx',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               )),
@@ -193,52 +193,52 @@ class _QuestionPageState extends State<QuestionPage> {
           Icons.directions_bus,
           StepState.editing,
           true,
-          const Text('Title 2',
+          const Text('Title 2 xxxxxxxxxxxxxxxxxxxxxxx',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               )),
           const Text('Sub Title -2'),
-          Container()),
+          const Text('Data-2')),
       Tuple6(
           Icons.motorcycle,
           StepState.complete,
           true,
-          const Text('Title 3',
+          const Text('Title 3 xxxxxxxxxxxxxxxxxxxxxxx',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               )),
           const Text('Sub Title -3'),
-          Container()),
+          const Text('Data-3')),
       Tuple6(
           Icons.airplanemode_active,
           StepState.disabled,
           true,
-          const Text('Title 4',
+          const Text('Title 4 xxxxxxxxxxxxxxxxxxxxxxx',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               )),
           const Text('Sub Title -4'),
-          Container()),
+          const Text('Data-4')),
       Tuple6(
           Icons.directions_boat,
           StepState.error,
           false,
-          const Text('Title 5',
+          const Text('Title 5 xxxxxxxxxxxxxxxxxxxxxxx',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               )),
           const Text('Sub Title -5'),
-          Container()),
+          const Text('Data-5')),
       Tuple6(
           Icons.access_time_rounded,
           StepState.complete,
           true,
-          const Text('Title 6',
+          const Text('Title 6 xxxxxxxxxxxxxxxxxxxxxxx',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               )),
           const Text('Sub Title -6'),
-          Container()),
+          const Text('Data-6')),
     ];
     return stepItems;
   }
@@ -300,13 +300,35 @@ class _QuestionPageState extends State<QuestionPage> {
 
   Widget getBody(BuildContext context) {
     if (stepper == StepperList.enhance) {
+      if (deviceType == DeviceType.android || deviceType == DeviceType.ios) {
+        var newWidth = MediaQuery.of(context).size.width *
+            (isStepperDirectionVertical ? 1 : stepItems.length);
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: SizedBox(
+            width: newWidth,
+            child: buildEnhanceStepper(context),
+          ),
+        );
+      }
       return buildEnhanceStepper(context);
     } else if (stepper == StepperList.classic) {
+      if (deviceType == DeviceType.android || deviceType == DeviceType.ios) {
+        var newWidth = MediaQuery.of(context).size.width *
+            (isStepperDirectionVertical ? 1 : stepItems.length);
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: SizedBox(
+            width: newWidth,
+            child: buildClassicStepper(context),
+          ),
+        );
+      }
       return buildClassicStepper(context);
     } else if (stepper == StepperList.icon) {
-      return buildIConStepper(context);
+      return buildIconStepper(context);
     } else {
-      return buildIConStepper(context);
+      return buildIconStepper(context);
     }
   }
 
@@ -339,7 +361,15 @@ class _QuestionPageState extends State<QuestionPage> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [Icon(e.item1), e.item4],
+                    children: [
+                      Icon(
+                        e.item1,
+                        color: stepIndex == stepItems.indexOf(e)
+                            ? Colors.red
+                            : null,
+                      ),
+                      e.item4
+                    ],
                   ),
                   //Text("step ${tuples.indexOf(e)}"),
                   subtitle: e.item5,
@@ -389,7 +419,11 @@ class _QuestionPageState extends State<QuestionPage> {
         physics: const ClampingScrollPhysics(),
         steps: stepItems
             .map((e) => EnhanceStep(
-                  icon: Icon(e.item1),
+                  icon: Icon(
+                    e.item1,
+                    color:
+                        stepIndex == stepItems.indexOf(e) ? Colors.red : null,
+                  ),
                   state: e.item2,
                   isActive: stepIndex == stepItems.indexOf(e),
                   title: e.item4,
@@ -430,7 +464,7 @@ class _QuestionPageState extends State<QuestionPage> {
         });
   }
 
-  Widget buildIConStepper(BuildContext context) {
+  Widget buildIconStepper(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -442,6 +476,8 @@ class _QuestionPageState extends State<QuestionPage> {
               IconData iconData;
               return Icon(
                 tuple.item1,
+                color:
+                    stepIndex == stepItems.indexOf(tuple) ? Colors.red : null,
               );
             }).toList(),
             activeStep: stepIndex,
