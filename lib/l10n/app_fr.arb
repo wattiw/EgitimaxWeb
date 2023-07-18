@@ -1,4 +1,7 @@
 {
+  "@@locale": "fr",
+  "countryCode": "FR",
+
   "hello": "Bonjour {userName}",
   "@hello": {
     "description": "Un message avec un seul paramètre",

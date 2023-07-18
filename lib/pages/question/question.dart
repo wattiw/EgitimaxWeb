@@ -1,4 +1,3 @@
-import 'package:awesome_stepper/awesome_stepper.dart';
 import 'package:egitimax/models/common/drawerItem.dart';
 import 'package:egitimax/repositories/appRepository.dart';
 import 'package:egitimax/utils/constant/appConstants.dart';
@@ -16,7 +15,6 @@ import 'package:provider/provider.dart';
 import 'package:egitimax/models/language/localeModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tuple/tuple.dart';
-import 'package:http/http.dart' as http;
 
 class QuestionPage extends StatefulWidget {
   const QuestionPage({super.key});
@@ -62,11 +60,13 @@ class _QuestionPageState extends State<QuestionPage> {
     loadComponent();
     try {
       return LayoutPage(
-        title: lang.homePage,
-        body: getBody(context),
-        floatingActionButton: getFloatingActionButtons(),
-        drawerItems: getDrawerItems(),
-        setState: (value) {},
+        bodyScaffold: getBody(context),
+        titleAppBar: const Text('Question Page'),
+        onTapConvexAppBar: (index) {
+          if (index == 0) {
+            routeManager.navigateTo('/');
+          }
+        },
       );
     } catch (e) {
       debugPrint(e.toString());
@@ -388,23 +388,28 @@ class _QuestionPageState extends State<QuestionPage> {
           });
         },
         controlsBuilder: (BuildContext context, ControlsDetails details) {
-          return Row(
-            children: [
-              const SizedBox(
-                height: 30,
-              ),
-              ElevatedButton(
-                onPressed: details.onStepContinue,
-                child: const Text("Next"),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              TextButton(
-                onPressed: details.onStepCancel,
-                child: const Text("Back"),
-              ),
-            ],
+          return Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ElevatedButton(
+                    onPressed: details.onStepCancel,
+                    child: const Text("Back"),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ElevatedButton(
+                    onPressed: details.onStepContinue,
+                    child: const Text("Next"),
+                  ),
+                ),
+              ],
+            ),
           );
         });
   }
@@ -443,23 +448,28 @@ class _QuestionPageState extends State<QuestionPage> {
           });
         },
         controlsBuilder: (BuildContext context, ControlsDetails details) {
-          return Row(
-            children: [
-              const SizedBox(
-                height: 30,
-              ),
-              ElevatedButton(
-                onPressed: details.onStepContinue,
-                child: const Text("Next"),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              TextButton(
-                onPressed: details.onStepCancel,
-                child: const Text("Back"),
-              ),
-            ],
+          return Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ElevatedButton(
+                    onPressed: details.onStepCancel,
+                    child: const Text("Back"),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ElevatedButton(
+                    onPressed: details.onStepContinue,
+                    child: const Text("Next"),
+                  ),
+                ),
+              ],
+            ),
           );
         });
   }
@@ -482,9 +492,8 @@ class _QuestionPageState extends State<QuestionPage> {
             }).toList(),
             activeStep: stepIndex,
             onStepReached: (index) {
-              setState(() {
-                stepIndex = index;
-              });
+              stepIndex = index; // Değiştirme
+              go(0); // Değiştirme
             },
           ),
           Container(
@@ -518,27 +527,32 @@ class _QuestionPageState extends State<QuestionPage> {
               )
             ]),
           ),
-          Row(
-            children: [
-              const SizedBox(
-                height: 30,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  go(1);
-                },
-                child: const Text("Next"),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              TextButton(
-                onPressed: () {
-                  go(-1);
-                },
-                child: const Text("Back"),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      go(-1);
+                    },
+                    child: const Text("Back"),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      go(1);
+                    },
+                    child: const Text("Next"),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

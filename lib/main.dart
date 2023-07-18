@@ -19,11 +19,11 @@ class MyApp extends StatelessWidget {
     routeManager.addRoute('/', (context) =>  const HomePage());
     routeManager.addRoute('/QuestionPage', (context) =>   const QuestionPage());
 
+
     return ChangeNotifierProvider(
       create: (context) => LocaleModel(),
       child: Consumer<LocaleModel>(
         builder: (context, localeModel, child){
-          var lc=localeModel;
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
             onGenerateTitle:(context) =>'Egitimax',
             title: 'Egitimax Platform',
             theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue.shade100),
               useMaterial3: true,
             ),
             initialRoute: '/',

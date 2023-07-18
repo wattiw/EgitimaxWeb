@@ -6,7 +6,8 @@ class AppConstants {
   static  int apiDebugPrintExceptionActive = 1;
   static  int apiDebugPrintActive = 1;
   //Language
-  static const String languageDefault = 'tr';
+  static const String languageCodeDefault = 'tr';
+  static const String languageCountryCodeDefault = 'TR';
 
   //Layout
   static  int floatingActionButtonAddToExisting = 1;

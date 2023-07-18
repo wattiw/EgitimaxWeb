@@ -1,4 +1,7 @@
 {
+  "@@locale": "tr",
+  "countryCode": "TR",
+
   "hello": "Merhaba {userName}",
   "@hello": {
     "description": "Tek parametreli bir mesaj",

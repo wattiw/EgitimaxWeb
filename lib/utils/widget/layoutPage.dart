@@ -1,600 +1,331 @@
-import 'package:egitimax/models/common/drawerItem.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:egitimax/models/language/localeModel.dart';
-import 'package:egitimax/repositories/appRepository.dart';
-import 'package:egitimax/utils/constant/appConstants.dart';
-import 'package:egitimax/utils/helper/routeManager.dart';
-import 'package:egitimax/utils/widget/message.dart';
+import 'package:egitimax/utils/widget/deviceInfo.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:country_flags/country_flags.dart';
 
 class LayoutPage extends StatefulWidget {
-  LayoutPage(
-      {Key? key,
-      required this.title,
-      this.setState,
-      this.appBarActions,
-      this.appBarBottom,
-      this.body,
-      this.drawerItems,
-      this.floatingActionButton})
-      : super(key: key);
+  LayoutPage({
+    Key? key,
+     this.tapPageItemsConvexAppBar,
+     this.itemsConvexAppBar,
+    this.initialActiveIndexConvexAppBar,
+    this.disableDefaultTabControllerConvexAppBar,
+    this.onTapConvexAppBar,
+    this.onTabNotifyConvexAppBar,
+    this.controllerConvexAppBar,
+    this.colorConvexAppBar,
+    this.activeColorConvexAppBar,
+    this.backgroundColorConvexAppBar,
+    this.shadowColorConvexAppBar,
+    this.gradientConvexAppBar,
+    this.heightConvexAppBar,
+    this.curveSizeConvexAppBar,
+    this.topConvexAppBar,
+    this.elevationConvexAppBar,
+    this.cornerRadiusConvexAppBar,
+    this.styleConvexAppBar,
+    this.curveConvexAppBar,
+    this.chipBuilderConvexAppBar,
+    this.leadingAppBar,
+    this.automaticallyImplyLeadingAppBar = true,
+    this.titleAppBar,
+    this.actionsAppBar,
+    this.flexibleSpaceAppBar,
+    this.bottomAppBar,
+    this.elevationAppBar,
+    this.scrolledUnderElevationAppBar,
+    this.notificationPredicateAppBar = defaultScrollNotificationPredicate,
+    this.shadowColorAppBar,
+    this.surfaceTintColorAppBar,
+    this.shapeAppBar,
+    this.backgroundColorAppBar,
+    this.foregroundColorAppBar,
+    this.iconThemeAppBar,
+    this.actionsIconThemeAppBar,
+    this.primaryAppBar = true,
+    this.centerTitleAppBar,
+    this.excludeHeaderSemanticsAppBar = false,
+    this.titleSpacingAppBar,
+    this.toolbarOpacityAppBar = 1.0,
+    this.bottomOpacityAppBar = 1.0,
+    this.toolbarHeightAppBar,
+    this.leadingWidthAppBar,
+    this.toolbarTextStyleAppBar,
+    this.titleTextStyleAppBar,
+    this.systemOverlayStyleAppBar,
+    this.forceMaterialTransparencyAppBar = false,
+    this.clipBehaviorAppBar,
+    this.appBarScaffold,
+    this.bodyScaffold,
+    this.floatingActionButtonScaffold,
+    this.floatingActionButtonLocationScaffold,
+    this.floatingActionButtonAnimatorScaffold,
+    this.persistentFooterButtonsScaffold,
+    this.persistentFooterAlignmentScaffold = AlignmentDirectional.centerEnd,
+    this.drawerScaffold,
+    this.onDrawerChangedScaffold,
+    this.endDrawerScaffold,
+    this.onEndDrawerChangedScaffold,
+    this.bottomNavigationBarScaffold,
+    this.bottomSheetScaffold,
+    this.backgroundColorScaffold,
+    this.resizeToAvoidBottomInsetScaffold,
+    this.primaryScaffold = true,
+    this.drawerDragStartBehaviorScaffold = DragStartBehavior.start,
+    this.extendBodyScaffold = false,
+    this.extendBodyBehindAppBarScaffold = false,
+    this.drawerScrimColorScaffold,
+    this.drawerEdgeDragWidthScaffold,
+    this.drawerEnableOpenDragGestureScaffold = true,
+    this.endDrawerEnableOpenDragGestureScaffold = true,
+    this.restorationIdScaffold,
+  }) : super(key: key);
 
-  String title = '';
-  List<Widget>? appBarActions;
-  PreferredSizeWidget? appBarBottom;
-  Widget? body = Container();
-  Widget? floatingActionButton = Container();
-  List<DrawerItem>? drawerItems;
-  final void Function(bool)? setState;
+  late ThemeData theme;
+  late AppLocalizations lang;
+  late LocaleModel localeModel;
+  late DeviceType deviceType;
+
+  final Widget? leadingAppBar;
+  final bool automaticallyImplyLeadingAppBar;
+  final Widget? titleAppBar;
+  final List<Widget>? actionsAppBar;
+  final Widget? flexibleSpaceAppBar;
+  final PreferredSizeWidget? bottomAppBar;
+  final double? elevationAppBar;
+  final double? scrolledUnderElevationAppBar;
+  final bool Function(ScrollNotification) notificationPredicateAppBar;
+  final Color? shadowColorAppBar;
+  final Color? surfaceTintColorAppBar;
+  final ShapeBorder? shapeAppBar;
+  final Color? backgroundColorAppBar;
+  final Color? foregroundColorAppBar;
+  final IconThemeData? iconThemeAppBar;
+  final IconThemeData? actionsIconThemeAppBar;
+  final bool primaryAppBar;
+  final bool? centerTitleAppBar;
+  final bool excludeHeaderSemanticsAppBar;
+  final double? titleSpacingAppBar;
+  final double toolbarOpacityAppBar;
+  final double bottomOpacityAppBar;
+  final double? toolbarHeightAppBar;
+  final double? leadingWidthAppBar;
+  final TextStyle? toolbarTextStyleAppBar;
+  final TextStyle? titleTextStyleAppBar;
+  final SystemUiOverlayStyle? systemOverlayStyleAppBar;
+  final bool forceMaterialTransparencyAppBar;
+  final Clip? clipBehaviorAppBar;
+
+  List<Widget>? tapPageItemsConvexAppBar;
+  List<TabItem<dynamic>>? itemsConvexAppBar;
+  final int? initialActiveIndexConvexAppBar;
+  final bool? disableDefaultTabControllerConvexAppBar;
+  final void Function(int)? onTapConvexAppBar;
+  final bool Function(int)? onTabNotifyConvexAppBar;
+  final TabController? controllerConvexAppBar;
+  final Color? colorConvexAppBar;
+  final Color? activeColorConvexAppBar;
+  final Color? backgroundColorConvexAppBar;
+  final Color? shadowColorConvexAppBar;
+  final Gradient? gradientConvexAppBar;
+  final double? heightConvexAppBar;
+  final double? curveSizeConvexAppBar;
+  final double? topConvexAppBar;
+  final double? elevationConvexAppBar;
+  final double? cornerRadiusConvexAppBar;
+  final TabStyle? styleConvexAppBar;
+  final Curve? curveConvexAppBar;
+  final ChipBuilder? chipBuilderConvexAppBar;
+
+  PreferredSizeWidget? appBarScaffold;
+  Widget? bodyScaffold;
+  Widget? floatingActionButtonScaffold;
+  FloatingActionButtonLocation? floatingActionButtonLocationScaffold;
+  FloatingActionButtonAnimator? floatingActionButtonAnimatorScaffold;
+  List<Widget>? persistentFooterButtonsScaffold;
+  AlignmentDirectional persistentFooterAlignmentScaffold;
+  Widget? drawerScaffold;
+  void Function(bool)? onDrawerChangedScaffold;
+  Widget? endDrawerScaffold;
+  void Function(bool)? onEndDrawerChangedScaffold;
+  Widget? bottomNavigationBarScaffold;
+  Widget? bottomSheetScaffold;
+  Color? backgroundColorScaffold;
+  bool? resizeToAvoidBottomInsetScaffold;
+  bool primaryScaffold;
+  DragStartBehavior drawerDragStartBehaviorScaffold;
+  bool extendBodyScaffold;
+
+  bool extendBodyBehindAppBarScaffold;
+  Color? drawerScrimColorScaffold;
+  double? drawerEdgeDragWidthScaffold;
+  bool drawerEnableOpenDragGestureScaffold;
+
+  bool endDrawerEnableOpenDragGestureScaffold;
+
+  String? restorationIdScaffold;
 
   @override
   State<LayoutPage> createState() => _LayoutPageState();
 }
 
 class _LayoutPageState extends State<LayoutPage> {
-  final RouteManager routeManager = RouteManager();
-  final AppRepository appRepository = AppRepository();
+  int _selectedTapIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedTapIndex = index;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
   }
 
-  void _changeLanguage(BuildContext context) {
-    LocaleModel localeModel = Provider.of<LocaleModel>(context, listen: false);
-    const supportedLocales = AppLocalizations.supportedLocales;
-    final currentLocale = localeModel.locale;
-    final currentIndex = supportedLocales.indexOf(currentLocale);
-    final nextIndex = (currentIndex + 1) % supportedLocales.length;
-    final nextLocale = supportedLocales[nextIndex];
-    localeModel.changeLocale(nextLocale);
-  }
-
   @override
   Widget build(BuildContext context) {
-    var lang = AppLocalizations.of(context)!;
-    final localeModel = Provider.of<LocaleModel>(context, listen: false);
-    var theme = Theme.of(context);
+    widget.theme = Theme.of(context);
+    widget.lang = AppLocalizations.of(context)!;
+    widget.localeModel = Provider.of<LocaleModel>(context, listen: false);
+    widget.deviceType = DeviceInfo().getDeviceType();
 
-    var appBarActions = [
-      Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: TextButton.icon(
-          onPressed: () {
-            _changeLanguage(context);
-          },
-          icon: const Icon(Icons.language_outlined),
-          label: Text(
-            localeModel.locale.toString().toUpperCase(),
-          ),
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: Container(
-          constraints: const BoxConstraints(
-            maxHeight: kToolbarHeight,
-            maxWidth: kToolbarHeight * 3.29, // Width matches the maximum height
-          ),
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/EgitimaxLogo.png'),
-              fit: BoxFit.contain,
-            ),
-          ),
-        ),
-      ),
-    ];
-    var floatingActionButtons = Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: FloatingActionButton(
-              heroTag: 'message_showMessage_iconText',
-              onPressed: () {
-                Message.showMessage(
-                  context,
-                  title: const Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('User Message'),
-                    ],
-                  ),
-                  content: const Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('This is a test message.'),
-                    ],
-                  ),
-                );
-              },
-              tooltip: lang.message_showMessage_iconText,
-              child: const Icon(
-                Icons.info,
-                color: Colors.black,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: FloatingActionButton(
-              heroTag: 'message_showInformationalMessage_iconText',
-              onPressed: () {
-                Message.showInformationalMessage(
-                  context,
-                  title: const Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('User Message'),
-                    ],
-                  ),
-                  content: const Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('This is a test message.'),
-                    ],
-                  ),
-                );
-              },
-              tooltip: lang.message_showInformationalMessage_iconText,
-              child: const Icon(
-                Icons.info,
-                color: Colors.blue,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: FloatingActionButton(
-              heroTag: 'message_showWarningMessage_iconText',
-              onPressed: () {
-                Message.showWarningMessage(
-                  context,
-                  title: const Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('User Message'),
-                    ],
-                  ),
-                  content: const Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('This is a test message.'),
-                    ],
-                  ),
-                );
-              },
-              tooltip: lang.message_showWarningMessage_iconText,
-              child: const Icon(
-                Icons.warning,
-                color: Colors.redAccent,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: FloatingActionButton(
-              heroTag: 'message_showRequestMessage_iconText',
-              onPressed: () {
-                Message.showRequestMessage(
-                  context,
-                  title: const Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('User Message'),
-                    ],
-                  ),
-                  content: const Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('This is a test message.'),
-                    ],
-                  ),
-                );
-              },
-              tooltip: lang.message_showRequestMessage_iconText,
-              child: const Icon(
-                Icons.task,
-                color: Colors.amber,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: FloatingActionButton(
-              heroTag: 'message_showConfirmationMessage_iconText',
-              onPressed: () {
-                Message.showConfirmationMessage(
-                  context,
-                  title: const Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('User Message'),
-                    ],
-                  ),
-                  content: const Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('This is a test message.'),
-                    ],
-                  ),
-                );
-              },
-              tooltip: lang.message_showConfirmationMessage_iconText,
-              child: const Icon(
-                Icons.checklist_outlined,
-                color: Colors.deepPurpleAccent,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: FloatingActionButton(
-              heroTag: 'message_showErrorMessage_iconText',
-              onPressed: () {
-                Message.showErrorMessage(
-                  context,
-                  title: const Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('User Message'),
-                    ],
-                  ),
-                  content: const Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('This is a test message.'),
-                    ],
-                  ),
-                );
-              },
-              tooltip: lang.message_showErrorMessage_iconText,
-              child: const Icon(
-                Icons.error_outline,
-                color: Colors.red,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-    var drawerItems = [
-      DrawerItem(
-        leading: const Icon(Icons.translate),
-        item:Text( '${lang.changeLanguage} (${Provider.of<LocaleModel>(context, listen: false).locale.toString().toUpperCase()})',),
-        onTap: (context) {
-          _changeLanguage(context);
-        },
-      ),
-      DrawerItem(
-        leading: const Icon(Icons.home),
-        item:Text(lang.homePage,),
-        onTap: (context) {
-          routeManager.navigateTo('/');
-        },
-      ),
-      // Add other DrawerItem objects here
-    ];
+    var logoWidthFactor = (widget.deviceType == DeviceType.web ||
+            MediaQuery.of(context).size.width > 500
+        ? 3.9
+        : 1);
 
-    if (widget.drawerItems == null) {
-      widget.drawerItems = List.empty(growable: true);
-      widget.drawerItems!.addAll(drawerItems);
-    } else {
-      widget.drawerItems!.addAll(drawerItems);
+    if (widget.itemsConvexAppBar == null || widget.itemsConvexAppBar!.isEmpty) {
+      widget.itemsConvexAppBar = [
+        const TabItem(icon: Icons.home, title: 'Home'),
+      ];
     }
 
-    var drawer = Drawer(
-      backgroundColor: theme.colorScheme.inversePrimary,
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: theme.primaryColor,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      lang.drawerTitle,
-                      style: theme.textTheme.headlineSmall!.copyWith(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          for (var item in widget.drawerItems!)
-            ListTile(
-              leading: item.leading,
-              title:   item.item,
-              onTap: () {
-                item.onTap?.call(context);
-              },
-            ),
-        ],
-      ),
-    );
-
-    Widget floatingActionButtonsRoot;
-    if (widget.floatingActionButton != null) {
-      if (AppConstants.floatingActionButtonAddToExisting == 1) {
-        floatingActionButtonsRoot = Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: FloatingActionButton(
-                  heroTag: 'message_showMessage_iconText',
-                  onPressed: () {
-                    Message.showMessage(
-                      context,
-                      title: const Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text('User Message'),
-                        ],
-                      ),
-                      content: const Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text('This is a test message.'),
-                        ],
-                      ),
-                    );
-                  },
-                  tooltip: lang.message_showMessage_iconText,
-                  child: const Icon(
-                    Icons.info,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: FloatingActionButton(
-                  heroTag: 'message_showInformationalMessage_iconText',
-                  onPressed: () {
-                    Message.showInformationalMessage(
-                      context,
-                      title: const Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text('User Message'),
-                        ],
-                      ),
-                      content: const Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text('This is a test message.'),
-                        ],
-                      ),
-                    );
-                  },
-                  tooltip: lang.message_showInformationalMessage_iconText,
-                  child: const Icon(
-                    Icons.info,
-                    color: Colors.blue,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: FloatingActionButton(
-                  heroTag: 'message_showWarningMessage_iconText',
-                  onPressed: () {
-                    Message.showWarningMessage(
-                      context,
-                      title: const Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text('User Message'),
-                        ],
-                      ),
-                      content: const Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text('This is a test message.'),
-                        ],
-                      ),
-                    );
-                  },
-                  tooltip: lang.message_showWarningMessage_iconText,
-                  child: const Icon(
-                    Icons.warning,
-                    color: Colors.redAccent,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: FloatingActionButton(
-                  heroTag: 'message_showRequestMessage_iconText',
-                  onPressed: () {
-                    Message.showRequestMessage(
-                      context,
-                      title: const Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text('User Message'),
-                        ],
-                      ),
-                      content: const Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text('This is a test message.'),
-                        ],
-                      ),
-                    );
-                  },
-                  tooltip: lang.message_showRequestMessage_iconText,
-                  child: const Icon(
-                    Icons.task,
-                    color: Colors.amber,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: FloatingActionButton(
-                  heroTag: 'message_showConfirmationMessage_iconText',
-                  onPressed: () {
-                    Message.showConfirmationMessage(
-                      context,
-                      title: const Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text('User Message'),
-                        ],
-                      ),
-                      content: const Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text('This is a test message.'),
-                        ],
-                      ),
-                    );
-                  },
-                  tooltip: lang.message_showConfirmationMessage_iconText,
-                  child: const Icon(
-                    Icons.checklist_outlined,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: FloatingActionButton(
-                  heroTag: 'message_showErrorMessage_iconText',
-                  onPressed: () {
-                    Message.showErrorMessage(
-                      context,
-                      title: const Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text('User Message'),
-                        ],
-                      ),
-                      content: const Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text('This is a test message.'),
-                        ],
-                      ),
-                    );
-                  },
-                  tooltip: lang.message_showErrorMessage_iconText,
-                  child: const Icon(
-                    Icons.error_outline,
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-              widget.floatingActionButton ?? Container()
-            ],
-          ),
-        );
-      } else {
-        floatingActionButtonsRoot = widget.floatingActionButton ?? Container();
-      }
-    } else {
-      floatingActionButtonsRoot = floatingActionButtons;
-    }
-
-    List<Widget> appBarActionsRoot = List.empty(growable: true);
-    if (widget.appBarActions != null) {
-      if (AppConstants.appBarActionsAddToExisting == 1) {
-        appBarActionsRoot.addAll(appBarActions);
-        appBarActionsRoot.add(Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: TextButton.icon(
-            onPressed: () {
-              _changeLanguage(context);
-            },
-            icon: const Icon(Icons.language_outlined),
-            label: Text(
-              localeModel.locale.toString().toUpperCase(),
-            ),
-          ),
-        ));
-        appBarActionsRoot.add(Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Container(
-            constraints: const BoxConstraints(
-              maxHeight: kToolbarHeight,
-              maxWidth:
-                  kToolbarHeight * 3.29, // Width matches the maximum height
-            ),
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/EgitimaxLogo.png'),
-                fit: BoxFit.contain,
-              ),
-            ),
-          ),
-        ));
-      } else {
-        appBarActionsRoot = widget.appBarActions ?? [];
-      }
-    } else {
-      appBarActionsRoot = appBarActions;
+    if (widget.tapPageItemsConvexAppBar == null ||
+        widget.tapPageItemsConvexAppBar!.isEmpty) {
+      widget.tapPageItemsConvexAppBar = [Container()];
     }
 
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: theme.colorScheme.inversePrimary,
-          title: Text(widget.title),
-          actions: appBarActionsRoot,
-          bottom: widget.appBarBottom,
-        ),
-        body: widget.body ?? Container(),
-        floatingActionButton: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Container(
-                child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: floatingActionButtonsRoot,
-            ))),
-        drawer: drawer);
+      appBar: widget.appBarScaffold ?? AppBar(
+        leading: widget.leadingAppBar ??
+            Builder(
+              builder: (BuildContext context) {
+                return Container(
+                  margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  constraints: BoxConstraints(
+                    maxHeight: kToolbarHeight,
+                    maxWidth: (kToolbarHeight * logoWidthFactor),
+                  ),
+                  decoration: BoxDecoration(
+                    shape: logoWidthFactor == 1
+                        ? BoxShape.rectangle
+                        : BoxShape.rectangle,
+                    image: DecorationImage(
+                      image: AssetImage(logoWidthFactor == 1
+                          ? 'assets/images/egitimaxLogo.png'
+                          : 'assets/images/egitimaxOld.png'),
+                      fit: BoxFit.scaleDown,
+                    ),
+                  ),
+                );
+              },
+            ),
+        automaticallyImplyLeading: widget.automaticallyImplyLeadingAppBar,
+        title: widget.titleAppBar,
+        actions: widget.actionsAppBar,
+        flexibleSpace: widget.flexibleSpaceAppBar,
+        bottom: widget.bottomAppBar,
+        elevation: widget.elevationAppBar ?? 4,
+        scrolledUnderElevation:
+        widget.scrolledUnderElevationAppBar ?? double.infinity,
+        notificationPredicate: widget.notificationPredicateAppBar,
+        shadowColor: widget.shadowColorAppBar,
+        surfaceTintColor: widget.surfaceTintColorAppBar,
+        shape: widget.shapeAppBar,
+        backgroundColor: widget.backgroundColorAppBar ??
+            widget.theme.colorScheme.inversePrimary,
+        foregroundColor: widget.foregroundColorAppBar,
+        iconTheme: widget.iconThemeAppBar,
+        actionsIconTheme: widget.actionsIconThemeAppBar,
+        primary: widget.primaryAppBar,
+        centerTitle: widget.centerTitleAppBar ?? false,
+        excludeHeaderSemantics: widget.excludeHeaderSemanticsAppBar,
+        titleSpacing: widget.titleSpacingAppBar,
+        toolbarOpacity: widget.toolbarOpacityAppBar,
+        bottomOpacity: widget.bottomOpacityAppBar,
+        toolbarHeight: widget.toolbarHeightAppBar ?? kToolbarHeight,
+        leadingWidth:
+        widget.leadingWidthAppBar ?? (kToolbarHeight * logoWidthFactor),
+        toolbarTextStyle: widget.toolbarTextStyleAppBar,
+        titleTextStyle: widget.titleTextStyleAppBar,
+        systemOverlayStyle: widget.systemOverlayStyleAppBar,
+        forceMaterialTransparency:
+        widget.forceMaterialTransparencyAppBar ?? false,
+        clipBehavior: widget.clipBehaviorAppBar,
+      ),
+      body: widget.bodyScaffold?? Center(
+        child: widget.tapPageItemsConvexAppBar!.elementAt(
+            widget.tapPageItemsConvexAppBar!.length ==
+                widget.itemsConvexAppBar!.length
+                ? _selectedTapIndex
+                : 0),
+      ),
+      floatingActionButton: widget.floatingActionButtonScaffold,
+      floatingActionButtonLocation: widget.floatingActionButtonLocationScaffold,
+      floatingActionButtonAnimator: widget.floatingActionButtonAnimatorScaffold,
+      persistentFooterButtons: widget.persistentFooterButtonsScaffold,
+      persistentFooterAlignment: widget.persistentFooterAlignmentScaffold,
+      drawer: widget.drawerScaffold,
+      onDrawerChanged: widget.onDrawerChangedScaffold,
+      endDrawer: widget.endDrawerScaffold,
+      onEndDrawerChanged: widget.onEndDrawerChangedScaffold,
+      bottomNavigationBar: widget.bottomNavigationBarScaffold??ConvexAppBar(
+        items: widget.itemsConvexAppBar!,
+        initialActiveIndex: widget.initialActiveIndexConvexAppBar,
+        disableDefaultTabController:
+        widget.disableDefaultTabControllerConvexAppBar,
+        onTap: (index) {
+          _onItemTapped(index);
+          if (widget.onTapConvexAppBar != null) {
+            widget.onTapConvexAppBar!(index);
+          }
+        },
+        onTabNotify: widget.onTabNotifyConvexAppBar,
+        controller: widget.controllerConvexAppBar,
+        color: widget.colorConvexAppBar,
+        activeColor: widget.activeColorConvexAppBar,
+        backgroundColor: widget.backgroundColorConvexAppBar ??
+            widget.theme.colorScheme.inversePrimary,
+        shadowColor: widget.shadowColorConvexAppBar,
+        gradient: widget.gradientConvexAppBar,
+        height: widget.heightConvexAppBar,
+        curveSize: widget.curveSizeConvexAppBar,
+        top: widget.topConvexAppBar,
+        elevation: widget.elevationConvexAppBar,
+        cornerRadius: widget.cornerRadiusConvexAppBar,
+        style: widget.styleConvexAppBar,
+        curve: widget.curveConvexAppBar,
+        chipBuilder: widget.chipBuilderConvexAppBar,
+      ),
+      bottomSheet: widget.bottomSheetScaffold,
+      backgroundColor: widget.backgroundColorScaffold,
+      resizeToAvoidBottomInset: widget.resizeToAvoidBottomInsetScaffold??true,
+      primary: widget.primaryScaffold,
+      drawerDragStartBehavior: widget.drawerDragStartBehaviorScaffold,
+      extendBody: widget.extendBodyScaffold,
+      extendBodyBehindAppBar: widget.extendBodyBehindAppBarScaffold,
+      drawerScrimColor: widget.drawerScrimColorScaffold,
+      drawerEdgeDragWidth: widget.drawerEdgeDragWidthScaffold,
+      drawerEnableOpenDragGesture: widget.drawerEnableOpenDragGestureScaffold,
+      endDrawerEnableOpenDragGesture:
+          widget.endDrawerEnableOpenDragGestureScaffold,
+      restorationId: widget.restorationIdScaffold,
+    );
   }
 }
