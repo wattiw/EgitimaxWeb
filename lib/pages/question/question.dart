@@ -66,6 +66,14 @@ class _QuestionPageState extends State<QuestionPage> {
           if (index == 0) {
             routeManager.navigateTo('/');
           }
+          else
+          {
+
+            if(Navigator.canPop(context))
+            {
+              routeManager.goBack(context);
+            }
+          }
         },
       );
     } catch (e) {

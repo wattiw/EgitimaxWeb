@@ -1,5 +1,9 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:egitimax/models/language/localeModel.dart';
+import 'package:egitimax/pages/home/homePage.dart';
+import 'package:egitimax/utils/constant/appConstants.dart';
+import 'package:egitimax/utils/provider/logoImageProvider.dart';
+import 'package:egitimax/utils/provider/userImageDrawerItemProvider.dart';
 import 'package:egitimax/utils/widget/deviceInfo.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +15,8 @@ import 'package:country_flags/country_flags.dart';
 class LayoutPage extends StatefulWidget {
   LayoutPage({
     Key? key,
-     this.tapPageItemsConvexAppBar,
-     this.itemsConvexAppBar,
+    this.tapPageItemsConvexAppBar,
+    this.itemsConvexAppBar,
     this.initialActiveIndexConvexAppBar,
     this.disableDefaultTabControllerConvexAppBar,
     this.onTapConvexAppBar,
@@ -28,7 +32,7 @@ class LayoutPage extends StatefulWidget {
     this.topConvexAppBar,
     this.elevationConvexAppBar,
     this.cornerRadiusConvexAppBar,
-    this.styleConvexAppBar,
+    this.styleConvexAppBar = AppConstants.convexAppBarStyle,
     this.curveConvexAppBar,
     this.chipBuilderConvexAppBar,
     this.leadingAppBar,
@@ -37,7 +41,7 @@ class LayoutPage extends StatefulWidget {
     this.actionsAppBar,
     this.flexibleSpaceAppBar,
     this.bottomAppBar,
-    this.elevationAppBar,
+    this.elevationAppBar = 4,
     this.scrolledUnderElevationAppBar,
     this.notificationPredicateAppBar = defaultScrollNotificationPredicate,
     this.shadowColorAppBar,
@@ -94,7 +98,7 @@ class LayoutPage extends StatefulWidget {
   final Widget? leadingAppBar;
   final bool automaticallyImplyLeadingAppBar;
   final Widget? titleAppBar;
-  final List<Widget>? actionsAppBar;
+  List<Widget>? actionsAppBar;
   final Widget? flexibleSpaceAppBar;
   final PreferredSizeWidget? bottomAppBar;
   final double? elevationAppBar;
@@ -175,6 +179,11 @@ class LayoutPage extends StatefulWidget {
 }
 
 class _LayoutPageState extends State<LayoutPage> {
+  List<Widget>? tapPageItemsConvexAppBar;
+  List<TabItem<dynamic>>? itemsConvexAppBar;
+  List<Widget>? actionsAppBar;
+  Widget? drawerScaffold;
+
   int _selectedTapIndex = 0;
 
   void _onItemTapped(int index) {
@@ -195,127 +204,272 @@ class _LayoutPageState extends State<LayoutPage> {
     widget.localeModel = Provider.of<LocaleModel>(context, listen: false);
     widget.deviceType = DeviceInfo().getDeviceType();
 
-    var logoWidthFactor = (widget.deviceType == DeviceType.web ||
-            MediaQuery.of(context).size.width > 500
-        ? 3.9
+    var logoWidthFactor = (widget.deviceType == DeviceType.web &&
+            MediaQuery.of(context).size.width >
+                AppConstants.appBarMobilScreenWidthLimitSize
+        ? AppConstants.appBarLogoRatio
         : 1);
 
     if (widget.itemsConvexAppBar == null || widget.itemsConvexAppBar!.isEmpty) {
-      widget.itemsConvexAppBar = [
-        const TabItem(icon: Icons.home, title: 'Home'),
+      itemsConvexAppBar = [
+        const TabItem(icon: Icons.arrow_back, title: 'Back'),
       ];
     }
 
     if (widget.tapPageItemsConvexAppBar == null ||
         widget.tapPageItemsConvexAppBar!.isEmpty) {
-      widget.tapPageItemsConvexAppBar = [Container()];
+      tapPageItemsConvexAppBar = [Container()];
     }
 
-    return Scaffold(
-      appBar: widget.appBarScaffold ?? AppBar(
-        leading: widget.leadingAppBar ??
-            Builder(
-              builder: (BuildContext context) {
-                return Container(
-                  margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  constraints: BoxConstraints(
-                    maxHeight: kToolbarHeight,
-                    maxWidth: (kToolbarHeight * logoWidthFactor),
+    var logoContainer = Builder(
+      builder: (BuildContext context) {
+        return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
+              );
+            },
+            child: Opacity(
+              opacity: 1,
+              child: Container(
+                alignment: Alignment.centerRight,
+                margin: EdgeInsets.all(AppConstants.appBarLogoMargin),
+                constraints: BoxConstraints(
+                  maxHeight: kToolbarHeight,
+                  maxWidth: (kToolbarHeight * logoWidthFactor),
+                ),
+                decoration: BoxDecoration(
+                  shape: logoWidthFactor == 1
+                      ? BoxShape.rectangle
+                      : BoxShape.rectangle,
+                  image: DecorationImage(
+                    image: LogoImageProvider.getLogoImage(logoWidthFactor == 1
+                        ? AppConstants.appBarSmallLogoPath
+                        : AppConstants.appBarLargeLogoPath),
+                    fit: BoxFit.scaleDown,
                   ),
-                  decoration: BoxDecoration(
-                    shape: logoWidthFactor == 1
-                        ? BoxShape.rectangle
-                        : BoxShape.rectangle,
-                    image: DecorationImage(
-                      image: AssetImage(logoWidthFactor == 1
-                          ? 'assets/images/egitimaxLogo.png'
-                          : 'assets/images/egitimaxOld.png'),
-                      fit: BoxFit.scaleDown,
-                    ),
-                  ),
-                );
-              },
+                ),
+              ),
+            ));
+      },
+    );
+
+    if (widget.actionsAppBar == null || widget.actionsAppBar!.isEmpty) {
+      if (AppConstants.appBarKeepRootActions == 1) {
+        actionsAppBar = [logoContainer];
+      }
+    } else {
+      actionsAppBar = List<Widget>.empty(growable: true);
+      for (var element in widget.actionsAppBar!) {
+        if (element is Widget) {
+          actionsAppBar!.add(element);
+        }
+      }
+      if (AppConstants.appBarKeepRootActions == 1) {
+        actionsAppBar!.add(logoContainer);
+      }
+    }
+    if (AppConstants.appBarReverseRootActions == 1 &&
+        actionsAppBar != null &&
+        actionsAppBar!.isNotEmpty) {
+      var newActionsAppBar = actionsAppBar!.reversed.toList();
+
+      actionsAppBar = newActionsAppBar;
+    }
+
+    var userImageContainer = Builder(
+      builder: (BuildContext context) {
+        return GestureDetector(
+          onTap: () {
+            Scaffold.of(context).openDrawer();
+          },
+          child: Opacity(
+            opacity: 0.8,
+            child: Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.all(AppConstants.appBarUserImageMargin),
+              constraints: const BoxConstraints(
+                maxHeight: kToolbarHeight,
+                maxWidth: kToolbarHeight,
+              ),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: widget.theme.colorScheme.primary,
+              ),
+              padding: const EdgeInsets.all(1.0),
+              child: CircleAvatar(
+                radius: 75,
+                backgroundImage: UserImageDrawerItemProvider.getUserImage(
+                    AppConstants.appBarUserImagePath),
+              ),
             ),
-        automaticallyImplyLeading: widget.automaticallyImplyLeadingAppBar,
-        title: widget.titleAppBar,
-        actions: widget.actionsAppBar,
-        flexibleSpace: widget.flexibleSpaceAppBar,
-        bottom: widget.bottomAppBar,
-        elevation: widget.elevationAppBar ?? 4,
-        scrolledUnderElevation:
-        widget.scrolledUnderElevationAppBar ?? double.infinity,
-        notificationPredicate: widget.notificationPredicateAppBar,
-        shadowColor: widget.shadowColorAppBar,
-        surfaceTintColor: widget.surfaceTintColorAppBar,
-        shape: widget.shapeAppBar,
-        backgroundColor: widget.backgroundColorAppBar ??
-            widget.theme.colorScheme.inversePrimary,
-        foregroundColor: widget.foregroundColorAppBar,
-        iconTheme: widget.iconThemeAppBar,
-        actionsIconTheme: widget.actionsIconThemeAppBar,
-        primary: widget.primaryAppBar,
-        centerTitle: widget.centerTitleAppBar ?? false,
-        excludeHeaderSemantics: widget.excludeHeaderSemanticsAppBar,
-        titleSpacing: widget.titleSpacingAppBar,
-        toolbarOpacity: widget.toolbarOpacityAppBar,
-        bottomOpacity: widget.bottomOpacityAppBar,
-        toolbarHeight: widget.toolbarHeightAppBar ?? kToolbarHeight,
-        leadingWidth:
-        widget.leadingWidthAppBar ?? (kToolbarHeight * logoWidthFactor),
-        toolbarTextStyle: widget.toolbarTextStyleAppBar,
-        titleTextStyle: widget.titleTextStyleAppBar,
-        systemOverlayStyle: widget.systemOverlayStyleAppBar,
-        forceMaterialTransparency:
-        widget.forceMaterialTransparencyAppBar ?? false,
-        clipBehavior: widget.clipBehaviorAppBar,
+          ),
+        );
+      },
+    );
+
+    List<ListTile> userImageDrawerListTileItems = List.empty(growable: true);
+    UserImageDrawerItemProvider userImageDrawerItemProvider =
+        UserImageDrawerItemProvider(context);
+    userImageDrawerListTileItems = AppConstants.scaffoldKeepRootDrawer == 1
+        ? (userImageDrawerItemProvider.getUserImageDrawerItems() ??
+            List<ListTile>.empty(growable: true))
+        : List<ListTile>.empty(growable: true);
+
+    if (widget.drawerScaffold != null) {
+      if (widget.drawerScaffold! is Column) {
+        Column existingListTilesContainer = (widget.drawerScaffold! as Column);
+
+        List<ListTile> incomingListTiles = List.empty(growable: true);
+        if (existingListTilesContainer.children.isNotEmpty) {
+          existingListTilesContainer.children!.forEach((listTile) {
+            if (listTile! is ListTile) {
+              incomingListTiles.add((listTile as ListTile));
+            }
+          });
+        }
+
+        if (incomingListTiles.isNotEmpty) {
+          userImageDrawerListTileItems.addAll(incomingListTiles);
+        }
+      }
+    }
+
+    if (AppConstants.scaffoldReverseRootDrawer == 1 &&
+        userImageDrawerListTileItems != null &&
+        userImageDrawerListTileItems!.isNotEmpty) {
+      var newUserImageDrawerListTileItems =
+          userImageDrawerListTileItems!.reversed.toList();
+
+      userImageDrawerListTileItems = newUserImageDrawerListTileItems;
+    }
+
+    var userImageDrawer = Drawer(
+      child: SafeArea(
+        child: Column(
+          children: userImageDrawerListTileItems,
+        ),
       ),
-      body: widget.bodyScaffold?? Center(
-        child: widget.tapPageItemsConvexAppBar!.elementAt(
-            widget.tapPageItemsConvexAppBar!.length ==
-                widget.itemsConvexAppBar!.length
-                ? _selectedTapIndex
-                : 0),
-      ),
+    );
+
+    if (widget.drawerScaffold is! Drawer) {
+      widget.drawerScaffold = userImageDrawer;
+    }
+
+    drawerScaffold = userImageDrawer;
+
+
+    return Scaffold(
+      appBar: widget.appBarScaffold ??
+          AppBar(
+            leading: widget.leadingAppBar ?? userImageContainer,
+            automaticallyImplyLeading: widget.automaticallyImplyLeadingAppBar,
+            title: widget.titleAppBar,
+            actions: actionsAppBar,
+            flexibleSpace: widget.flexibleSpaceAppBar,
+            bottom: widget.bottomAppBar,
+            elevation:
+                widget.elevationAppBar == null || widget.elevationAppBar! < 0
+                    ? 0
+                    : widget.elevationAppBar,
+            scrolledUnderElevation:
+                widget.scrolledUnderElevationAppBar ?? double.infinity,
+            notificationPredicate: widget.notificationPredicateAppBar,
+            shadowColor:
+                widget.shadowColorAppBar ?? widget.theme.colorScheme.shadow,
+            surfaceTintColor: widget.surfaceTintColorAppBar ??
+                widget.theme.colorScheme.surface,
+            shape: widget.shapeAppBar,
+            backgroundColor: widget.backgroundColorAppBar ??
+                widget.theme.colorScheme.background,
+            foregroundColor: widget.foregroundColorAppBar ??
+                widget.theme.colorScheme.secondary,
+            iconTheme: widget.iconThemeAppBar,
+            actionsIconTheme: widget.actionsIconThemeAppBar,
+            primary: widget.primaryAppBar,
+            centerTitle: widget.centerTitleAppBar ?? false,
+            excludeHeaderSemantics: widget.excludeHeaderSemanticsAppBar,
+            titleSpacing: widget.titleSpacingAppBar ?? 0,
+            toolbarOpacity: widget.toolbarOpacityAppBar,
+            bottomOpacity: widget.bottomOpacityAppBar,
+            toolbarHeight: widget.toolbarHeightAppBar ?? kToolbarHeight,
+            leadingWidth: widget.leadingWidthAppBar ?? kToolbarHeight,
+            toolbarTextStyle: widget.toolbarTextStyleAppBar,
+            titleTextStyle: widget.titleTextStyleAppBar,
+            systemOverlayStyle: widget.systemOverlayStyleAppBar,
+            forceMaterialTransparency:
+                widget.forceMaterialTransparencyAppBar ?? false,
+            clipBehavior: widget.clipBehaviorAppBar,
+          ),
+      body: widget.bodyScaffold ??
+          Center(
+            child: (widget.tapPageItemsConvexAppBar ??
+                    tapPageItemsConvexAppBar)!
+                .elementAt((widget.tapPageItemsConvexAppBar ??
+                                tapPageItemsConvexAppBar)!
+                            .length ==
+                        (widget.itemsConvexAppBar ?? itemsConvexAppBar)!.length
+                    ? _selectedTapIndex
+                    : 0),
+          ),
       floatingActionButton: widget.floatingActionButtonScaffold,
       floatingActionButtonLocation: widget.floatingActionButtonLocationScaffold,
       floatingActionButtonAnimator: widget.floatingActionButtonAnimatorScaffold,
       persistentFooterButtons: widget.persistentFooterButtonsScaffold,
       persistentFooterAlignment: widget.persistentFooterAlignmentScaffold,
-      drawer: widget.drawerScaffold,
+      drawer: widget.drawerScaffold ?? drawerScaffold,
       onDrawerChanged: widget.onDrawerChangedScaffold,
       endDrawer: widget.endDrawerScaffold,
       onEndDrawerChanged: widget.onEndDrawerChangedScaffold,
-      bottomNavigationBar: widget.bottomNavigationBarScaffold??ConvexAppBar(
-        items: widget.itemsConvexAppBar!,
-        initialActiveIndex: widget.initialActiveIndexConvexAppBar,
-        disableDefaultTabController:
-        widget.disableDefaultTabControllerConvexAppBar,
-        onTap: (index) {
-          _onItemTapped(index);
-          if (widget.onTapConvexAppBar != null) {
-            widget.onTapConvexAppBar!(index);
-          }
-        },
-        onTabNotify: widget.onTabNotifyConvexAppBar,
-        controller: widget.controllerConvexAppBar,
-        color: widget.colorConvexAppBar,
-        activeColor: widget.activeColorConvexAppBar,
-        backgroundColor: widget.backgroundColorConvexAppBar ??
-            widget.theme.colorScheme.inversePrimary,
-        shadowColor: widget.shadowColorConvexAppBar,
-        gradient: widget.gradientConvexAppBar,
-        height: widget.heightConvexAppBar,
-        curveSize: widget.curveSizeConvexAppBar,
-        top: widget.topConvexAppBar,
-        elevation: widget.elevationConvexAppBar,
-        cornerRadius: widget.cornerRadiusConvexAppBar,
-        style: widget.styleConvexAppBar,
-        curve: widget.curveConvexAppBar,
-        chipBuilder: widget.chipBuilderConvexAppBar,
-      ),
+      bottomNavigationBar: widget.bottomNavigationBarScaffold ??
+          StyleProvider(
+            style: Style(),
+            child: ConvexAppBar(
+              items: widget.itemsConvexAppBar ?? itemsConvexAppBar!,
+              initialActiveIndex: widget.initialActiveIndexConvexAppBar,
+              disableDefaultTabController:
+                  widget.disableDefaultTabControllerConvexAppBar,
+              onTap: (index) {
+                _onItemTapped(index);
+                if (widget.onTapConvexAppBar != null) {
+                  if (widget.itemsConvexAppBar == null ||
+                      widget.itemsConvexAppBar!.isEmpty) {
+                    if (index == 0) {
+                      widget.onTapConvexAppBar!(
+                          -1); // Hiç bir item yoksa goback olması için
+                    } else {
+                      widget.onTapConvexAppBar!(index);
+                    }
+                  } else {
+                    widget.onTapConvexAppBar!(index);
+                  }
+                }
+              },
+              onTabNotify: widget.onTabNotifyConvexAppBar,
+              controller: widget.controllerConvexAppBar,
+              color:
+                  widget.colorConvexAppBar ?? widget.theme.colorScheme.primary,
+              activeColor: widget.activeColorConvexAppBar ??
+                  widget.theme.colorScheme.secondary,
+              backgroundColor: widget.backgroundColorConvexAppBar ??
+                  widget.theme.colorScheme.surface,
+              shadowColor: widget.shadowColorConvexAppBar ??
+                  widget.theme.colorScheme.shadow,
+              gradient: widget.gradientConvexAppBar,
+              height: widget.heightConvexAppBar ?? kToolbarHeight,
+              curveSize: widget.curveSizeConvexAppBar,
+              top: widget.topConvexAppBar,
+              elevation: widget.elevationConvexAppBar,
+              cornerRadius: widget.cornerRadiusConvexAppBar,
+              style: widget.styleConvexAppBar,
+              curve: widget.curveConvexAppBar,
+              chipBuilder: widget.chipBuilderConvexAppBar,
+            ),
+          ),
       bottomSheet: widget.bottomSheetScaffold,
       backgroundColor: widget.backgroundColorScaffold,
-      resizeToAvoidBottomInset: widget.resizeToAvoidBottomInsetScaffold??true,
+      resizeToAvoidBottomInset: widget.resizeToAvoidBottomInsetScaffold ?? true,
       primary: widget.primaryScaffold,
       drawerDragStartBehavior: widget.drawerDragStartBehaviorScaffold,
       extendBody: widget.extendBodyScaffold,
@@ -327,5 +481,22 @@ class _LayoutPageState extends State<LayoutPage> {
           widget.endDrawerEnableOpenDragGestureScaffold,
       restorationId: widget.restorationIdScaffold,
     );
+  }
+}
+
+class Style extends StyleHook {
+  @override
+  double get activeIconSize => AppConstants.convexAppBarStyleActiveIconSize;
+
+  @override
+  double get activeIconMargin => AppConstants.convexAppBarStyleActiveIconMargin;
+
+  @override
+  double get iconSize => AppConstants.convexAppBarStyleIconSize;
+
+  @override
+  TextStyle textStyle(Color color, String? fontFamily) {
+    return TextStyle(
+        fontSize: AppConstants.convexAppBarStyleFontSize, color: color);
   }
 }

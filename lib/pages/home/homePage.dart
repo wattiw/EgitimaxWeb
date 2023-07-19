@@ -52,16 +52,36 @@ class _HomePageState extends State<HomePage> {
     ];
     var itemsConvexAppBar = [
       const TabItem(icon: Icons.home, title: 'Home'),
-      const TabItem(icon: Icons.map, title: 'Discovery'),
-      const TabItem(icon: Icons.question_mark_outlined, title: 'Question'),
-      const TabItem(icon: Icons.message, title: 'Message'),
-      const TabItem(icon: Icons.people, title: 'Profile'),
+      const TabItem(
+          icon: Icons.connect_without_contact_rounded, title: 'My Network'),
+      const TabItem(icon: Icons.menu, title: 'Menu'),
+      const TabItem(
+          icon: Icons.notification_add_outlined, title: 'Notifications'),
+      const TabItem(icon: Icons.message_outlined, title: 'Messages'),
     ];
+
+    var drawerScaffold = Column(children: [
+      ListTile(
+        leading: Switch(
+            value: true,
+            onChanged: (value) {
+              int x = 0;
+            }),
+        title: Text("Home Page"),
+        subtitle: Text("Subtitle menu 1"),
+      ),
+      ListTile(
+        leading: Icon(Icons.search),
+        title: Text("Search Page"),
+        subtitle: Text("Subtitle menu 1"),
+      ),
+      //put more menu items here
+    ]);
+
     var endDrawerScaffold = const Drawer(
       //drawer navigation on scaffold
       child: SafeArea(
         child: Column(
-          //column widget
           children: [
             ListTile(
               leading: Icon(Icons.home),
@@ -79,7 +99,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-    var actionsAppBar = [
+    List<Widget>? actionsAppBar = [
       Row(
         children: [
           IconButton(
@@ -92,43 +112,6 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(Icons.notifications),
             onPressed: () {
               // Bildirimler aksiyonu
-            },
-          ),
-          PopupMenuButton<Locale>(
-            icon: Center(
-              child: CountryFlag.fromCountryCode(
-                localeModel.getCountryCodeFromLanguageCode(
-                    localeModel.locale.languageCode),
-                height: kToolbarHeight / 2,
-                width: kToolbarHeight / 2,
-                borderRadius: 5,
-              ),
-            ),
-            onSelected: (Locale selectedLocale) {
-              localeModel.changeLocale(selectedLocale);
-            },
-            itemBuilder: (BuildContext context) {
-              return AppLocalizations.supportedLocales.map((Locale locale) {
-                return PopupMenuItem<Locale>(
-                  value: locale,
-                  child: Row(
-                    children: [
-                      Center(
-                        child: CountryFlag.fromCountryCode(
-                          localeModel.getCountryCodeFromLanguageCode(
-                                  locale.languageCode) ??
-                              locale.languageCode,
-                          height: kToolbarHeight / 2,
-                          width: kToolbarHeight,
-                          borderRadius: 8,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Text(locale.languageCode.toUpperCase()),
-                    ],
-                  ),
-                );
-              }).toList();
             },
           ),
           Builder(
@@ -150,6 +133,7 @@ class _HomePageState extends State<HomePage> {
 
     return LayoutPage(
       actionsAppBar: actionsAppBar,
+      drawerScaffold: drawerScaffold,
       endDrawerScaffold: endDrawerScaffold,
       tapPageItemsConvexAppBar: tapPageItemsConvexAppBar,
       itemsConvexAppBar: itemsConvexAppBar,
@@ -160,6 +144,10 @@ class _HomePageState extends State<HomePage> {
         }
         if (index == 2) {
           routeManager.navigateTo('/QuestionPage');
+        } else {
+          if (Navigator.canPop(context)) {
+            routeManager.goBack(context);
+          }
         }
       },
     );

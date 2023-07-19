@@ -36,8 +36,12 @@ class RouteManager {
     navigatorKey.currentState?.pushNamed(routeName, arguments: arguments);
   }
 
-  void goBack() {
-    navigatorKey.currentState?.pop();
+  void goBack(BuildContext context) {
+    if(Navigator.canPop(context))
+    {
+      navigatorKey.currentState?.pop();
+    }
+
   }
 
   void navigateAndReplace(String routeName, {dynamic arguments}) {

@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
             onGenerateTitle:(context) =>'Egitimax',
             title: 'Egitimax Platform',
             theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue.shade100),
+              colorScheme: ColorScheme.fromSeed(seedColor:Colors.blue ),
               useMaterial3: true,
             ),
             initialRoute: '/',
