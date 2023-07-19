@@ -182,7 +182,7 @@ class _LayoutPageState extends State<LayoutPage> {
   List<Widget>? tapPageItemsConvexAppBar;
   List<TabItem<dynamic>>? itemsConvexAppBar;
   List<Widget>? actionsAppBar;
-  Widget? drawerScaffold;
+  Widget? endDrawerScaffold;
 
   int _selectedTapIndex = 0;
 
@@ -221,6 +221,36 @@ class _LayoutPageState extends State<LayoutPage> {
       tapPageItemsConvexAppBar = [Container()];
     }
 
+    var userImageContainer = Builder(
+      builder: (BuildContext context) {
+        return GestureDetector(
+          onTap: () {
+            Scaffold.of(context).openEndDrawer();
+          },
+          child: Opacity(
+            opacity: 0.8,
+            child: Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.all(AppConstants.appBarUserImageMargin),
+              constraints:  BoxConstraints(
+                maxHeight: kToolbarHeight*AppConstants.appBarUserImageSizeCorrectionFactor ??1,
+                maxWidth: kToolbarHeight*AppConstants.appBarUserImageSizeCorrectionFactor ??1,
+              ),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: widget.theme.colorScheme.primary,
+              ),
+              padding: const EdgeInsets.all(1.0),
+              child: CircleAvatar(
+                radius: 75,
+                backgroundImage: UserImageDrawerItemProvider.getUserImage(
+                    AppConstants.appBarUserImagePath),
+              ),
+            ),
+          ),
+        );
+      },
+    );
     var logoContainer = Builder(
       builder: (BuildContext context) {
         return GestureDetector(
@@ -236,8 +266,8 @@ class _LayoutPageState extends State<LayoutPage> {
                 alignment: Alignment.centerRight,
                 margin: EdgeInsets.all(AppConstants.appBarLogoMargin),
                 constraints: BoxConstraints(
-                  maxHeight: kToolbarHeight,
-                  maxWidth: (kToolbarHeight * logoWidthFactor),
+                  maxHeight: kToolbarHeight*AppConstants.appBarLogoSizeCorrectionFactor ??1,
+                  maxWidth: (kToolbarHeight * logoWidthFactor)*AppConstants.appBarLogoSizeCorrectionFactor ??1,
                 ),
                 decoration: BoxDecoration(
                   shape: logoWidthFactor == 1
@@ -257,7 +287,7 @@ class _LayoutPageState extends State<LayoutPage> {
 
     if (widget.actionsAppBar == null || widget.actionsAppBar!.isEmpty) {
       if (AppConstants.appBarKeepRootActions == 1) {
-        actionsAppBar = [logoContainer];
+        actionsAppBar = [userImageContainer];
       }
     } else {
       actionsAppBar = List<Widget>.empty(growable: true);
@@ -267,7 +297,7 @@ class _LayoutPageState extends State<LayoutPage> {
         }
       }
       if (AppConstants.appBarKeepRootActions == 1) {
-        actionsAppBar!.add(logoContainer);
+        actionsAppBar!.add(userImageContainer);
       }
     }
     if (AppConstants.appBarReverseRootActions == 1 &&
@@ -278,36 +308,7 @@ class _LayoutPageState extends State<LayoutPage> {
       actionsAppBar = newActionsAppBar;
     }
 
-    var userImageContainer = Builder(
-      builder: (BuildContext context) {
-        return GestureDetector(
-          onTap: () {
-            Scaffold.of(context).openDrawer();
-          },
-          child: Opacity(
-            opacity: 0.8,
-            child: Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.all(AppConstants.appBarUserImageMargin),
-              constraints: const BoxConstraints(
-                maxHeight: kToolbarHeight,
-                maxWidth: kToolbarHeight,
-              ),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: widget.theme.colorScheme.primary,
-              ),
-              padding: const EdgeInsets.all(1.0),
-              child: CircleAvatar(
-                radius: 75,
-                backgroundImage: UserImageDrawerItemProvider.getUserImage(
-                    AppConstants.appBarUserImagePath),
-              ),
-            ),
-          ),
-        );
-      },
-    );
+
 
     List<ListTile> userImageDrawerListTileItems = List.empty(growable: true);
     UserImageDrawerItemProvider userImageDrawerItemProvider =
@@ -317,9 +318,9 @@ class _LayoutPageState extends State<LayoutPage> {
             List<ListTile>.empty(growable: true))
         : List<ListTile>.empty(growable: true);
 
-    if (widget.drawerScaffold != null) {
-      if (widget.drawerScaffold! is Column) {
-        Column existingListTilesContainer = (widget.drawerScaffold! as Column);
+    if (widget.endDrawerScaffold != null) {
+      if (widget.endDrawerScaffold! is Column) {
+        Column existingListTilesContainer = (widget.endDrawerScaffold! as Column);
 
         List<ListTile> incomingListTiles = List.empty(growable: true);
         if (existingListTilesContainer.children.isNotEmpty) {
@@ -353,17 +354,17 @@ class _LayoutPageState extends State<LayoutPage> {
       ),
     );
 
-    if (widget.drawerScaffold is! Drawer) {
-      widget.drawerScaffold = userImageDrawer;
+    if (widget.endDrawerScaffold is! Drawer) {
+      widget.endDrawerScaffold = userImageDrawer;
     }
 
-    drawerScaffold = userImageDrawer;
+    endDrawerScaffold = userImageDrawer;
 
 
     return Scaffold(
       appBar: widget.appBarScaffold ??
           AppBar(
-            leading: widget.leadingAppBar ?? userImageContainer,
+            leading: widget.leadingAppBar ?? logoContainer,
             automaticallyImplyLeading: widget.automaticallyImplyLeadingAppBar,
             title: widget.titleAppBar,
             actions: actionsAppBar,
@@ -394,7 +395,7 @@ class _LayoutPageState extends State<LayoutPage> {
             toolbarOpacity: widget.toolbarOpacityAppBar,
             bottomOpacity: widget.bottomOpacityAppBar,
             toolbarHeight: widget.toolbarHeightAppBar ?? kToolbarHeight,
-            leadingWidth: widget.leadingWidthAppBar ?? kToolbarHeight,
+            leadingWidth: widget.leadingWidthAppBar ?? kToolbarHeight*logoWidthFactor,
             toolbarTextStyle: widget.toolbarTextStyleAppBar,
             titleTextStyle: widget.titleTextStyleAppBar,
             systemOverlayStyle: widget.systemOverlayStyleAppBar,
@@ -418,9 +419,9 @@ class _LayoutPageState extends State<LayoutPage> {
       floatingActionButtonAnimator: widget.floatingActionButtonAnimatorScaffold,
       persistentFooterButtons: widget.persistentFooterButtonsScaffold,
       persistentFooterAlignment: widget.persistentFooterAlignmentScaffold,
-      drawer: widget.drawerScaffold ?? drawerScaffold,
+      drawer: widget.drawerScaffold,
       onDrawerChanged: widget.onDrawerChangedScaffold,
-      endDrawer: widget.endDrawerScaffold,
+      endDrawer: widget.endDrawerScaffold ?? endDrawerScaffold,
       onEndDrawerChanged: widget.onEndDrawerChangedScaffold,
       bottomNavigationBar: widget.bottomNavigationBarScaffold ??
           StyleProvider(

@@ -2,6 +2,11 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:country_flags/country_flags.dart';
 import 'package:egitimax/models/common/drawerItem.dart';
 import 'package:egitimax/models/language/localeModel.dart';
+import 'package:egitimax/pages/home/homeHome.dart';
+import 'package:egitimax/pages/home/homeMenu.dart';
+import 'package:egitimax/pages/home/homeMessages.dart';
+import 'package:egitimax/pages/home/homeNetwork.dart';
+import 'package:egitimax/pages/home/homeNotifications.dart';
 import 'package:egitimax/repositories/appRepository.dart';
 import 'package:egitimax/utils/helper/routeManager.dart';
 import 'package:egitimax/utils/widget/layoutPage.dart';
@@ -33,51 +38,70 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     loadComponent();
 
-    var tapPageItemsConvexAppBar = <Widget>[
-      const Text(
-        'Index 0: Home',
-      ),
-      const Text(
-        'Index 1: Business',
-      ),
-      const Text(
-        'Index 2: Question Page Routing',
-      ),
-      const Text(
-        'Index 3: Settings',
-      ),
-      const Text(
-        'Index 4: Settings',
+    List<Widget> tapPageItemsConvexAppBar = getTapPageItemsConvexAppBar();
+    List<TabItem<IconData>> itemsConvexAppBar = getItemsConvexAppBar();
+    Drawer drawerScaffold = getDrawerScaffold();
+    Widget endDrawerScaffold = getEndDrawerScaffold();
+    List<Widget>? actionsAppBar = getActionsAppBar();
+
+    return LayoutPage(
+      actionsAppBar: actionsAppBar,
+      drawerScaffold: drawerScaffold,
+      endDrawerScaffold: endDrawerScaffold,
+      tapPageItemsConvexAppBar: tapPageItemsConvexAppBar,
+      itemsConvexAppBar: itemsConvexAppBar,
+      titleAppBar: const Text('Egitimax'),
+      centerTitleAppBar:true,
+      onTapConvexAppBar: (index) {
+        if (index == 0) {
+          routeManager.navigateTo('/');
+        }
+        if (index == 2) {
+          //routeManager.navigateTo('/QuestionPage');
+        } else {
+          if (Navigator.canPop(context)) {
+            routeManager.goBack(context);
+          }
+        }
+      },
+    );
+  }
+
+  void loadComponent() {
+    routeManager = RouteManager();
+    appRepository = AppRepository();
+    theme = Theme.of(context);
+    lang = AppLocalizations.of(context)!;
+    localeModel = Provider.of<LocaleModel>(context, listen: false);
+  }
+
+  List<Widget>? getActionsAppBar() {
+    List<Widget>? actionsAppBar = [
+      Builder(
+        builder: (BuildContext context) {
+          return Align(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            ),
+          );
+        },
       ),
     ];
-    var itemsConvexAppBar = [
-      const TabItem(icon: Icons.home, title: 'Home'),
-      const TabItem(
-          icon: Icons.connect_without_contact_rounded, title: 'My Network'),
-      const TabItem(icon: Icons.menu, title: 'Menu'),
-      const TabItem(
-          icon: Icons.notification_add_outlined, title: 'Notifications'),
-      const TabItem(icon: Icons.message_outlined, title: 'Messages'),
-    ];
+    return actionsAppBar;
+  }
 
-    var drawerScaffold = Column(children: [
-      ListTile(
-        leading: Switch(
-            value: true,
-            onChanged: (value) {
-              int x = 0;
-            }),
-        title: Text("Home Page"),
-        subtitle: Text("Subtitle menu 1"),
-      ),
-      ListTile(
-        leading: Icon(Icons.search),
-        title: Text("Search Page"),
-        subtitle: Text("Subtitle menu 1"),
-      ),
-      //put more menu items here
-    ]);
+  Widget getEndDrawerScaffold() {
+    //Mevcut'a eklemek için Column/ListTile şeklinde gönder...
+    var drawerScaffold = const Column(children: []);
+    return drawerScaffold;
 
+  }
+
+  Drawer getDrawerScaffold() {
     var endDrawerScaffold = const Drawer(
       //drawer navigation on scaffold
       child: SafeArea(
@@ -99,65 +123,38 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-    List<Widget>? actionsAppBar = [
-      Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.home),
-            onPressed: () {
-              // Ayarlar aksiyonu
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {
-              // Bildirimler aksiyonu
-            },
-          ),
-          Builder(
-            builder: (BuildContext context) {
-              return Align(
-                alignment: Alignment.centerRight,
-                child: IconButton(
-                  icon: const Icon(Icons.menu),
-                  onPressed: () {
-                    Scaffold.of(context).openEndDrawer();
-                  },
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    ];
-
-    return LayoutPage(
-      actionsAppBar: actionsAppBar,
-      drawerScaffold: drawerScaffold,
-      endDrawerScaffold: endDrawerScaffold,
-      tapPageItemsConvexAppBar: tapPageItemsConvexAppBar,
-      itemsConvexAppBar: itemsConvexAppBar,
-      titleAppBar: const Text('Home'),
-      onTapConvexAppBar: (index) {
-        if (index == 0) {
-          routeManager.navigateTo('/');
-        }
-        if (index == 2) {
-          routeManager.navigateTo('/QuestionPage');
-        } else {
-          if (Navigator.canPop(context)) {
-            routeManager.goBack(context);
-          }
-        }
-      },
-    );
+    return endDrawerScaffold;
   }
 
-  void loadComponent() {
-    routeManager = RouteManager();
-    appRepository = AppRepository();
-    theme = Theme.of(context);
-    lang = AppLocalizations.of(context)!;
-    localeModel = Provider.of<LocaleModel>(context, listen: false);
+  List<TabItem<IconData>> getItemsConvexAppBar() {
+    var itemsConvexAppBar = [
+      const TabItem(icon: Icons.home, title: 'Home'),
+      const TabItem(
+          icon: Icons.connect_without_contact_rounded, title: 'My Network'),
+      const TabItem(icon: Icons.menu, title: 'Menu'),
+      const TabItem(
+          icon: Icons.notification_add_outlined, title: 'Notifications'),
+      const TabItem(icon: Icons.message_outlined, title: 'Messages'),
+    ];
+    return itemsConvexAppBar;
+  }
+
+  List<Widget> getTapPageItemsConvexAppBar() {
+    var tapPageItemsConvexAppBar = <Widget>[
+      const HomeHome(
+        title: 'Home',
+      ),
+      const HomeNetwork(
+        title: 'Network',
+      ),
+      const HomeMenu(title: 'Menu',),
+      const HomeNotifications(
+        title: 'Notifications',
+      ),
+      const HomeMessages(
+        title: 'Messages',
+      ),
+    ];
+    return tapPageItemsConvexAppBar;
   }
 }
