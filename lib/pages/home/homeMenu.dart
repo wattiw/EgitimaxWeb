@@ -12,7 +12,6 @@ class HomeMenu extends StatefulWidget {
 
 class _HomeMenuState extends State<HomeMenu> {
   final Map<String, String> links = {
-    '/':'Home',
     '/QuestionPage':'Question Page'
   };
 

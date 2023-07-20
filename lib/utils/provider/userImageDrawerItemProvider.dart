@@ -1,6 +1,6 @@
 import 'package:country_flags/country_flags.dart';
 import 'package:egitimax/utils/helper/localeManager.dart';
-import 'package:egitimax/utils/provider/createDummyImage.dart';
+import 'package:egitimax/utils/provider/imager.dart';
 import 'package:egitimax/utils/widget/deviceInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -83,7 +83,7 @@ class UserImageDrawerItemProvider {
     } else if (imagePath is ImageProvider<Object>) {
       return imagePath;
     } else {
-      return createDummyImage(Colors.grey,int.parse(kToolbarHeight.toString()),int.parse(kToolbarHeight.toString()));
+      return Imager.createDummyImage(Colors.grey,int.parse(kToolbarHeight.toString()),int.parse(kToolbarHeight.toString()));
     }
   }
 }

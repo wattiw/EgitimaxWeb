@@ -24,7 +24,7 @@ class _QuestionPageState extends State<QuestionPage> {
   late AppLocalizations lang;
   late LocaleManager localeManager;
   late DeviceType deviceType;
-  int selectedPageIndex=1;
+  int selectedPageIndex = 1;
 
   @override
   void initState() {
@@ -61,10 +61,10 @@ class _QuestionPageState extends State<QuestionPage> {
         debugPrint('Selected Index : $index');
         if (index == 0) {
           if (selectedPageIndex != index) {
-            routeManager.navigateAndRemoveUntil('/',arguments:{'route':false});
+            routeManager
+                .navigateAndRemoveUntil('/', arguments: {'route': false});
           }
         } else if (index == 1) {
-
         } else {
           if (Navigator.canPop(context)) {
             routeManager.goBack(context);
@@ -135,12 +135,15 @@ class _QuestionPageState extends State<QuestionPage> {
     return endDrawerScaffold;
   }
 
-
   List<TabItem<IconData>> getItemsConvexAppBar() {
     var itemsConvexAppBar = [
       TabItem(icon: Icons.home, title: lang.libPagesHomeHomePage_home),
-      TabItem(icon: Icons.question_mark_outlined, title: lang.libPagesQuestionQuestionPage_question),
-      TabItem(icon: Icons.arrow_back, title: lang.libPagesQuestionQuestionPage_back),
+      TabItem(
+          icon: Icons.question_mark_outlined,
+          title: lang.libPagesQuestionQuestionPage_question),
+      TabItem(
+          icon: Icons.arrow_back,
+          title: lang.libPagesQuestionQuestionPage_back),
     ];
     return itemsConvexAppBar;
   }
@@ -149,7 +152,7 @@ class _QuestionPageState extends State<QuestionPage> {
     var tapPageItemsConvexAppBar = <Widget>[
       Container(),
       QuestionQuestion(
-        title: lang.libPagesQuestionQuestionPage_question,
+        title: lang.libPagesQuestionQuestionPage_question, routeManager: routeManager, appRepository: appRepository, theme: theme, lang: lang, localeManager: localeManager, deviceType: deviceType,
       ),
       Container()
     ];

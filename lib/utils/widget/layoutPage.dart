@@ -42,7 +42,7 @@ class LayoutPage extends StatefulWidget {
     this.flexibleSpaceAppBar,
     this.bottomAppBar,
     this.elevationAppBar = 4,
-    this.scrolledUnderElevationAppBar,
+    this.scrolledUnderElevationAppBar=0.0,
     this.notificationPredicateAppBar = defaultScrollNotificationPredicate,
     this.shadowColorAppBar,
     this.surfaceTintColorAppBar,
