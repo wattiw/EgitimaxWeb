@@ -1,7 +1,9 @@
+import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:flutter/material.dart';
 
 class HomeNotifications extends StatefulWidget {
   const HomeNotifications({super.key, required this.title});
+
   final String title;
 
   @override
@@ -18,13 +20,24 @@ class _HomeNotificationsState extends State<HomeNotifications> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    if (AppConstants.homePageDebugPrintActive == 1) {
+      debugPrint("HomeNotifications_initState");
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (AppConstants.homePageDebugPrintActive == 1) {
+      debugPrint("HomeNotifications_build");
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.background,
-        foregroundColor:Theme.of(context).colorScheme.secondary ,
-        shadowColor:Theme.of(context).colorScheme.shadow ,
-        surfaceTintColor: Theme.of(context).colorScheme.surface ,
+        foregroundColor: Theme.of(context).colorScheme.secondary,
+        shadowColor: Theme.of(context).colorScheme.shadow,
+        surfaceTintColor: Theme.of(context).colorScheme.surface,
         title: Text(widget.title),
       ),
       body: Center(

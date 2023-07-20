@@ -1,11 +1,7 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:egitimax/pages/question/questionQuestion.dart';
 import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:egitimax/utils/helper/localeManager.dart';
-import 'package:egitimax/pages/home/homeHome.dart';
-import 'package:egitimax/pages/home/homeMenu.dart';
-import 'package:egitimax/pages/home/homeMessages.dart';
-import 'package:egitimax/pages/home/homeNetwork.dart';
-import 'package:egitimax/pages/home/homeNotifications.dart';
 import 'package:egitimax/repositories/appRepository.dart';
 import 'package:egitimax/utils/helper/routeManager.dart';
 import 'package:egitimax/utils/widget/deviceInfo.dart';
@@ -14,35 +10,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class QuestionPage extends StatefulWidget {
+  const QuestionPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<QuestionPage> createState() => _QuestionPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _QuestionPageState extends State<QuestionPage> {
   late RouteManager routeManager;
   late AppRepository appRepository;
   late ThemeData theme;
   late AppLocalizations lang;
   late LocaleManager localeManager;
   late DeviceType deviceType;
-  int selectedPageIndex = 0;
+  int selectedPageIndex=1;
 
   @override
   void initState() {
     super.initState();
-    if (AppConstants.homePageDebugPrintActive == 1) {
-      debugPrint("HomePage_initState");
+    if (AppConstants.questionPageDebugPrintActive == 1) {
+      debugPrint("QuestionPage_initState");
     }
     routeManager = RouteManager();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (AppConstants.homePageDebugPrintActive == 1) {
-      debugPrint("HomePage_build");
+    if (AppConstants.questionPageDebugPrintActive == 1) {
+      debugPrint("QuestionPage_build");
     }
     loadComponent();
 
@@ -59,19 +55,22 @@ class _HomePageState extends State<HomePage> {
       endDrawerScaffold: endDrawerScaffold,
       tapPageItemsConvexAppBar: tapPageItemsConvexAppBar,
       itemsConvexAppBar: itemsConvexAppBar,
-      titleAppBar: Text(lang.libPagesHomeHomePage_home),
+      titleAppBar: Text(lang.libPagesQuestionQuestionPage_questionPage),
       centerTitleAppBar: true,
       onTapConvexAppBar: (index) {
         debugPrint('Selected Index : $index');
         if (index == 0) {
           if (selectedPageIndex != index) {
-            //routeManager.navigateAndRemoveUntil('/',arguments:{'route':false});
+            routeManager.navigateAndRemoveUntil('/',arguments:{'route':false});
           }
+        } else if (index == 1) {
+
         } else {
           if (Navigator.canPop(context)) {
             routeManager.goBack(context);
           }
         }
+
         selectedPageIndex = index;
       },
     );
@@ -119,12 +118,12 @@ class _HomePageState extends State<HomePage> {
           children: [
             ListTile(
               leading: Icon(Icons.home),
-              title: Text("Home Page"),
+              title: Text("Soru Page"),
               subtitle: Text("Subtitle menu 1"),
             ),
             ListTile(
               leading: Icon(Icons.search),
-              title: Text("Search Page"),
+              title: Text("Test Page"),
               subtitle: Text("Subtitle menu 1"),
             ),
 
@@ -139,32 +138,20 @@ class _HomePageState extends State<HomePage> {
 
   List<TabItem<IconData>> getItemsConvexAppBar() {
     var itemsConvexAppBar = [
-       TabItem(icon: Icons.home, title: lang.libPagesHomeHomePage_home),
-       TabItem(icon: Icons.connect_without_contact_rounded, title: lang.libPagesHomeHomePage_myNetwork),
-       TabItem(icon: Icons.menu, title: lang.libPagesHomeHomePage_menu),
-       TabItem(icon: Icons.notification_add_outlined, title: lang.libPagesHomeHomePage_notifications),
-       TabItem(icon: Icons.message_outlined, title: lang.libPagesHomeHomePage_messages),
+      TabItem(icon: Icons.home, title: lang.libPagesHomeHomePage_home),
+      TabItem(icon: Icons.question_mark_outlined, title: lang.libPagesQuestionQuestionPage_question),
+      TabItem(icon: Icons.arrow_back, title: lang.libPagesQuestionQuestionPage_back),
     ];
     return itemsConvexAppBar;
   }
 
   List<Widget> getTapPageItemsConvexAppBar() {
     var tapPageItemsConvexAppBar = <Widget>[
-       HomeHome(
-        title: lang.libPagesHomeHomePage_home,
+      Container(),
+      QuestionQuestion(
+        title: lang.libPagesQuestionQuestionPage_question,
       ),
-       HomeNetwork(
-        title: lang.libPagesHomeHomePage_myNetwork,
-      ),
-       HomeMenu(
-        title: lang.libPagesHomeHomePage_menu,
-      ),
-       HomeNotifications(
-        title:  lang.libPagesHomeHomePage_notifications,
-      ),
-       HomeMessages(
-        title: lang.libPagesHomeHomePage_messages,
-      ),
+      Container()
     ];
     return tapPageItemsConvexAppBar;
   }

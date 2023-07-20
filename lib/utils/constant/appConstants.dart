@@ -1,17 +1,18 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 
 class AppConstants {
-  //Api
+  //lib/utils/helper/api.dart
   static  String apiBaseUrl = 'http://138.68.82.103:9090/';
   static  String apiUsername = 'info@egitimax.com';
   static  String apiPassword = 'password';
   static  int apiDebugPrintExceptionActive = 1;
   static  int apiDebugPrintActive = 1;
-  //Language
+
+  //lib/utils/helper/localeManager.dart
   static const String languageCodeDefault = 'tr';
   static const String languageCountryCodeDefault = 'TR';
 
-  //Layout
+  //lib/utils/widget/layoutPage.dart
   static  int floatingActionButtonAddToExisting = 1;
   static  int appBarActionsAddToExisting = 1;
   static  String appBarSmallLogoPath= 'https://media.licdn.com/dms/image/D4D0BAQFkB1OOfWU6Bg/company-logo_200_200/0/1665299041364?e=2147483647&v=beta&t=L5eVXqByti-aEzZvoSSvQcYhQ4fzpn1p2EgR-XU_iG8';
@@ -33,5 +34,12 @@ class AppConstants {
   static  int scaffoldKeepRootDrawer = 1;
   static  int scaffoldReverseRootDrawer = 0;
 
+  //lib/pages/home/homePage.dart
+  static  int homePageDebugPrintExceptionActive = 1;
+  static  int homePageDebugPrintActive = 1;
+
+  //lib/pages/question/questionPage.dart
+  static  int questionPageDebugPrintExceptionActive = 1;
+  static  int questionPageDebugPrintActive = 1;
 
 }

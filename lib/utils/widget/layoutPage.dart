@@ -1,5 +1,5 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:egitimax/models/language/localeModel.dart';
+import 'package:egitimax/utils/helper/localeManager.dart';
 import 'package:egitimax/pages/home/homePage.dart';
 import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:egitimax/utils/provider/logoImageProvider.dart';
@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:country_flags/country_flags.dart';
+
 
 class LayoutPage extends StatefulWidget {
   LayoutPage({
@@ -92,7 +92,7 @@ class LayoutPage extends StatefulWidget {
 
   late ThemeData theme;
   late AppLocalizations lang;
-  late LocaleModel localeModel;
+  late LocaleManager localeManager;
   late DeviceType deviceType;
 
   final Widget? leadingAppBar;
@@ -195,14 +195,15 @@ class _LayoutPageState extends State<LayoutPage> {
   @override
   void initState() {
     super.initState();
+    _selectedTapIndex=widget.initialActiveIndexConvexAppBar??0;
   }
 
   @override
   Widget build(BuildContext context) {
     widget.theme = Theme.of(context);
     widget.lang = AppLocalizations.of(context)!;
-    widget.localeModel = Provider.of<LocaleModel>(context, listen: false);
-    widget.deviceType = DeviceInfo().getDeviceType();
+    widget.localeManager = Provider.of<LocaleManager>(context, listen: false);
+    widget.deviceType = DeviceInfo(context).getDeviceType();
 
     var logoWidthFactor = (widget.deviceType == DeviceType.web &&
             MediaQuery.of(context).size.width >
@@ -212,7 +213,7 @@ class _LayoutPageState extends State<LayoutPage> {
 
     if (widget.itemsConvexAppBar == null || widget.itemsConvexAppBar!.isEmpty) {
       itemsConvexAppBar = [
-        const TabItem(icon: Icons.arrow_back, title: 'Back'),
+         TabItem(icon: Icons.arrow_back, title: widget.lang.libUtilsWidgetLayoutPage_back),
       ];
     }
 

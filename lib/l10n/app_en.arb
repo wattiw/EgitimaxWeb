@@ -1,7 +1,7 @@
 {
   "@@locale": "en",
   "countryCode": "US",
-
+  "countryName": "English (United States)",
   "hello": "Hello {userName}",
   "@hello": {
     "description": "A message with a single parameter",
@@ -12,9 +12,9 @@
       }
     }
   },
-  "nWombats": "{count, plural, =0{no wombats} =1{1 wombat} other{{count} wombats}}",
+  "nWombats": "{count, plural, =0{There are no wombats} =1{1 wombat} other{{count} wombats}}",
   "@nWombats": {
-    "description": "A plural message",
+    "description": "A message with multiple cases",
     "placeholders": {
       "count": {
         "type": "num",
@@ -24,7 +24,7 @@
   },
   "pronoun": "{gender, select, male{he} female{she} other{they}}",
   "@pronoun": {
-    "description": "A gendered message",
+    "description": "A message based on gender",
     "placeholders": {
       "gender": {
         "type": "String"
@@ -33,54 +33,113 @@
   },
   "egitimax": "Egitimax",
   "@egitimax": {
-    "description": "Educational Platform"
+    "description": "Education Platform"
   },
-  "callServiceTestButton": "API Test",
-  "@callServiceTestButton": {
-    "description": "Performs web API testing."
+  "libUtilsWidgetLayoutPage_back": "Back",
+  "@libUtilsWidgetLayoutPage_back": {
+    "description": "Default button created for the Navigation bar: Back"
   },
+  "libUtilsWidgetMessage_general": "Information",
+  "@libUtilsWidgetMessage_general": {
+    "description": "Icon text for the message panel."
+  },
+  "libUtilsWidgetMessage_information": "Information",
+  "@libUtilsWidgetMessage_information": {
+    "description": "Icon text for the message panel."
+  },
+  "libUtilsWidgetMessage_warning": "Warning",
+  "@libUtilsWidgetMessage_warning": {
+    "description": "Icon text for the message panel."
+  },
+  "libUtilsWidgetMessage_confirmation": "Confirmation",
+  "@libUtilsWidgetMessage_confirmation": {
+    "description": "Icon text for the message panel."
+  },
+  "libUtilsWidgetMessage_request": "Request",
+  "@libUtilsWidgetMessage_request": {
+    "description": "Icon text for the message panel."
+  },
+  "libUtilsWidgetMessage_error": "Error",
+  "@libUtilsWidgetMessage_error": {
+    "description": "Icon text for the message panel."
+  },
+  "libUtilsWidgetDeviceInfo_fuchsiaPlatformIsNotSupported": "Fuchsia platform is not supported",
+  "@libUtilsWidgetDeviceInfo_fuchsiaPlatformIsNotSupported": {
+    "description": "Device information."
+  },
+  "libUtilsWidgetDeviceInfo_failedToGetPlatformVersion": "Failed to get platform version",
+  "@libUtilsWidgetDeviceInfo_failedToGetPlatformVersion": {
+    "description": "Device information."
+  },
+  "libUtilsWidgetDeviceInfo_error": "Error",
+  "@libUtilsWidgetDeviceInfo_error": {
+    "description": "Device information."
+  },
+  "libPagesHomeHomePage_home": "Home",
+  "@libPagesHomeHomePage_home": {
+    "description": "Home Page"
+  },
+  "libPagesHomeHomePage_myNetwork": "My Network",
+  "@libPagesHomeHomePage_myNetwork": {
+    "description": "Home Page"
+  },
+  "libPagesHomeHomePage_menu": "Menu",
+  "@libPagesHomeHomePage_menu": {
+    "description": "Home Page"
+  },
+  "libPagesHomeHomePage_notifications": "Notifications",
+  "@libPagesHomeHomePage_notifications": {
+    "description": "Home Page"
+  },
+  "libPagesHomeHomePage_messages": "Messages",
+  "@libPagesHomeHomePage_messages": {
+    "description": "Home Page"
+  },
+
+
+  "libPagesQuestionQuestionPage_questionPage": "Question Page",
+  "@libPagesQuestionQuestionPage_questionPage": {
+    "description": "Question Page"
+  },
+
+  "libPagesQuestionQuestionPage_question": "Question",
+  "@libPagesQuestionQuestionPage_question": {
+    "description": "Question"
+  },
+
+  "libPagesQuestionQuestionPage_back": "Back",
+  "@libPagesQuestionQuestionPage_back": {
+    "description": "Back"
+  },
+
+
+
+
+
+
+
   "changeLanguage": "Change Language",
   "@changeLanguage": {
-    "description": "Changes the language of the educational platform."
+    "description": "Changes the language of the Education Platform."
   },
   "drawerTitle": "Menu",
   "@drawerTitle": {
-    "description": "The left side menu of the educational platform."
+    "description": "Left-side drawer menu panel of the Education Platform."
   },
   "message_showMessage_iconText": "General",
   "@message_showMessage_iconText": {
     "description": "Icon text for the message panel."
   },
-  "message_showInformationalMessage_iconText": "Information",
-  "@message_showInformationalMessage_iconText": {
-    "description": "Icon text for the informational message panel."
-  },
-  "message_showWarningMessage_iconText": "Warning",
-  "@message_showWarningMessage_iconText": {
-    "description": "Icon text for the warning message panel."
-  },
-  "message_showConfirmationMessage_iconText": "Confirmation",
-  "@message_showConfirmationMessage_iconText": {
-    "description": "Icon text for the confirmation message panel."
-  },
-  "message_showRequestMessage_iconText": "Request",
-  "@message_showRequestMessage_iconText": {
-    "description": "Icon text for the request message panel."
-  },
-  "message_showErrorMessage_iconText": "Error",
-  "@message_showErrorMessage_iconText": {
-    "description": "Icon text for the error message panel."
-  },
   "homePage": "Home Page",
   "@homePage": {
-    "description": "Main page"
+    "description": "Home Page"
   },
-  "changeEnhanceStepperType": "Change Enhance Stepper Type",
+  "changeEnhanceStepperType": "Change Stepper Type",
   "@changeEnhanceStepperType": {
-    "description": "Button to change the enhance stepper type"
+    "description": "Button that changes the stepper type."
   },
-  "changeEnhanceStepperDirection": "Change Enhance Stepper Direction",
+  "changeEnhanceStepperDirection": "Change Stepper Direction",
   "@changeEnhanceStepperDirection": {
-    "description": "Button to change the enhance stepper direction"
+    "description": "Button that changes the stepper direction."
   }
 }

@@ -1,4 +1,4 @@
-import 'package:egitimax/models/language/localeModel.dart';
+import 'package:egitimax/utils/helper/localeManager.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +34,7 @@ class Message {
     bool scrollable = false,
   }) {
     var lang = AppLocalizations.of(context)!;
-    final localeModel = Provider.of<LocaleModel>(context, listen: false);
+    final localeManager = Provider.of<LocaleManager>(context, listen: false);
     var theme = Theme.of(context);
 
     return showDialog<String>(
@@ -49,7 +49,7 @@ class Message {
                     color: Colors.black,
                   ),
                   const SizedBox(width: 5.0),
-                  Text(lang.message_showMessage_iconText),
+                  Text(lang.libUtilsWidgetMessage_general),
                 ],
               ),
           iconPadding: iconPadding,
@@ -123,7 +123,7 @@ class Message {
   }) {
 
     var lang = AppLocalizations.of(context)!;
-    final localeModel = Provider.of<LocaleModel>(context, listen: false);
+    final localeModel = Provider.of<LocaleManager>(context, listen: false);
     var theme = Theme.of(context);
 
     return showDialog<String>(
@@ -138,7 +138,7 @@ class Message {
                     color: Colors.blue,
                   ),
                   const SizedBox(width: 5.0),
-                  Text(lang.message_showInformationalMessage_iconText),
+                  Text(lang.libUtilsWidgetMessage_information),
                 ],
               ),
           iconPadding: iconPadding,
@@ -211,7 +211,7 @@ class Message {
     bool scrollable = false,
   }) {
     var lang = AppLocalizations.of(context)!;
-    final localeModel = Provider.of<LocaleModel>(context, listen: false);
+    final localeModel = Provider.of<LocaleManager>(context, listen: false);
     var theme = Theme.of(context);
 
     return showDialog<String>(
@@ -226,7 +226,7 @@ class Message {
                     color: Colors.redAccent,
                   ),
                   const SizedBox(width: 5.0),
-                  Text(lang.message_showWarningMessage_iconText),
+                  Text(lang.libUtilsWidgetMessage_warning),
                 ],
               ),
           iconPadding: iconPadding,
@@ -300,7 +300,7 @@ class Message {
   }) {
 
     var lang = AppLocalizations.of(context)!;
-    final localeModel = Provider.of<LocaleModel>(context, listen: false);
+    final localeModel = Provider.of<LocaleManager>(context, listen: false);
     var theme = Theme.of(context);
 
     return showDialog<String>(
@@ -315,7 +315,7 @@ class Message {
                     color: Colors.deepPurpleAccent,
                   ),
                   const SizedBox(width: 5.0),
-                  Text(lang.message_showConfirmationMessage_iconText),
+                  Text(lang.libUtilsWidgetMessage_confirmation),
                 ],
               ),
           iconPadding: iconPadding,
@@ -389,7 +389,7 @@ class Message {
   }) {
 
     var lang = AppLocalizations.of(context)!;
-    final localeModel = Provider.of<LocaleModel>(context, listen: false);
+    final localeModel = Provider.of<LocaleManager>(context, listen: false);
     var theme = Theme.of(context);
 
     return showDialog<String>(
@@ -404,7 +404,7 @@ class Message {
                     color: Colors.amber,
                   ),
                   const SizedBox(width: 5.0),
-                  Text(lang.message_showRequestMessage_iconText),
+                  Text(lang.libUtilsWidgetMessage_request),
                 ],
               ),
           iconPadding: iconPadding,
@@ -478,7 +478,7 @@ class Message {
   }) {
 
     var lang = AppLocalizations.of(context)!;
-    final localeModel = Provider.of<LocaleModel>(context, listen: false);
+    final localeModel = Provider.of<LocaleManager>(context, listen: false);
     var theme = Theme.of(context);
 
     return showDialog<String>(
@@ -493,7 +493,7 @@ class Message {
                     color: Colors.red,
                   ),
                   const SizedBox(width: 5.0),
-                  Text(lang.message_showErrorMessage_iconText),
+                  Text(lang.libUtilsWidgetMessage_error),
                 ],
               ),
           iconPadding: iconPadding,

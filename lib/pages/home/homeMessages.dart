@@ -1,3 +1,4 @@
+import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:flutter/material.dart';
 
 class HomeMessages extends StatefulWidget {
@@ -18,7 +19,18 @@ class _HomeMessagesState extends State<HomeMessages> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    if (AppConstants.homePageDebugPrintActive == 1) {
+    debugPrint("HomeMessages_initState");
+  }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (AppConstants.homePageDebugPrintActive == 1) {
+    debugPrint("HomeMessages_build");
+  }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.background,

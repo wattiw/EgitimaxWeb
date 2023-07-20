@@ -1,15 +1,15 @@
 import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:flutter/material.dart';
 
-class HomeHome extends StatefulWidget {
-  const HomeHome({super.key, required this.title});
+class QuestionQuestion extends StatefulWidget {
+  const QuestionQuestion({super.key, required this.title});
   final String title;
 
   @override
-  State<HomeHome> createState() => _HomeHomeState();
+  State<QuestionQuestion> createState() => _QuestionQuestionState();
 }
 
-class _HomeHomeState extends State<HomeHome> {
+class _QuestionQuestionState extends State<QuestionQuestion> {
   int _counter = 0;
 
   void _incrementCounter() {
@@ -22,15 +22,15 @@ class _HomeHomeState extends State<HomeHome> {
   void initState() {
     super.initState();
     if (AppConstants.homePageDebugPrintActive == 1) {
-    debugPrint("HomeHome_initState");
-  }
+      debugPrint("QuestionQuestion_initState");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     if (AppConstants.homePageDebugPrintActive == 1) {
-    debugPrint("HomeHome_build");
-  }
+      debugPrint("QuestionQuestion_build");
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.background,

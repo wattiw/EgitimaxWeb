@@ -1,0 +1,146 @@
+{
+  "@@locale": "ar",
+  "countryCode": "SA",
+  "countryName": "Arabian (Arabian)",
+  "hello": "مرحبًا {userName}",
+  "@hello": {
+    "description": "رسالة تحتوي على معلمة واحدة",
+    "placeholders": {
+      "userName": {
+        "type": "String",
+        "example": "بوب"
+      }
+    }
+  },
+  "nWombats": "{count, plural, =0{لا يوجد وومبات} =1{وومبات واحد} other{{count} وومبات}}",
+  "@nWombats": {
+    "description": "رسالة تحتوي على حالات متعددة",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "pronoun": "{gender, select, male{ذكر} female{أنثى} other{هم/هن}}",
+  "@pronoun": {
+    "description": "رسالة تعتمد على الجنس",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "egitimax": "إيجيتيماكس",
+  "@egitimax": {
+    "description": "منصة التعليم"
+  },
+  "libUtilsWidgetLayoutPage_back": "رجوع",
+  "@libUtilsWidgetLayoutPage_back": {
+    "description": "زر الافتراضي الذي تم إنشاؤه لشريط التنقل: رجوع"
+  },
+  "libUtilsWidgetMessage_general": "معلومات",
+  "@libUtilsWidgetMessage_general": {
+    "description": "نص رمز اللوحة التنبيهية."
+  },
+  "libUtilsWidgetMessage_information": "معلومات",
+  "@libUtilsWidgetMessage_information": {
+    "description": "نص رمز اللوحة التنبيهية."
+  },
+  "libUtilsWidgetMessage_warning": "تحذير",
+  "@libUtilsWidgetMessage_warning": {
+    "description": "نص رمز اللوحة التنبيهية."
+  },
+  "libUtilsWidgetMessage_confirmation": "تأكيد",
+  "@libUtilsWidgetMessage_confirmation": {
+    "description": "نص رمز اللوحة التنبيهية."
+  },
+  "libUtilsWidgetMessage_request": "طلب",
+  "@libUtilsWidgetMessage_request": {
+    "description": "نص رمز اللوحة التنبيهية."
+  },
+  "libUtilsWidgetMessage_error": "خطأ",
+  "@libUtilsWidgetMessage_error": {
+    "description": "نص رمز اللوحة التنبيهية."
+  },
+  "libUtilsWidgetDeviceInfo_fuchsiaPlatformIsNotSupported": "لا يتم دعم منصة فوشيا",
+  "@libUtilsWidgetDeviceInfo_fuchsiaPlatformIsNotSupported": {
+    "description": "معلومات الجهاز."
+  },
+  "libUtilsWidgetDeviceInfo_failedToGetPlatformVersion": "فشل في الحصول على إصدار المنصة",
+  "@libUtilsWidgetDeviceInfo_failedToGetPlatformVersion": {
+    "description": "معلومات الجهاز."
+  },
+  "libUtilsWidgetDeviceInfo_error": "خطأ",
+  "@libUtilsWidgetDeviceInfo_error": {
+    "description": "معلومات الجهاز."
+  },
+  "libPagesHomeHomePage_home": "الصفحة الرئيسية",
+  "@libPagesHomeHomePage_home": {
+    "description": "الصفحة الرئيسية"
+  },
+  "libPagesHomeHomePage_myNetwork": "شبكتي",
+  "@libPagesHomeHomePage_myNetwork": {
+    "description": "الصفحة الرئيسية"
+  },
+  "libPagesHomeHomePage_menu": "القائمة",
+  "@libPagesHomeHomePage_menu": {
+    "description": "الصفحة الرئيسية"
+  },
+  "libPagesHomeHomePage_notifications": "الإشعارات",
+  "@libPagesHomeHomePage_notifications": {
+    "description": "الصفحة الرئيسية"
+  },
+  "libPagesHomeHomePage_messages": "الرسائل",
+  "@libPagesHomeHomePage_messages": {
+    "description": "الصفحة الرئيسية"
+  },
+
+
+
+  "libPagesQuestionQuestionPage_questionPage": "صفحة الأسئلة",
+  "@libPagesQuestionQuestionPage_questionPage": {
+    "description": "صفحة الأسئلة"
+  },
+
+  "libPagesQuestionQuestionPage_question": "سؤال",
+  "@libPagesQuestionQuestionPage_question": {
+    "description": "سؤال"
+  },
+
+  "libPagesQuestionQuestionPage_back": "الى الخلف",
+  "@libPagesQuestionQuestionPage_back": {
+    "description": "الى الخلف"
+  },
+
+
+
+
+
+
+
+  "changeLanguage": "تغيير اللغة",
+  "@changeLanguage": {
+    "description": "يغير لغة منصة التعليم."
+  },
+  "drawerTitle": "القائمة",
+  "@drawerTitle": {
+    "description": "لوحة القائمة الجانبية اليسرى لمنصة التعليم."
+  },
+  "message_showMessage_iconText": "عام",
+  "@message_showMessage_iconText": {
+    "description": "نص رمز اللوحة التنبيهية."
+  },
+  "homePage": "الصفحة الرئيسية",
+  "@homePage": {
+    "description": "الصفحة الرئيسية"
+  },
+  "changeEnhanceStepperType": "تغيير نوع الخطوة",
+  "@changeEnhanceStepperType": {
+    "description": "زر يغير نوع الخطوة."
+  },
+  "changeEnhanceStepperDirection": "تغيير اتجاه الخطوة",
+  "@changeEnhanceStepperDirection": {
+    "description": "زر يغير اتجاه الخطوة."
+  }
+}

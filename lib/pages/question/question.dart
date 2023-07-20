@@ -7,12 +7,11 @@ import 'package:egitimax/utils/widget/layoutPage.dart';
 import 'package:egitimax/utils/widget/message.dart';
 import 'package:egitimax/utils/widget/radioGroupButtons.dart';
 import 'package:enhance_stepper/enhance_stepper.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:im_stepper/stepper.dart';
 import 'package:provider/provider.dart';
-import 'package:egitimax/models/language/localeModel.dart';
+import 'package:egitimax/utils/helper/localeManager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tuple/tuple.dart';
 
@@ -31,7 +30,7 @@ class _QuestionPageState extends State<QuestionPage> {
   late AppRepository appRepository;
   late ThemeData theme;
   late AppLocalizations lang;
-  late LocaleModel localeModel;
+  late LocaleManager localeManager;
   late List<Tuple6> stepItems;
   late DeviceType deviceType;
 
@@ -45,7 +44,7 @@ class _QuestionPageState extends State<QuestionPage> {
   void initState() {
     super.initState();
     initializePreferences();
-    deviceType = DeviceInfo().getDeviceType();
+    deviceType = DeviceInfo(context).getDeviceType();
     if (deviceType == DeviceType.web) {
       stepperType = StepperType.horizontal;
       isStepperDirectionVertical = false;
@@ -88,7 +87,7 @@ class _QuestionPageState extends State<QuestionPage> {
 
     theme = Theme.of(context);
     lang = AppLocalizations.of(context)!;
-    localeModel = Provider.of<LocaleModel>(context, listen: false);
+    localeManager = Provider.of<LocaleManager>(context, listen: false);
     stepItems = getStepItems();
   }
 
@@ -568,7 +567,7 @@ class _QuestionPageState extends State<QuestionPage> {
   }
 
   Widget getDeviceInfo() {
-    return DeviceInfo().getDeviceInfo();
+    return DeviceInfo(context).getDeviceInfo();
   }
 }
 

@@ -1,17 +1,26 @@
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:egitimax/utils/helper/localeManager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tuple/tuple.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class DeviceInfo {
 
   late DeviceInfoPlugin deviceInfoPlugin;
   late Map<String, dynamic> _deviceData;
+  late ThemeData theme;
+  late AppLocalizations lang;
+  late LocaleManager localeManager;
 
-  DeviceInfo(){
+  DeviceInfo(BuildContext context){
     deviceInfoPlugin = DeviceInfoPlugin();
     _deviceData = <String, dynamic>{};
+    theme = Theme.of(context);
+    lang = AppLocalizations.of(context)!;
+    localeManager = Provider.of<LocaleManager>(context, listen: false);
   }
 
   Future<void> initPlatformState() async {
@@ -33,13 +42,13 @@ class DeviceInfo {
           TargetPlatform.macOS =>
               _readMacOsDeviceInfo(await deviceInfoPlugin.macOsInfo),
           TargetPlatform.fuchsia => <String, dynamic>{
-            'Error:': 'Fuchsia platform isn\'t supported'
+            lang.libUtilsWidgetDeviceInfo_error:lang.libUtilsWidgetDeviceInfo_fuchsiaPlatformIsNotSupported
           },
         };
       }
     } on PlatformException {
       deviceData = <String, dynamic>{
-        'Error:': 'Failed to get platform version.'
+        lang.libUtilsWidgetDeviceInfo_error:lang.libUtilsWidgetDeviceInfo_failedToGetPlatformVersion
       };
     }
 
@@ -211,7 +220,7 @@ class DeviceInfo {
           );
         } else if (snapshot.hasError) {
           return Center(
-            child: Text('${snapshot.error}'),
+            child: Text('${lang.libUtilsWidgetDeviceInfo_error}: ${snapshot.error}'),
           );
         } else if (snapshot.hasData) {
           final deviceData = snapshot.data!.item1;
@@ -308,7 +317,7 @@ class DeviceInfo {
                 );
               } else if (snapshot.hasError) {
                 return Center(
-                  child: Text('Hata: ${snapshot.error}'),
+                  child: Text('${lang.libUtilsWidgetDeviceInfo_error}: ${snapshot.error}'),
                 );
               } else if (snapshot.hasData) {
                 final deviceData = snapshot.data!.item1;
@@ -402,7 +411,7 @@ class DeviceInfo {
             );
           } else if (snapshot.hasError) {
             return Center(
-              child: Text('Hata: ${snapshot.error}'),
+              child: Text('${lang.libUtilsWidgetDeviceInfo_error}: ${snapshot.error}'),
             );
           } else if (snapshot.hasData) {
             final deviceData = snapshot.data!.item1;

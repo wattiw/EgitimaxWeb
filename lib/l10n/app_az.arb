@@ -1,0 +1,153 @@
+{
+  "@@locale": "az",
+  "countryCode": "AZ",
+  "countryName": "Azərbaycan (Azərbaycan)",
+
+  "hello": "Salam {userName}",
+  "@hello": {
+    "description": "Tək parametrli bir mesaj",
+    "placeholders": {
+      "userName": {
+        "type": "String",
+        "example": "Bob"
+      }
+    }
+  },
+  "nWombats": "{count, plural, =0{Heç bir wombat yoxdur} =1{1 wombat} other{{count} wombat}}",
+  "@nWombats": {
+    "description": "Çoxlu mesaj",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "pronoun": "{gender, select, male{kişi} female{qadın} other{onlar}}",
+  "@pronoun": {
+    "description": "Cinsiyətə əsaslanan bir mesaj",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+
+  "egitimax": "Egitimax",
+  "@egitimax": {
+    "description": "Təhsil Platformu"
+  },
+
+  "libUtilsWidgetLayoutPage_back": "Geri",
+  "@libUtilsWidgetLayoutPage_back": {
+    "description": "Default yaradılmış düymə, Navigasiya çubuğu üçün düymə təyin olunmadıysa: Geri"
+  },
+
+  "libUtilsWidgetMessage_general": "Məlumat",
+  "@libUtilsWidgetMessage_general": {
+    "description": "Mesaj panelinin ikon mətni."
+  },
+  "libUtilsWidgetMessage_information": "Məlumat",
+  "@libUtilsWidgetMessage_information": {
+    "description": "Mesaj panelinin ikon mətni."
+  },
+  "libUtilsWidgetMessage_warning": "Xəbərdarlıq",
+  "@libUtilsWidgetMessage_warning": {
+    "description": "Mesaj panelinin ikon mətni."
+  },
+  "libUtilsWidgetMessage_confirmation": "Təsdiq",
+  "@libUtilsWidgetMessage_confirmation": {
+    "description": "Mesaj panelinin ikon mətni."
+  },
+  "libUtilsWidgetMessage_request": "Tələb",
+  "@libUtilsWidgetMessage_request": {
+    "description": "Mesaj panelinin ikon mətni."
+  },
+  "libUtilsWidgetMessage_error": "Səhv",
+  "@libUtilsWidgetMessage_error": {
+    "description": "Mesaj panelinin ikon mətni."
+  },
+
+  "libUtilsWidgetDeviceInfo_fuchsiaPlatformIsNotSupported": "Fuchsia platformu dəstəklənmir",
+  "@libUtilsWidgetDeviceInfo_fuchsiaPlatformIsNotSupported": {
+    "description": "Cihaz məlumatı."
+  },
+  "libUtilsWidgetDeviceInfo_failedToGetPlatformVersion": "Platforma versiyasını almaq mümkün olmadı",
+  "@libUtilsWidgetDeviceInfo_failedToGetPlatformVersion": {
+    "description": "Cihaz məlumatı."
+  },
+  "libUtilsWidgetDeviceInfo_error": "Səhv",
+  "@libUtilsWidgetDeviceInfo_error": {
+    "description": "Cihaz məlumatı."
+  },
+
+  "libPagesHomeHomePage_home": "Əsas Səhifə",
+  "@libPagesHomeHomePage_home": {
+    "description": "Əsas Səhifə"
+  },
+  "libPagesHomeHomePage_myNetwork": "Şəbəkəm",
+  "@libPagesHomeHomePage_myNetwork": {
+    "description": "Əsas Səhifə"
+  },
+  "libPagesHomeHomePage_menu": "Menyu",
+  "@libPagesHomeHomePage_menu": {
+    "description": "Əsas Səhifə"
+  },
+  "libPagesHomeHomePage_notifications": "Bildirişlər",
+  "@libPagesHomeHomePage_notifications": {
+    "description": "Əsas Səhifə"
+  },
+  "libPagesHomeHomePage_messages": "Mesajlar",
+  "@libPagesHomeHomePage_messages": {
+    "description": "Əsas Səhifə"
+  },
+
+
+
+  "libPagesQuestionQuestionPage_questionPage": "Sual Səhifəsi",
+  "@libPagesQuestionQuestionPage_questionPage": {
+    "description": "Sual Səhifəsi"
+  },
+
+  "libPagesQuestionQuestionPage_question": "Sual",
+  "@libPagesQuestionQuestionPage_question": {
+    "description": "Sual"
+  },
+
+  "libPagesQuestionQuestionPage_back": "Geri",
+  "@libPagesQuestionQuestionPage_back": {
+    "description": "Geri"
+  },
+
+
+
+
+
+
+
+  "changeLanguage": "Dili Dəyişdir",
+  "@changeLanguage": {
+    "description": "Təhsil Platformunun dilini dəyişdirir."
+  },
+  "drawerTitle": "Menyu",
+  "@drawerTitle": {
+    "description": "Təhsil Platformunun sol tərəfdə açılan menyu paneli."
+  },
+  "message_showMessage_iconText": "Ümumi",
+  "@message_showMessage_iconText": {
+    "description": "Mesaj panelinin ikon mətni."
+  },
+
+  "homePage": "Əsas Səhifə",
+  "@homePage": {
+    "description": "Əsas Səhifə"
+  },
+  "changeEnhanceStepperType": "Addımlayıcının Tipini Dəyişdir",
+  "@changeEnhanceStepperType": {
+    "description": "Addımlayıcının tipini dəyişdirən düymədir."
+  },
+  "changeEnhanceStepperDirection": "Addımlayıcının İstinadını Dəyişdir",
+  "@changeEnhanceStepperDirection": {
+    "description": "Addımlayıcının istinadını dəyişdirən düymədir."
+  }
+}

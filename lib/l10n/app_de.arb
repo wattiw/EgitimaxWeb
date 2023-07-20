@@ -1,10 +1,10 @@
 {
   "@@locale": "de",
   "countryCode": "DE",
-
+  "countryName": "German (Germany)",
   "hello": "Hallo {userName}",
   "@hello": {
-    "description": "Eine Nachricht mit einem einzelnen Parameter",
+    "description": "Eine Nachricht mit einem Parameter",
     "placeholders": {
       "userName": {
         "type": "String",
@@ -12,9 +12,9 @@
       }
     }
   },
-  "nWombats": "{count, plural, =0{keine Wombats} =1{1 Wombat} other{{count} Wombats}}",
+  "nWombats": "{count, plural, =0{Es gibt keine Wombats} =1{1 Wombat} other{{count} Wombats}}",
   "@nWombats": {
-    "description": "Eine Nachricht im Plural",
+    "description": "Eine Nachricht mit mehreren Fällen",
     "placeholders": {
       "count": {
         "type": "num",
@@ -24,7 +24,7 @@
   },
   "pronoun": "{gender, select, male{er} female{sie} other{sie}}",
   "@pronoun": {
-    "description": "Eine nach Geschlecht differenzierte Nachricht",
+    "description": "Eine Nachricht, die sich auf das Geschlecht bezieht",
     "placeholders": {
       "gender": {
         "type": "String"
@@ -35,52 +35,115 @@
   "@egitimax": {
     "description": "Bildungsplattform"
   },
-  "callServiceTestButton": "API-Test",
-  "@callServiceTestButton": {
-    "description": "Führt einen Web-API-Test durch."
+  "libUtilsWidgetLayoutPage_back": "Zurück",
+  "@libUtilsWidgetLayoutPage_back": {
+    "description": "Standard-Schaltfläche erstellt für die Navigationsleiste: Zurück"
   },
+  "libUtilsWidgetMessage_general": "Information",
+  "@libUtilsWidgetMessage_general": {
+    "description": "Symboltext für das Nachrichtenpanel."
+  },
+  "libUtilsWidgetMessage_information": "Information",
+  "@libUtilsWidgetMessage_information": {
+    "description": "Symboltext für das Nachrichtenpanel."
+  },
+  "libUtilsWidgetMessage_warning": "Warnung",
+  "@libUtilsWidgetMessage_warning": {
+    "description": "Symboltext für das Nachrichtenpanel."
+  },
+  "libUtilsWidgetMessage_confirmation": "Bestätigung",
+  "@libUtilsWidgetMessage_confirmation": {
+    "description": "Symboltext für das Nachrichtenpanel."
+  },
+  "libUtilsWidgetMessage_request": "Anfrage",
+  "@libUtilsWidgetMessage_request": {
+    "description": "Symboltext für das Nachrichtenpanel."
+  },
+  "libUtilsWidgetMessage_error": "Fehler",
+  "@libUtilsWidgetMessage_error": {
+    "description": "Symboltext für das Nachrichtenpanel."
+  },
+  "libUtilsWidgetDeviceInfo_fuchsiaPlatformIsNotSupported": "Die Fuchsia-Plattform wird nicht unterstützt",
+  "@libUtilsWidgetDeviceInfo_fuchsiaPlatformIsNotSupported": {
+    "description": "Geräteinformationen."
+  },
+  "libUtilsWidgetDeviceInfo_failedToGetPlatformVersion": "Fehler beim Abrufen der Plattformversion",
+  "@libUtilsWidgetDeviceInfo_failedToGetPlatformVersion": {
+    "description": "Geräteinformationen."
+  },
+  "libUtilsWidgetDeviceInfo_error": "Fehler",
+  "@libUtilsWidgetDeviceInfo_error": {
+    "description": "Geräteinformationen."
+  },
+  "libPagesHomeHomePage_home": "Startseite",
+  "@libPagesHomeHomePage_home": {
+    "description": "Startseite"
+  },
+  "libPagesHomeHomePage_myNetwork": "Mein Netzwerk",
+  "@libPagesHomeHomePage_myNetwork": {
+    "description": "Startseite"
+  },
+  "libPagesHomeHomePage_menu": "Menü",
+  "@libPagesHomeHomePage_menu": {
+    "description": "Startseite"
+  },
+  "libPagesHomeHomePage_notifications": "Benachrichtigungen",
+  "@libPagesHomeHomePage_notifications": {
+    "description": "Startseite"
+  },
+  "libPagesHomeHomePage_messages": "Nachrichten",
+  "@libPagesHomeHomePage_messages": {
+    "description": "Startseite"
+  },
+
+
+
+
+
+  "libPagesQuestionQuestionPage_questionPage": "Fragen Seite",
+  "@libPagesQuestionQuestionPage_questionPage": {
+    "description": "Fragen Seite"
+  },
+
+  "libPagesQuestionQuestionPage_question": "Frage",
+  "@libPagesQuestionQuestionPage_question": {
+    "description": "Frage"
+  },
+
+  "libPagesQuestionQuestionPage_back": "Zurück",
+  "@libPagesQuestionQuestionPage_back": {
+    "description": "Zurück"
+  },
+
+
+
+
+
+
+
+
   "changeLanguage": "Sprache ändern",
   "@changeLanguage": {
     "description": "Ändert die Sprache der Bildungsplattform."
   },
   "drawerTitle": "Menü",
   "@drawerTitle": {
-    "description": "Das linke Seitenmenü der Bildungsplattform."
+    "description": "Linkes Ausklappmenü der Bildungsplattform."
   },
   "message_showMessage_iconText": "Allgemein",
   "@message_showMessage_iconText": {
-    "description": "Icon-Text für das Nachrichtenfeld."
-  },
-  "message_showInformationalMessage_iconText": "Information",
-  "@message_showInformationalMessage_iconText": {
-    "description": "Icon-Text für das Informationsfeld."
-  },
-  "message_showWarningMessage_iconText": "Warnung",
-  "@message_showWarningMessage_iconText": {
-    "description": "Icon-Text für das Warnungsfeld."
-  },
-  "message_showConfirmationMessage_iconText": "Bestätigung",
-  "@message_showConfirmationMessage_iconText": {
-    "description": "Icon-Text für das Bestätigungsfeld."
-  },
-  "message_showRequestMessage_iconText": "Anfrage",
-  "@message_showRequestMessage_iconText": {
-    "description": "Icon-Text für das Anfragefeld."
-  },
-  "message_showErrorMessage_iconText": "Fehler",
-  "@message_showErrorMessage_iconText": {
-    "description": "Icon-Text für das Fehlerfeld."
+    "description": "Symboltext für das Nachrichtenpanel."
   },
   "homePage": "Startseite",
   "@homePage": {
-    "description": "Hauptseite"
+    "description": "Startseite"
   },
-  "changeEnhanceStepperType": "Ändere den Schritttyp",
+  "changeEnhanceStepperType": "Steppertyp ändern",
   "@changeEnhanceStepperType": {
-    "description": "Button, um den Schritttyp zu ändern"
+    "description": "Schaltfläche, die den Steppertyp ändert."
   },
-  "changeEnhanceStepperDirection": "Ändere die Schrittrichtung",
+  "changeEnhanceStepperDirection": "Stepperrichtung ändern",
   "@changeEnhanceStepperDirection": {
-    "description": "Button, um die Schrittrichtung zu ändern"
+    "description": "Schaltfläche, die die Stepperrichtung ändert."
   }
 }

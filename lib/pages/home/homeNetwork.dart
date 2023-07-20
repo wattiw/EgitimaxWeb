@@ -1,3 +1,4 @@
+import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:flutter/material.dart';
 
 class HomeNetwork extends StatefulWidget {
@@ -18,7 +19,18 @@ class _HomeNetworkState extends State<HomeNetwork> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    if (AppConstants.homePageDebugPrintActive == 1) {
+      debugPrint("HomeNetwork_initState");
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (AppConstants.homePageDebugPrintActive == 1) {
+      debugPrint("HomeNetwork_build");
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.background,

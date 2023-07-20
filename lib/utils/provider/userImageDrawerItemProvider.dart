@@ -1,5 +1,5 @@
 import 'package:country_flags/country_flags.dart';
-import 'package:egitimax/models/language/localeModel.dart';
+import 'package:egitimax/utils/helper/localeManager.dart';
 import 'package:egitimax/utils/provider/createDummyImage.dart';
 import 'package:egitimax/utils/widget/deviceInfo.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +10,13 @@ class UserImageDrawerItemProvider {
   UserImageDrawerItemProvider(BuildContext context) {
     theme = Theme.of(context);
     lang = AppLocalizations.of(context)!;
-    localeModel = Provider.of<LocaleModel>(context, listen: false);
-    deviceType = DeviceInfo().getDeviceType();
+    localeManager = Provider.of<LocaleManager>(context, listen: false);
+    deviceType = DeviceInfo(context).getDeviceType();
   }
 
   late ThemeData theme;
   late AppLocalizations lang;
-  late LocaleModel localeModel;
+  late LocaleManager localeManager;
   late DeviceType deviceType;
 
   List<ListTile> getUserImageDrawerItems() {
@@ -25,9 +25,9 @@ class UserImageDrawerItemProvider {
     // Fetch data from the repository
     List<ListTile> data = [
        ListTile(
-        leading:   CountryFlag.fromCountryCode(
-          localeModel.getCountryCodeFromLanguageCode(
-              localeModel.locale.languageCode),
+        leading: CountryFlag.fromCountryCode(
+          localeManager.getCountryCodeFromLanguageCode(
+              localeManager.locale.languageCode),
           height: kToolbarHeight / 2,
           width: kToolbarHeight / 2,
           borderRadius: 5,
@@ -37,10 +37,10 @@ class UserImageDrawerItemProvider {
           child: PopupMenuButton<Locale>(
             icon: Center(
               widthFactor: double.infinity,
-              child:Text(localeModel.locale.languageCode.toUpperCase()),
+              child:  Text(localeManager.getCountryNameFromLanguageCode(localeManager.locale.languageCode)),
             ),
             onSelected: (Locale selectedLocale) {
-              localeModel.changeLocale(selectedLocale);
+              localeManager.changeLocale(selectedLocale);
             },
             itemBuilder: (BuildContext context) {
               return AppLocalizations.supportedLocales.map((Locale locale) {
@@ -50,7 +50,7 @@ class UserImageDrawerItemProvider {
                     children: [
                       Center(
                         child: CountryFlag.fromCountryCode(
-                          localeModel.getCountryCodeFromLanguageCode(
+                          localeManager.getCountryCodeFromLanguageCode(
                               locale.languageCode) ??
                               locale.languageCode,
                           height: kToolbarHeight / 2,
@@ -59,7 +59,7 @@ class UserImageDrawerItemProvider {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      Text(locale.languageCode.toUpperCase()),
+                      Text(localeManager.getCountryNameFromLanguageCode(locale.languageCode)),
                     ],
                   ),
                 );

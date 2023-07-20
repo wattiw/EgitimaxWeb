@@ -1,7 +1,7 @@
 {
   "@@locale": "tr",
   "countryCode": "TR",
-
+  "countryName": "Turkish (Turkey)",
   "hello": "Merhaba {userName}",
   "@hello": {
     "description": "Tek parametreli bir mesaj",
@@ -12,9 +12,9 @@
       }
     }
   },
-  "nWombats": "{count, plural, =0{hiç wombat yok} =1{1 wombat} other{{count} wombat}}",
+  "nWombats": "{count, plural, =0{Hiç bir wombat yok} =1{1 wombat} other{{count} wombat}}",
   "@nWombats": {
-    "description": "Çoğul mesaj",
+    "description": "Çoklu mesaj",
     "placeholders": {
       "count": {
         "type": "num",
@@ -35,52 +35,111 @@
   "@egitimax": {
     "description": "Eğitim Platformu"
   },
-  "callServiceTestButton": "Api Test",
-  "@callServiceTestButton": {
-    "description": "Web api test işlemi yapar."
+  "libUtilsWidgetLayoutPage_back": "Geri",
+  "@libUtilsWidgetLayoutPage_back": {
+    "description": "Varsayılan olarak oluşturulmuş Geri düğmesi, Navigasyon çubuğu için düğme belirtilmediğinde: Geri"
   },
-  "changeLanguage": "Dil Değiştir",
+  "libUtilsWidgetMessage_general": "Bilgi",
+  "@libUtilsWidgetMessage_general": {
+    "description": "Mesaj paneli simge metni."
+  },
+  "libUtilsWidgetMessage_information": "Bilgi",
+  "@libUtilsWidgetMessage_information": {
+    "description": "Mesaj paneli simge metni."
+  },
+  "libUtilsWidgetMessage_warning": "Uyarı",
+  "@libUtilsWidgetMessage_warning": {
+    "description": "Mesaj paneli simge metni."
+  },
+  "libUtilsWidgetMessage_confirmation": "Onay",
+  "@libUtilsWidgetMessage_confirmation": {
+    "description": "Mesaj paneli simge metni."
+  },
+  "libUtilsWidgetMessage_request": "İstek",
+  "@libUtilsWidgetMessage_request": {
+    "description": "Mesaj paneli simge metni."
+  },
+  "libUtilsWidgetMessage_error": "Hata",
+  "@libUtilsWidgetMessage_error": {
+    "description": "Mesaj paneli simge metni."
+  },
+  "libUtilsWidgetDeviceInfo_fuchsiaPlatformIsNotSupported": "Fuchsia platformu desteklenmiyor",
+  "@libUtilsWidgetDeviceInfo_fuchsiaPlatformIsNotSupported": {
+    "description": "Cihaz bilgisi."
+  },
+  "libUtilsWidgetDeviceInfo_failedToGetPlatformVersion": "Platform sürümü alınamadı",
+  "@libUtilsWidgetDeviceInfo_failedToGetPlatformVersion": {
+    "description": "Cihaz bilgisi."
+  },
+  "libUtilsWidgetDeviceInfo_error": "Hata",
+  "@libUtilsWidgetDeviceInfo_error": {
+    "description": "Cihaz bilgisi."
+  },
+  "libPagesHomeHomePage_home": "Ana Sayfa",
+  "@libPagesHomeHomePage_home": {
+    "description": "Ana Sayfa"
+  },
+  "libPagesHomeHomePage_myNetwork": "Ağım",
+  "@libPagesHomeHomePage_myNetwork": {
+    "description": "Ana Sayfa"
+  },
+  "libPagesHomeHomePage_menu": "Menü",
+  "@libPagesHomeHomePage_menu": {
+    "description": "Ana Sayfa"
+  },
+  "libPagesHomeHomePage_notifications": "Bildirimler",
+  "@libPagesHomeHomePage_notifications": {
+    "description": "Ana Sayfa"
+  },
+  "libPagesHomeHomePage_messages": "Mesajlar",
+  "@libPagesHomeHomePage_messages": {
+    "description": "Ana Sayfa"
+  },
+
+
+
+
+
+  "libPagesQuestionQuestionPage_questionPage": "Soru Sayfası",
+  "@libPagesQuestionQuestionPage_questionPage": {
+    "description": "Soru Sayfası"
+  },
+
+  "libPagesQuestionQuestionPage_question": "Soru",
+  "@libPagesQuestionQuestionPage_question": {
+    "description": "Soru Sayfası"
+  },
+
+  "libPagesQuestionQuestionPage_back": "Geri",
+  "@libPagesQuestionQuestionPage_back": {
+    "description": "Soru Sayfası"
+  },
+
+
+
+
+  "changeLanguage": "Dili Değiştir",
   "@changeLanguage": {
-    "description": "Eğitim Platformu dilini değiştirir."
+    "description": "Eğitim Platformunun dilini değiştirir."
   },
   "drawerTitle": "Menü",
   "@drawerTitle": {
-    "description": "Eğitim Platformu sol taraf açılan menüdür."
+    "description": "Eğitim Platformunun sol taraftan açılan menü paneli."
   },
   "message_showMessage_iconText": "Genel",
   "@message_showMessage_iconText": {
-    "description": "Mesaj panosu iconu metnidir."
-  },
-  "message_showInformationalMessage_iconText": "Bilgi",
-  "@message_showInformationalMessage_iconText": {
-    "description": "Mesaj panosu iconu metnidir."
-  },
-  "message_showWarningMessage_iconText": "Uyarı",
-  "@message_showWarningMessage_iconText": {
-    "description": "Mesaj panosu iconu metnidir."
-  },
-  "message_showConfirmationMessage_iconText": "Onay",
-  "@message_showConfirmationMessage_iconText": {
-    "description": "Mesaj panosu iconu metnidir."
-  },
-  "message_showRequestMessage_iconText": "Talep",
-  "@message_showRequestMessage_iconText": {
-    "description": "Mesaj panosu iconu metnidir."
-  },
-  "message_showErrorMessage_iconText": "Hata",
-  "@message_showErrorMessage_iconText": {
-    "description": "Mesaj panosu iconu metnidir."
+    "description": "Mesaj paneli simge metni."
   },
   "homePage": "Ana Sayfa",
   "@homePage": {
     "description": "Ana Sayfa"
   },
-  "changeEnhanceStepperType": "Adımcı Tipini Değiştir",
+  "changeEnhanceStepperType": "Adım Sayısının Türünü Değiştir",
   "@changeEnhanceStepperType": {
-    "description": "Adımcı Tipini değiştir buttonudur."
+    "description": "Adım sayısının türünü değiştiren düğmedir."
   },
-  "changeEnhanceStepperDirection": "Adımcı Yönünü Değiştir",
+  "changeEnhanceStepperDirection": "Adım Sayısının Yönünü Değiştir",
   "@changeEnhanceStepperDirection": {
-    "description": "Adımcı Yönünü değiştir buttonudur."
+    "description": "Adım sayısının yönünü değiştiren düğmedir."
   }
 }

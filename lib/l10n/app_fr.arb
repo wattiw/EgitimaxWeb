@@ -1,7 +1,7 @@
 {
   "@@locale": "fr",
   "countryCode": "FR",
-
+  "countryName": "French (France)",
   "hello": "Bonjour {userName}",
   "@hello": {
     "description": "Un message avec un seul paramètre",
@@ -12,9 +12,9 @@
       }
     }
   },
-  "nWombats": "{count, plural, =0{aucun wombat} =1{1 wombat} other{{count} wombats}}",
+  "nWombats": "{count, plural, =0{Il n'y a pas de wombats} =1{1 wombat} other{{count} wombats}}",
   "@nWombats": {
-    "description": "Un message au pluriel",
+    "description": "Un message avec plusieurs cas",
     "placeholders": {
       "count": {
         "type": "num",
@@ -24,7 +24,7 @@
   },
   "pronoun": "{gender, select, male{il} female{elle} other{ils/elles}}",
   "@pronoun": {
-    "description": "Un message avec genre",
+    "description": "Un message basé sur le genre",
     "placeholders": {
       "gender": {
         "type": "String"
@@ -33,54 +33,111 @@
   },
   "egitimax": "Egitimax",
   "@egitimax": {
-    "description": "Plateforme éducative"
+    "description": "Plateforme d'éducation"
   },
-  "callServiceTestButton": "Test d'API",
-  "@callServiceTestButton": {
-    "description": "Effectue un test d'API Web."
+  "libUtilsWidgetLayoutPage_back": "Retour",
+  "@libUtilsWidgetLayoutPage_back": {
+    "description": "Bouton par défaut créé pour la barre de navigation : Retour"
   },
-  "changeLanguage": "Changer la langue",
+  "libUtilsWidgetMessage_general": "Information",
+  "@libUtilsWidgetMessage_general": {
+    "description": "Texte de l'icône du panneau de message."
+  },
+  "libUtilsWidgetMessage_information": "Information",
+  "@libUtilsWidgetMessage_information": {
+    "description": "Texte de l'icône du panneau de message."
+  },
+  "libUtilsWidgetMessage_warning": "Avertissement",
+  "@libUtilsWidgetMessage_warning": {
+    "description": "Texte de l'icône du panneau de message."
+  },
+  "libUtilsWidgetMessage_confirmation": "Confirmation",
+  "@libUtilsWidgetMessage_confirmation": {
+    "description": "Texte de l'icône du panneau de message."
+  },
+  "libUtilsWidgetMessage_request": "Demande",
+  "@libUtilsWidgetMessage_request": {
+    "description": "Texte de l'icône du panneau de message."
+  },
+  "libUtilsWidgetMessage_error": "Erreur",
+  "@libUtilsWidgetMessage_error": {
+    "description": "Texte de l'icône du panneau de message."
+  },
+  "libUtilsWidgetDeviceInfo_fuchsiaPlatformIsNotSupported": "La plateforme Fuchsia n'est pas prise en charge",
+  "@libUtilsWidgetDeviceInfo_fuchsiaPlatformIsNotSupported": {
+    "description": "Informations sur l'appareil."
+  },
+  "libUtilsWidgetDeviceInfo_failedToGetPlatformVersion": "Impossible d'obtenir la version de la plateforme",
+  "@libUtilsWidgetDeviceInfo_failedToGetPlatformVersion": {
+    "description": "Informations sur l'appareil."
+  },
+  "libUtilsWidgetDeviceInfo_error": "Erreur",
+  "@libUtilsWidgetDeviceInfo_error": {
+    "description": "Informations sur l'appareil."
+  },
+  "libPagesHomeHomePage_home": "Accueil",
+  "@libPagesHomeHomePage_home": {
+    "description": "Page d'accueil"
+  },
+  "libPagesHomeHomePage_myNetwork": "Mon réseau",
+  "@libPagesHomeHomePage_myNetwork": {
+    "description": "Page d'accueil"
+  },
+  "libPagesHomeHomePage_menu": "Menu",
+  "@libPagesHomeHomePage_menu": {
+    "description": "Page d'accueil"
+  },
+  "libPagesHomeHomePage_notifications": "Notifications",
+  "@libPagesHomeHomePage_notifications": {
+    "description": "Page d'accueil"
+  },
+  "libPagesHomeHomePage_messages": "Messages",
+  "@libPagesHomeHomePage_messages": {
+    "description": "Page d'accueil"
+  },
+
+  "libPagesQuestionQuestionPage_questionPage": "Page des questions",
+  "@libPagesQuestionQuestionPage_questionPage": {
+    "description": "Page des questions"
+  },
+
+  "libPagesQuestionQuestionPage_question": "Question",
+  "@libPagesQuestionQuestionPage_question": {
+    "description": "Question"
+  },
+
+  "libPagesQuestionQuestionPage_back": "Retour",
+  "@libPagesQuestionQuestionPage_back": {
+    "description": "Retour"
+  },
+
+
+
+
+
+
+  "changeLanguage": "Changer de langue",
   "@changeLanguage": {
-    "description": "Change la langue de la plateforme éducative."
+    "description": "Change la langue de la plateforme d'éducation."
   },
   "drawerTitle": "Menu",
   "@drawerTitle": {
-    "description": "Le menu latéral gauche de la plateforme éducative."
+    "description": "Panneau de menu déroulant de gauche de la plateforme d'éducation."
   },
   "message_showMessage_iconText": "Général",
   "@message_showMessage_iconText": {
-    "description": "Texte de l'icône pour le panneau de message."
-  },
-  "message_showInformationalMessage_iconText": "Information",
-  "@message_showInformationalMessage_iconText": {
-    "description": "Texte de l'icône pour le panneau d'information."
-  },
-  "message_showWarningMessage_iconText": "Avertissement",
-  "@message_showWarningMessage_iconText": {
-    "description": "Texte de l'icône pour le panneau d'avertissement."
-  },
-  "message_showConfirmationMessage_iconText": "Confirmation",
-  "@message_showConfirmationMessage_iconText": {
-    "description": "Texte de l'icône pour le panneau de confirmation."
-  },
-  "message_showRequestMessage_iconText": "Demande",
-  "@message_showRequestMessage_iconText": {
-    "description": "Texte de l'icône pour le panneau de demande."
-  },
-  "message_showErrorMessage_iconText": "Erreur",
-  "@message_showErrorMessage_iconText": {
-    "description": "Texte de l'icône pour le panneau d'erreur."
+    "description": "Texte de l'icône du panneau de message."
   },
   "homePage": "Page d'accueil",
   "@homePage": {
-    "description": "Page principale"
+    "description": "Page d'accueil"
   },
-  "changeEnhanceStepperType": "Changer le type de l'indicateur de progression",
+  "changeEnhanceStepperType": "Changer le type de pas",
   "@changeEnhanceStepperType": {
-    "description": "Bouton pour changer le type de l'indicateur de progression"
+    "description": "Bouton qui change le type de pas."
   },
-  "changeEnhanceStepperDirection": "Changer la direction de l'indicateur de progression",
+  "changeEnhanceStepperDirection": "Changer la direction du pas",
   "@changeEnhanceStepperDirection": {
-    "description": "Bouton pour changer la direction de l'indicateur de progression"
+    "description": "Bouton qui change la direction du pas."
   }
 }
