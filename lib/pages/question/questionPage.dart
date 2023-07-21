@@ -92,7 +92,7 @@ class _QuestionPageState extends State<QuestionPage> {
           return Align(
             alignment: Alignment.centerRight,
             child: IconButton(
-              icon: const Icon(Icons.menu),
+              icon:  Icon(Icons.menu,size:theme.iconTheme.size),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
@@ -117,12 +117,12 @@ class _QuestionPageState extends State<QuestionPage> {
         child: Column(
           children: [
             ListTile(
-              leading: Icon(Icons.home),
+              leading: Icon(Icons.home,size:theme.iconTheme.size),
               title: Text("Soru Page",style: theme.textTheme.titleMedium,),
               subtitle: Text("Subtitle menu 1",style: theme.textTheme.titleSmall,),
             ),
             ListTile(
-              leading: Icon(Icons.search),
+              leading: Icon(Icons.search,size:theme.iconTheme.size),
               title: Text("Test Page",style: theme.textTheme.titleMedium,),
               subtitle: Text("Subtitle menu 1",style: theme.textTheme.titleSmall,),
             ),

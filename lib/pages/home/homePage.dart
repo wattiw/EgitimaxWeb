@@ -59,7 +59,10 @@ class _HomePageState extends State<HomePage> {
       endDrawerScaffold: endDrawerScaffold,
       tapPageItemsConvexAppBar: tapPageItemsConvexAppBar,
       itemsConvexAppBar: itemsConvexAppBar,
-      titleAppBar: Text(lang.libPagesHomeHomePage_home,style: theme.textTheme.titleMedium,),
+      titleAppBar: Text(
+        lang.libPagesHomeHomePage_home,
+        style: theme.textTheme.titleMedium,
+      ),
       centerTitleAppBar: true,
       onTapConvexAppBar: (index) {
         debugPrint('Selected Index : $index');
@@ -93,7 +96,7 @@ class _HomePageState extends State<HomePage> {
           return Align(
             alignment: Alignment.centerRight,
             child: IconButton(
-              icon: const Icon(Icons.menu),
+              icon: Icon(Icons.menu, size: theme.iconTheme.size),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
@@ -112,20 +115,32 @@ class _HomePageState extends State<HomePage> {
   }
 
   Drawer getDrawerScaffold() {
-    var endDrawerScaffold =  Drawer(
+    var endDrawerScaffold = Drawer(
       //drawer navigation on scaffold
       child: SafeArea(
         child: Column(
           children: [
             ListTile(
-              leading: Icon(Icons.home),
-              title: Text("Home Page",style: theme.textTheme.titleMedium,),
-              subtitle: Text("Subtitle menu 1",style: theme.textTheme.titleSmall,),
+              leading: Icon(Icons.home, size: theme.iconTheme.size),
+              title: Text(
+                "Home Page",
+                style: theme.textTheme.titleMedium,
+              ),
+              subtitle: Text(
+                "Subtitle menu 1",
+                style: theme.textTheme.titleSmall,
+              ),
             ),
             ListTile(
-              leading: Icon(Icons.search),
-              title: Text("Search Page",style: theme.textTheme.titleMedium,),
-              subtitle: Text("Subtitle menu 1",style: theme.textTheme.titleSmall,),
+              leading: Icon(Icons.search, size: theme.iconTheme.size),
+              title: Text(
+                "Search Page",
+                style: theme.textTheme.titleMedium,
+              ),
+              subtitle: Text(
+                "Subtitle menu 1",
+                style: theme.textTheme.titleSmall,
+              ),
             ),
 
             //put more menu items here
@@ -136,34 +151,69 @@ class _HomePageState extends State<HomePage> {
     return endDrawerScaffold;
   }
 
-
   List<TabItem<IconData>> getItemsConvexAppBar() {
     var itemsConvexAppBar = [
-       TabItem(icon: Icons.home, title: lang.libPagesHomeHomePage_home),
-       TabItem(icon: Icons.connect_without_contact_rounded, title: lang.libPagesHomeHomePage_myNetwork),
-       TabItem(icon: Icons.menu, title: lang.libPagesHomeHomePage_menu),
-       TabItem(icon: Icons.notification_add_outlined, title: lang.libPagesHomeHomePage_notifications),
-       TabItem(icon: Icons.message_outlined, title: lang.libPagesHomeHomePage_messages),
+      TabItem(icon: Icons.home, title: lang.libPagesHomeHomePage_home),
+      TabItem(
+          icon: Icons.connect_without_contact_rounded,
+          title: lang.libPagesHomeHomePage_myNetwork),
+      TabItem(icon: Icons.menu, title: lang.libPagesHomeHomePage_menu),
+      TabItem(
+          icon: Icons.notification_add_outlined,
+          title: lang.libPagesHomeHomePage_notifications),
+      TabItem(
+          icon: Icons.message_outlined,
+          title: lang.libPagesHomeHomePage_messages),
     ];
     return itemsConvexAppBar;
   }
 
   List<Widget> getTapPageItemsConvexAppBar() {
     var tapPageItemsConvexAppBar = <Widget>[
-       HomeHome(
+      HomeHome(
         title: lang.libPagesHomeHomePage_home,
+        routeManager: routeManager,
+        appRepository: appRepository,
+        theme: theme,
+        lang: lang,
+        localeManager: localeManager,
+        deviceType: deviceType,
       ),
-       HomeNetwork(
+      HomeNetwork(
         title: lang.libPagesHomeHomePage_myNetwork,
+        routeManager: routeManager,
+        appRepository: appRepository,
+        theme: theme,
+        lang: lang,
+        localeManager: localeManager,
+        deviceType: deviceType,
       ),
-       HomeMenu(
+      HomeMenu(
         title: lang.libPagesHomeHomePage_menu,
+        routeManager: routeManager,
+        appRepository: appRepository,
+        theme: theme,
+        lang: lang,
+        localeManager: localeManager,
+        deviceType: deviceType,
       ),
-       HomeNotifications(
-        title:  lang.libPagesHomeHomePage_notifications,
+      HomeNotifications(
+        title: lang.libPagesHomeHomePage_notifications,
+        routeManager: routeManager,
+        appRepository: appRepository,
+        theme: theme,
+        lang: lang,
+        localeManager: localeManager,
+        deviceType: deviceType,
       ),
-       HomeMessages(
+      HomeMessages(
         title: lang.libPagesHomeHomePage_messages,
+        routeManager: routeManager,
+        appRepository: appRepository,
+        theme: theme,
+        lang: lang,
+        localeManager: localeManager,
+        deviceType: deviceType,
       ),
     ];
     return tapPageItemsConvexAppBar;

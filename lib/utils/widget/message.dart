@@ -44,9 +44,10 @@ class Message {
           icon: icon ??
                Row(
                 children: [
-                  const Icon(
+                   Icon(
                     Icons.info,
                     color: Colors.black,
+                      size:theme.iconTheme.size
                   ),
                   const SizedBox(width: 5.0),
                   Text(lang.libUtilsWidgetMessage_general,style:theme.textTheme.titleMedium,),
@@ -64,11 +65,11 @@ class Message {
               [
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'Cancel'),
-                  child: const Icon(Icons.cancel_outlined),
+                  child:  Icon(Icons.cancel_outlined ,size:theme.iconTheme.size),
                 ),
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'OK'),
-                  child: const Icon(Icons.check_circle_outline),
+                  child:  Icon(Icons.check_circle_outline,size:theme.iconTheme.size),
                 ),
               ],
           actionsPadding: actionsPadding,
@@ -133,9 +134,9 @@ class Message {
           icon: icon ??
                Row(
                 children: [
-                  const Icon(
+                   Icon(
                     Icons.info,
-                    color: Colors.blue,
+                    color: Colors.blue,size:theme.iconTheme.size
                   ),
                   const SizedBox(width: 5.0),
                   Text(lang.libUtilsWidgetMessage_information,style:theme.textTheme.titleMedium,),
@@ -153,11 +154,11 @@ class Message {
               [
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'Cancel'),
-                  child: const Icon(Icons.cancel_outlined),
+                  child:  Icon(Icons.cancel_outlined,size:theme.iconTheme.size),
                 ),
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'OK'),
-                  child: const Icon(Icons.check_circle_outline),
+                  child:  Icon(Icons.check_circle_outline,size:theme.iconTheme.size),
                 ),
               ],
           actionsPadding: actionsPadding,
@@ -221,9 +222,9 @@ class Message {
           icon: icon ??
                Row(
                 children: [
-                  const Icon(
+                   Icon(
                     Icons.warning,
-                    color: Colors.redAccent,
+                    color: Colors.redAccent,size:theme.iconTheme.size
                   ),
                   const SizedBox(width: 5.0),
                   Text(lang.libUtilsWidgetMessage_warning,style:theme.textTheme.titleMedium,),
@@ -241,11 +242,11 @@ class Message {
               [
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'Cancel'),
-                  child: const Icon(Icons.cancel_outlined),
+                  child:  Icon(Icons.cancel_outlined,size:theme.iconTheme.size),
                 ),
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'OK'),
-                  child: const Icon(Icons.check_circle_outline),
+                  child:  Icon(Icons.check_circle_outline,size:theme.iconTheme.size),
                 ),
               ],
           actionsPadding: actionsPadding,
@@ -310,9 +311,9 @@ class Message {
           icon: icon ??
                Row(
                 children: [
-                  const Icon(
+                   Icon(
                     Icons.checklist_outlined,
-                    color: Colors.deepPurpleAccent,
+                    color: Colors.deepPurpleAccent,size:theme.iconTheme.size
                   ),
                   const SizedBox(width: 5.0),
                   Text(lang.libUtilsWidgetMessage_confirmation,style:theme.textTheme.titleMedium,),
@@ -330,11 +331,11 @@ class Message {
               [
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'Cancel'),
-                  child: const Icon(Icons.cancel_outlined),
+                  child:  Icon(Icons.cancel_outlined,size:theme.iconTheme.size),
                 ),
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'OK'),
-                  child: const Icon(Icons.check_circle_outline),
+                  child:  Icon(Icons.check_circle_outline,size:theme.iconTheme.size),
                 ),
               ],
           actionsPadding: actionsPadding,
@@ -399,9 +400,9 @@ class Message {
           icon: icon ??
                Row(
                 children: [
-                  const Icon(
+                   Icon(
                     Icons.task,
-                    color: Colors.amber,
+                    color: Colors.amber,size:theme.iconTheme.size
                   ),
                   const SizedBox(width: 5.0),
                   Text(lang.libUtilsWidgetMessage_request,style:theme.textTheme.titleMedium,),
@@ -419,11 +420,11 @@ class Message {
               [
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'Cancel'),
-                  child: const Icon(Icons.cancel_outlined),
+                  child:  Icon(Icons.cancel_outlined,size:theme.iconTheme.size),
                 ),
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'OK'),
-                  child: const Icon(Icons.check_circle_outline),
+                  child:  Icon(Icons.check_circle_outline,size:theme.iconTheme.size),
                 ),
               ],
           actionsPadding: actionsPadding,
@@ -488,9 +489,9 @@ class Message {
           icon: icon ??
                Row(
                 children: [
-                  const Icon(
+                   Icon(
                     Icons.error_outline,
-                    color: Colors.red,
+                    color: Colors.red,size:theme.iconTheme.size
                   ),
                   const SizedBox(width: 5.0),
                   Text(lang.libUtilsWidgetMessage_error,style:theme.textTheme.titleMedium,),
@@ -508,11 +509,11 @@ class Message {
               [
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'Cancel'),
-                  child: const Icon(Icons.cancel_outlined),
+                  child:  Icon(Icons.cancel_outlined,size:theme.iconTheme.size),
                 ),
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'OK'),
-                  child: const Icon(Icons.check_circle_outline),
+                  child:  Icon(Icons.check_circle_outline,size:theme.iconTheme.size),
                 ),
               ],
           actionsPadding: actionsPadding,

@@ -286,7 +286,7 @@ class DeviceInfo {
                 contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                 leading: CircleAvatar(
                   backgroundColor: Colors.blue,
-                  child: Icon(icon),
+                  child: Icon(icon,size:theme.iconTheme.size),
                 ),
               );
             },
@@ -382,7 +382,7 @@ class DeviceInfo {
                       contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                       leading: CircleAvatar(
                         backgroundColor: Colors.blue,
-                        child: Icon(icon),
+                        child: Icon(icon,size:theme.iconTheme.size),
                       ),
                     );
                   },
@@ -476,7 +476,7 @@ class DeviceInfo {
                   const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   leading: CircleAvatar(
                     backgroundColor: Colors.blue,
-                    child: Icon(icon),
+                    child: Icon(icon,size:theme.iconTheme.size),
                   ),
                 );
               },

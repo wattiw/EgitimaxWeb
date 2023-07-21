@@ -41,6 +41,12 @@ class MyApp extends StatelessWidget {
               bodyMedium: TextStyle(fontSize: 10),
               bodySmall: TextStyle(fontSize: 8),
             ),
+            iconTheme: const IconThemeData(
+              size:20
+            ),
+            buttonTheme: const ButtonThemeData(
+              textTheme: ButtonTextTheme.primary
+            ),
           ),
           initialRoute: '/',
           navigatorKey: routeManager.navigatorKey,
