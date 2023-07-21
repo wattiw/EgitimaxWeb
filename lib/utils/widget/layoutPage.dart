@@ -426,7 +426,7 @@ class _LayoutPageState extends State<LayoutPage> {
       onEndDrawerChanged: widget.onEndDrawerChangedScaffold,
       bottomNavigationBar: widget.bottomNavigationBarScaffold ??
           StyleProvider(
-            style: Style(),
+            style: Style(theme: widget.theme),
             child: ConvexAppBar(
               items: widget.itemsConvexAppBar ?? itemsConvexAppBar!,
               initialActiveIndex: widget.initialActiveIndexConvexAppBar,
@@ -459,7 +459,7 @@ class _LayoutPageState extends State<LayoutPage> {
               shadowColor: widget.shadowColorConvexAppBar ??
                   widget.theme.colorScheme.shadow,
               gradient: widget.gradientConvexAppBar,
-              height: widget.heightConvexAppBar ?? kToolbarHeight,
+              height: widget.heightConvexAppBar ?? kToolbarHeight*AppConstants.convexAppBarHeightConvexAppBar ?? 1,
               curveSize: widget.curveSizeConvexAppBar,
               top: widget.topConvexAppBar,
               elevation: widget.elevationConvexAppBar,
@@ -487,18 +487,21 @@ class _LayoutPageState extends State<LayoutPage> {
 }
 
 class Style extends StyleHook {
+
+  Style({required this.theme});
+  ThemeData theme;
   @override
   double get activeIconSize => AppConstants.convexAppBarStyleActiveIconSize;
 
   @override
-  double get activeIconMargin => AppConstants.convexAppBarStyleActiveIconMargin;
+  double get activeIconMargin =>  AppConstants.convexAppBarStyleActiveIconMargin;
 
   @override
   double get iconSize => AppConstants.convexAppBarStyleIconSize;
 
   @override
   TextStyle textStyle(Color color, String? fontFamily) {
-    return TextStyle(
-        fontSize: AppConstants.convexAppBarStyleFontSize, color: color);
+    return theme.textTheme.titleMedium ?? TextStyle(
+        fontSize:AppConstants.convexAppBarStyleFontSize, color: color);
   }
 }

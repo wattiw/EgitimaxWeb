@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
       endDrawerScaffold: endDrawerScaffold,
       tapPageItemsConvexAppBar: tapPageItemsConvexAppBar,
       itemsConvexAppBar: itemsConvexAppBar,
-      titleAppBar: Text(lang.libPagesHomeHomePage_home),
+      titleAppBar: Text(lang.libPagesHomeHomePage_home,style: theme.textTheme.titleMedium,),
       centerTitleAppBar: true,
       onTapConvexAppBar: (index) {
         debugPrint('Selected Index : $index');
@@ -112,20 +112,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   Drawer getDrawerScaffold() {
-    var endDrawerScaffold = const Drawer(
+    var endDrawerScaffold =  Drawer(
       //drawer navigation on scaffold
       child: SafeArea(
         child: Column(
           children: [
             ListTile(
               leading: Icon(Icons.home),
-              title: Text("Home Page"),
-              subtitle: Text("Subtitle menu 1"),
+              title: Text("Home Page",style: theme.textTheme.titleMedium,),
+              subtitle: Text("Subtitle menu 1",style: theme.textTheme.titleSmall,),
             ),
             ListTile(
               leading: Icon(Icons.search),
-              title: Text("Search Page"),
-              subtitle: Text("Subtitle menu 1"),
+              title: Text("Search Page",style: theme.textTheme.titleMedium,),
+              subtitle: Text("Subtitle menu 1",style: theme.textTheme.titleSmall,),
             ),
 
             //put more menu items here

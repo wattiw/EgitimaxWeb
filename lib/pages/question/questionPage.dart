@@ -55,7 +55,7 @@ class _QuestionPageState extends State<QuestionPage> {
       endDrawerScaffold: endDrawerScaffold,
       tapPageItemsConvexAppBar: tapPageItemsConvexAppBar,
       itemsConvexAppBar: itemsConvexAppBar,
-      titleAppBar: Text(lang.libPagesQuestionQuestionPage_questionPage),
+      titleAppBar: Text(lang.libPagesQuestionQuestionPage_questionPage,style: theme.textTheme.titleMedium,),
       centerTitleAppBar: true,
       onTapConvexAppBar: (index) {
         debugPrint('Selected Index : $index');
@@ -111,20 +111,20 @@ class _QuestionPageState extends State<QuestionPage> {
   }
 
   Drawer getDrawerScaffold() {
-    var endDrawerScaffold = const Drawer(
+    var endDrawerScaffold =  Drawer(
       //drawer navigation on scaffold
       child: SafeArea(
         child: Column(
           children: [
             ListTile(
               leading: Icon(Icons.home),
-              title: Text("Soru Page"),
-              subtitle: Text("Subtitle menu 1"),
+              title: Text("Soru Page",style: theme.textTheme.titleMedium,),
+              subtitle: Text("Subtitle menu 1",style: theme.textTheme.titleSmall,),
             ),
             ListTile(
               leading: Icon(Icons.search),
-              title: Text("Test Page"),
-              subtitle: Text("Subtitle menu 1"),
+              title: Text("Test Page",style: theme.textTheme.titleMedium,),
+              subtitle: Text("Subtitle menu 1",style: theme.textTheme.titleSmall,),
             ),
 
             //put more menu items here

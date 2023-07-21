@@ -220,7 +220,7 @@ class DeviceInfo {
           );
         } else if (snapshot.hasError) {
           return Center(
-            child: Text('${lang.libUtilsWidgetDeviceInfo_error}: ${snapshot.error}'),
+            child: Text('${lang.libUtilsWidgetDeviceInfo_error}: ${snapshot.error}',style: theme.textTheme.bodyMedium,),
           );
         } else if (snapshot.hasData) {
           final deviceData = snapshot.data!.item1;
@@ -266,9 +266,7 @@ class DeviceInfo {
                     Expanded(
                       child: Text(
                         property,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: theme.textTheme.titleMedium,
                       ),
                     ),
                   ],
@@ -281,6 +279,7 @@ class DeviceInfo {
                       value.toString(),
                       maxLines: 10,
                       overflow: TextOverflow.ellipsis,
+                     style: theme.textTheme.bodyMedium,
                     ),
                   ],
                 ),
@@ -317,7 +316,7 @@ class DeviceInfo {
                 );
               } else if (snapshot.hasError) {
                 return Center(
-                  child: Text('${lang.libUtilsWidgetDeviceInfo_error}: ${snapshot.error}'),
+                  child: Text('${lang.libUtilsWidgetDeviceInfo_error}: ${snapshot.error}',style: theme.textTheme.bodyMedium,),
                 );
               } else if (snapshot.hasData) {
                 final deviceData = snapshot.data!.item1;
@@ -363,9 +362,7 @@ class DeviceInfo {
                           Expanded(
                             child: Text(
                               property,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: theme.textTheme.titleMedium,
                             ),
                           ),
                         ],
@@ -378,6 +375,7 @@ class DeviceInfo {
                             value.toString(),
                             maxLines: 10,
                             overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodyMedium,
                           ),
                         ],
                       ),
@@ -411,7 +409,7 @@ class DeviceInfo {
             );
           } else if (snapshot.hasError) {
             return Center(
-              child: Text('${lang.libUtilsWidgetDeviceInfo_error}: ${snapshot.error}'),
+              child: Text('${lang.libUtilsWidgetDeviceInfo_error}: ${snapshot.error}',style: theme.textTheme.bodyMedium,),
             );
           } else if (snapshot.hasData) {
             final deviceData = snapshot.data!.item1;
@@ -457,9 +455,7 @@ class DeviceInfo {
                       Expanded(
                         child: Text(
                           property,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: theme.textTheme.titleMedium,
                         ),
                       ),
                     ],
@@ -472,6 +468,7 @@ class DeviceInfo {
                         value.toString(),
                         maxLines: 10,
                         overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodyMedium,
                       ),
                     ],
                   ),

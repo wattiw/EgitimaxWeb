@@ -47,6 +47,7 @@ class _RadioGroupButtonsState<T> extends State<RadioGroupButtons<T>> {
           title: Text(
             widget.displayText(widget.values[index]), // Use displayText function
             overflow: TextOverflow.ellipsis,
+            style:Theme.of(context).textTheme.titleMedium,
           ),
           leading: Radio<T>(
             value: widget.values[index],

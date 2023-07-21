@@ -37,7 +37,7 @@ class UserImageDrawerItemProvider {
           child: PopupMenuButton<Locale>(
             icon: Center(
               widthFactor: double.infinity,
-              child:  Text(localeManager.getCountryNameFromLanguageCode(localeManager.locale.languageCode)),
+              child:  Text(localeManager.getCountryNameFromLanguageCode(localeManager.locale.languageCode),style: theme.textTheme.bodyMedium,),
             ),
             onSelected: (Locale selectedLocale) {
               localeManager.changeLocale(selectedLocale);
@@ -59,7 +59,7 @@ class UserImageDrawerItemProvider {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      Text(localeManager.getCountryNameFromLanguageCode(locale.languageCode)),
+                      Text(localeManager.getCountryNameFromLanguageCode(locale.languageCode),style: theme.textTheme.bodyMedium,),
                     ],
                   ),
                 );
