@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           onGenerateTitle: (context) => 'Egitimax',
           title: 'Egitimax Platform',
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+            colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromRGBO(55, 91, 145, 1)),
             useMaterial3: true,
             textTheme: const TextTheme(
               titleLarge: TextStyle(fontSize: 12),

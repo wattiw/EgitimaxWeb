@@ -32,7 +32,6 @@ class _QuestionPageState extends State<QuestionPage> {
     if (AppConstants.questionPageDebugPrintActive == 1) {
       debugPrint("QuestionPage_initState");
     }
-    routeManager = RouteManager();
   }
 
   @override
@@ -61,14 +60,14 @@ class _QuestionPageState extends State<QuestionPage> {
         debugPrint('Selected Index : $index');
         if (index == 0) {
           if (selectedPageIndex != index) {
-            routeManager
-                .navigateAndRemoveUntil('/', arguments: {'route': false});
+            routeManager.navigateAndRemoveUntil('/', arguments: {'route': false});
           }
-        } else if (index == 1) {
-        } else {
+        } else if (index == 2) {
           if (Navigator.canPop(context)) {
             routeManager.goBack(context);
           }
+        } else {
+
         }
 
         selectedPageIndex = index;

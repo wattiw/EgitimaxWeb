@@ -12,7 +12,6 @@ class AppRepository {
     for (var jsonItem in jsonDecodeResult) {
       forecasts.add(WeatherForecast.fromJson(jsonItem));
     }
-
     //await Future.delayed(const Duration(seconds: 5));
     return forecasts;
   }

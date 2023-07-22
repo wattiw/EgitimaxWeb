@@ -2,6 +2,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:egitimax/utils/helper/localeManager.dart';
 import 'package:egitimax/pages/home/homePage.dart';
 import 'package:egitimax/utils/constant/appConstants.dart';
+import 'package:egitimax/utils/helper/routeManager.dart';
 import 'package:egitimax/utils/provider/logoImageProvider.dart';
 import 'package:egitimax/utils/provider/userImageDrawerItemProvider.dart';
 import 'package:egitimax/utils/widget/deviceInfo.dart';
@@ -256,10 +257,8 @@ class _LayoutPageState extends State<LayoutPage> {
       builder: (BuildContext context) {
         return GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const HomePage()),
-              );
+              RouteManager().navigateAndRemoveUntil('/', arguments: {'route': false});
+
             },
             child: Opacity(
               opacity: 1,

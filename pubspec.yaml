@@ -80,9 +80,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
    - assets/images/Salih.jpeg
-   - assets/images/egitimax.png
-   - assets/images/egitimaxLogo.png
-   - assets/images/egitimaxOld.png
+   - assets/images/egitimaxLogoNarrow.png
+   - assets/images/egitimaxLogoWide.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

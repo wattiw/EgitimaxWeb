@@ -15,10 +15,10 @@ class AppConstants {
   //lib/utils/widget/layoutPage.dart
   static  int floatingActionButtonAddToExisting = 1;
   static  int appBarActionsAddToExisting = 1;
-  static  String appBarSmallLogoPath= 'https://media.licdn.com/dms/image/D4D0BAQFkB1OOfWU6Bg/company-logo_200_200/0/1665299041364?e=2147483647&v=beta&t=L5eVXqByti-aEzZvoSSvQcYhQ4fzpn1p2EgR-XU_iG8';
-  static  String appBarLargeLogoPath = 'assets/images/egitimaxOld.png';
+  static  String appBarSmallLogoPath= 'assets/images/egitimaxLogoNarrow.png';
+  static  String appBarLargeLogoPath = 'assets/images/egitimaxLogoWide.png';
   static  String appBarUserImagePath = 'assets/images/Salih.jpeg';
-  static  double appBarLogoRatio = 3.9;
+  static  double appBarLogoRatio = 3.176;
   static  double appBarLogoMargin = 3;
   static  double appBarUserImageMargin = 3;
   static  double appBarLogoSizeCorrectionFactor = 0.1;

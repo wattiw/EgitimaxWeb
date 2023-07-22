@@ -36,7 +36,6 @@ class _HomePageState extends State<HomePage> {
     if (AppConstants.homePageDebugPrintActive == 1) {
       debugPrint("HomePage_initState");
     }
-    routeManager = RouteManager();
   }
 
   @override
@@ -71,9 +70,7 @@ class _HomePageState extends State<HomePage> {
             //routeManager.navigateAndRemoveUntil('/',arguments:{'route':false});
           }
         } else {
-          if (Navigator.canPop(context)) {
-            routeManager.goBack(context);
-          }
+
         }
         selectedPageIndex = index;
       },

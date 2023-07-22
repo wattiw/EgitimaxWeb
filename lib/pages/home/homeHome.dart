@@ -311,7 +311,7 @@ class _HomeHomeBody extends State<HomeHomeBody> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const Text(
+          Text(
             'You have pushed the button this many times:',
           ),
           Text(
