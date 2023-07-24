@@ -1,7 +1,7 @@
 
 ///User
 class User {
-  late int id;
+  late BigInt id;
   TblUserMain? tblUserMain;
   List<TblPermPermissionMain>? tblPermPermissionMains;
   List<TblPermRolePermMap>? tblPermRolePermMaps;
@@ -18,7 +18,7 @@ class User {
   });
 
   User.fromJson(Map<String, dynamic> json) {
-    id = json['Id'];
+    id = BigInt.parse((json['id']??'0').toString());
     tblUserMain = json['tblUserMain'] != null ? TblUserMain.fromJson(json['tblUserMain']) : null;
     if (json['tblPermPermissionMains'] != null) {
       tblPermPermissionMains = <TblPermPermissionMain>[];
@@ -69,7 +69,7 @@ class User {
 }
 
 class TblUserMain {
-  late int id;
+  late BigInt id;
   int? userType;
   String? email;
   String? userPassword;
@@ -85,17 +85,17 @@ class TblUserMain {
   int? teachEmpType;
   String? teachDutyCert;
   String? refCode;
-  int? refUser;
+  BigInt? refUser;
   String? parentName;
   String? parentSurname;
   String? headlineText;
   int? isPublic;
   int? status;
-  int? createdBy;
+  BigInt? createdBy;
   DateTime? createdOn;
-  int? updatedBy;
+  BigInt? updatedBy;
   DateTime? updatedOn;
-  int? approvedBy;
+  BigInt? approvedBy;
   DateTime? approvedOn;
 
   TblUserMain({
@@ -130,34 +130,34 @@ class TblUserMain {
   });
 
   TblUserMain.fromJson(Map<String, dynamic> json) {
-    id = json['Id'];
-    userType = json['UserType'];
-    email = json['Email'];
-    userPassword = json['UserPassword'];
-    nationalId = json['NationalId'];
-    teacherBranchId = json['TeacherBranchId'];
-    studentGradeId = json['StudentGradeId'];
-    name = json['Name'];
-    surname = json['Surname'];
-    mobile = json['Mobile'];
-    profilePhotoPath = json['ProfilePhotoPath'];
-    firebaseUserid = json['FirebaseUserid'];
-    locationId = json['LocationId'];
-    teachEmpType = json['TeachEmpType'];
-    teachDutyCert = json['TeachDutyCert'];
-    refCode = json['RefCode'];
-    refUser = json['RefUser'];
-    parentName = json['ParentName'];
-    parentSurname = json['ParentSurname'];
-    headlineText = json['HeadlineText'];
-    isPublic = json['IsPublic'];
-    status = json['Status'];
-    createdBy = json['CreatedBy'];
-    createdOn = DateTime.tryParse(json['CreatedOn']);
-    updatedBy = json['UpdatedBy'];
-    updatedOn = DateTime.tryParse(json['UpdatedOn']);
-    approvedBy = json['ApprovedBy'];
-    approvedOn = DateTime.tryParse(json['ApprovedOn']);
+    id = BigInt.parse((json['id']??'0').toString());
+    userType = json['userType'];
+    email = json['email'];
+    userPassword = json['userPassword'];
+    nationalId = json['nationalId'];
+    teacherBranchId = json['teacherBranchId'];
+    studentGradeId = json['studentGradeId'];
+    name = json['name'];
+    surname = json['surname'];
+    mobile = json['mobile'];
+    profilePhotoPath = json['profilePhotoPath'];
+    firebaseUserid = json['firebaseUserid'];
+    locationId = json['locationId'];
+    teachEmpType = json['teachEmpType'];
+    teachDutyCert = json['teachDutyCert'];
+    refCode = json['refCode'];
+    refUser = BigInt.parse((json['refUser']??'0').toString());
+    parentName = json['parentName'];
+    parentSurname = json['parentSurname'];
+    headlineText = json['headlineText'];
+    isPublic = json['isPublic'];
+    status = json['status'];
+    createdBy = BigInt.parse((json['createdBy']??'0').toString());
+    createdOn = json['createdOn']!=null ? DateTime.tryParse(json['createdOn']) :null;
+    updatedBy = BigInt.parse((json['updatedBy']??'0').toString());
+    updatedOn = json['updatedOn']!=null ? DateTime.tryParse(json['updatedOn']) :null;
+    approvedBy = BigInt.parse((json['approvedBy']??'0').toString());
+    approvedOn =json['approvedOn']!=null ? DateTime.tryParse(json['approvedOn']) :null;
   }
 
   Map<String, dynamic> toMap() {
@@ -208,10 +208,10 @@ class TblPermPermissionMain {
   });
 
   TblPermPermissionMain.fromJson(Map<String, dynamic> json) {
-    id = json['Id'];
-    permName = json['PermName'];
-    permDesc = json['PermDesc'];
-    status = json['Status'];
+    id = json['id'];
+    permName = json['permName'];
+    permDesc = json['permDesc'];
+    status = json['status'];
   }
 
   Map<String, dynamic> toMap() {
@@ -238,10 +238,10 @@ class TblPermRolePermMap {
   });
 
   TblPermRolePermMap.fromJson(Map<String, dynamic> json) {
-    id = json['Id'];
-    roleId = json['RoleId'];
-    permId = json['PermId'];
-    status = json['Status'];
+    id = json['id'];
+    roleId = json['roleId'];
+    permId = json['permId'];
+    status = json['status'];
   }
 
   Map<String, dynamic> toMap() {
@@ -266,9 +266,9 @@ class TblPermUserRole {
   });
 
   TblPermUserRole.fromJson(Map<String, dynamic> json) {
-    id = json['Id'];
-    roleName = json['RoleName'];
-    status = json['Status'];
+    id = json['id'];
+    roleName = json['roleName'];
+    status = json['status'];
   }
 
   Map<String, dynamic> toMap() {
@@ -282,7 +282,7 @@ class TblPermUserRole {
 
 class TblPermUserRoleMap {
   late int id;
-  int? userId;
+  BigInt? userId;
   int? roleId;
   int? status;
 
@@ -294,10 +294,10 @@ class TblPermUserRoleMap {
   });
 
   TblPermUserRoleMap.fromJson(Map<String, dynamic> json) {
-    id = json['Id'];
-    userId = json['UserId'];
-    roleId = json['RoleId'];
-    status = json['Status'];
+    id = json['id'];
+    userId = BigInt.parse((json['userId']??'0').toString());
+    roleId = json['roleId'];
+    status = json['status'];
   }
 
   Map<String, dynamic> toMap() {
@@ -312,9 +312,9 @@ class TblPermUserRoleMap {
 
 ///Question
 class Question {
-  late int id;
+  late BigInt id;
   String? connectionId;
-  late int userId;
+  late BigInt userId;
   TblQueQuestionMain? tblQueQuestionMain;
   List<TblQueQuestionOption>? tblQueQuestionOptions;
   TblFavQuestion? tblFavQuestion;
@@ -333,9 +333,9 @@ class Question {
   });
 
   Question.fromJson(Map<String, dynamic> json) {
-    id = json['Id'];
-    connectionId = json['ConnectionId'];
-    userId = json['UserId'];
+    id = BigInt.parse((json['id']??'0').toString());
+    connectionId = json['connectionId'];
+    userId = json['userId'];
     tblQueQuestionMain = json['tblQueQuestionMain'] != null ? TblQueQuestionMain.fromJson(json['tblQueQuestionMain']) : null;
     if (json['tblQueQuestionOptions'] != null) {
       tblQueQuestionOptions = <TblQueQuestionOption>[];
@@ -383,20 +383,20 @@ class Question {
 }
 
 class TblQueQuestionMain {
-  late int id;
+  late BigInt id;
   int? academicYear;
   int? difficultyLev;
   int? locationId;
-  late int userId;
+  late BigInt userId;
   int? gradeId;
   int? learnId;
   String? questionText;
   String? resolution;
   int? isPublic;
   int? status;
-  int? createdBy;
+  BigInt? createdBy;
   DateTime? createdOn;
-  int? updatedBy;
+  BigInt? updatedBy;
   DateTime? updatedOn;
 
   TblQueQuestionMain({
@@ -418,39 +418,39 @@ class TblQueQuestionMain {
   });
 
   TblQueQuestionMain.fromJson(Map<String, dynamic> json) {
-    id = json['Id'];
-    academicYear = json['AcademicYear'];
-    difficultyLev = json['DifficultyLev'];
-    locationId = json['LocationId'];
-    userId = json['UserId'];
-    gradeId = json['GradeId'];
-    learnId = json['LearnId'];
-    questionText = json['QuestionText'];
-    resolution = json['Resolution'];
-    isPublic = json['IsPublic'];
-    status = json['Status'];
-    createdBy = json['CreatedBy'];
-    createdOn = DateTime.tryParse(json['CreatedOn']);
-    updatedBy = json['UpdatedBy'];
-    updatedOn = DateTime.tryParse(json['UpdatedOn']);
+    id = json['id'];
+    academicYear = json['academicYear'];
+    difficultyLev = json['difficultyLev'];
+    locationId = json['locationId'];
+    userId = json['userId'];
+    gradeId = json['gradeId'];
+    learnId = json['learnId'];
+    questionText = json['questionText'];
+    resolution = json['resolution'];
+    isPublic = json['isPublic'];
+    status = json['status'];
+    createdBy = json['createdBy'];
+    createdOn = json['createdOn']!=null ? DateTime.tryParse(json['createdOn']) :null;
+    updatedBy = json['updatedBy'];
+    updatedOn = json['updatedOn']!=null ? DateTime.tryParse(json['updatedOn']) :null;
   }
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
+    data['Id'] = BigInt.parse((id??'0').toString());
     data['AcademicYear'] = academicYear;
     data['DifficultyLev'] = difficultyLev;
     data['LocationId'] = locationId;
-    data['UserId'] = userId;
+    data['UserId'] = BigInt.parse((userId??'0').toString());
     data['GradeId'] = gradeId;
     data['LearnId'] = learnId;
     data['QuestionText'] = questionText;
     data['Resolution'] = resolution;
     data['IsPublic'] = isPublic;
     data['Status'] = status;
-    data['CreatedBy'] = createdBy;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn?.toIso8601String();
-    data['UpdatedBy'] = updatedBy;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn?.toIso8601String();
     return data;
   }
@@ -458,7 +458,7 @@ class TblQueQuestionMain {
 
 class TblQueQuestionOption {
   late int id;
-  int? questionId;
+  BigInt? questionId;
   String? optIdentifier;
   String? optText;
   int? isCorrect;
@@ -474,12 +474,12 @@ class TblQueQuestionOption {
   });
 
   TblQueQuestionOption.fromJson(Map<String, dynamic> json) {
-    id = json['Id'];
-    questionId = json['QuestionId'];
-    optIdentifier = json['OptIdentifier'];
-    optText = json['OptText'];
-    isCorrect = json['IsCorrect'];
-    status = json['Status'];
+    id = json['id'];
+    questionId = BigInt.parse((json['questionId']??'0').toString());
+    optIdentifier = json['optIdentifier'];
+    optText = json['optText'];
+    isCorrect = json['isCorrect'];
+    status = json['status'];
   }
 
   Map<String, dynamic> toMap() {
@@ -495,9 +495,9 @@ class TblQueQuestionOption {
 }
 
 class TblFavQuestion {
-  late int id;
-  int? userId;
-  int? questionId;
+  late BigInt id;
+  BigInt? userId;
+  BigInt? questionId;
   DateTime? createdOn;
 
   TblFavQuestion({
@@ -508,10 +508,10 @@ class TblFavQuestion {
   });
 
   TblFavQuestion.fromJson(Map<String, dynamic> json) {
-    id = json['Id'];
-    userId = json['UserId'];
-    questionId = json['QuestionId'];
-    createdOn = DateTime.tryParse(json['CreatedOn']);
+    id = BigInt.parse((json['id']??'0').toString());
+    userId = BigInt.parse((json['userId']??'0').toString());
+    questionId = BigInt.parse((json['questionId']??'0').toString());
+    createdOn = json['createdOn']!=null ? DateTime.tryParse(json['createdOn']) :null;
   }
 
   Map<String, dynamic> toMap() {
@@ -525,9 +525,9 @@ class TblFavQuestion {
 }
 
 class TblFavGroupQuestMap {
-  late int id;
-  int? groupId;
-  int? favQuestionId;
+  late BigInt id;
+  BigInt? groupId;
+  BigInt? favQuestionId;
 
   TblFavGroupQuestMap({
     required this.id,
@@ -536,9 +536,9 @@ class TblFavGroupQuestMap {
   });
 
   TblFavGroupQuestMap.fromJson(Map<String, dynamic> json) {
-    id = json['Id'];
-    groupId = json['GroupId'];
-    favQuestionId = json['FavQuestionId'];
+    id = BigInt.parse((json['id']??'0').toString());
+    groupId = BigInt.parse((json['groupId']??'0').toString());
+    favQuestionId = BigInt.parse((json['favQuestionId']??'0').toString());
   }
 
   Map<String, dynamic> toMap() {
@@ -551,8 +551,8 @@ class TblFavGroupQuestMap {
 }
 
 class TblFavGroupQuest {
-  late int id;
-  int? userId;
+  late BigInt id;
+  BigInt? userId;
   String? groupName;
 
   TblFavGroupQuest({
@@ -562,9 +562,9 @@ class TblFavGroupQuest {
   });
 
   TblFavGroupQuest.fromJson(Map<String, dynamic> json) {
-    id = json['Id'];
-    userId = json['UserId'];
-    groupName = json['GroupName'];
+    id = BigInt.parse((json['id']??'0').toString());
+    userId = BigInt.parse((json['userId']??'0').toString());
+    groupName = json['groupName'];
   }
 
   Map<String, dynamic> toMap() {

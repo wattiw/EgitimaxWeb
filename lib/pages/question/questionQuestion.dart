@@ -356,6 +356,7 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
   late Widget stepOneBody;
   late Widget stepTwoBody;
   late Widget stepThreeBody;
+  late Widget stepFourBody;
   late int stepIndex;
 
   @override
@@ -384,6 +385,15 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
       deviceType: widget.deviceType,
     );
     stepThreeBody = StepThreeBody(
+      title: widget.lang.libPagesHomeHomePage_home,
+      routeManager: widget.routeManager,
+      appRepository: widget.appRepository,
+      theme: widget.theme,
+      lang: widget.lang,
+      localeManager: widget.localeManager,
+      deviceType: widget.deviceType,
+    );
+    stepFourBody = StepFourBody(
       title: widget.lang.libPagesHomeHomePage_home,
       routeManager: widget.routeManager,
       appRepository: widget.appRepository,
@@ -429,26 +439,38 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
             'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
 
     var step2 = StepItem(
+        icon: Icons.fact_check,
+        stepState: StepState.indexed,
+        isActive: true,
+        title: 'Question Options And Resolution',
+        subtitle: 'Please add options and resolutions !',
+        content: stepTwoBody,
+        imagePath:
+        'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
+
+    var step3 = StepItem(
         icon: Icons.details_outlined,
         stepState: StepState.editing,
         isActive: true,
         title: 'Question Details',
         subtitle: 'Please define details of question !',
-        content: stepTwoBody,
+        content: stepThreeBody,
         imagePath:
             'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
 
-    var step3 = StepItem(
+    var step4 = StepItem(
         icon: Icons.summarize_outlined,
         stepState: StepState.indexed,
         isActive: true,
         title: 'Summary And Submit',
         subtitle: 'Please check and submit !',
-        content: stepThreeBody,
+        content: stepFourBody,
         imagePath:
             'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
 
-    stepItems = [step1, step2, step3];
+
+
+    stepItems = [step1, step2, step3,step4];
 
     return stepItems;
   }
@@ -966,6 +988,84 @@ class _StepThreeBody extends State<StepThreeBody> {
                 children: [
                   FloatingActionButton(
                     heroTag: 'sdsdsasd',
+                    onPressed: _incrementCounter,
+                    tooltip: 'Increment',
+                    child: const Icon(Icons.add),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class StepFourBody extends StatefulWidget {
+  StepFourBody(
+      {super.key,
+        required this.title,
+        required this.routeManager,
+        required this.appRepository,
+        required this.theme,
+        required this.lang,
+        required this.localeManager,
+        required this.deviceType});
+
+  String title;
+  final RouteManager routeManager;
+  final AppRepository appRepository;
+  final ThemeData theme;
+  final AppLocalizations lang;
+  final LocaleManager localeManager;
+  final DeviceType deviceType;
+
+  @override
+  State<StepFourBody> createState() => _StepFourBody();
+}
+
+class _StepFourBody extends State<StepFourBody> {
+  int _counter = 0;
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+      widget.title = _counter.toString();
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      //width: MediaQuery.of(context).size.width,
+      height: kToolbarHeight * 7, // MediaQuery.of(context).size.height,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'You have pushed the button this many times:${widget.title}',
+            ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  FloatingActionButton(
+                    heroTag: 'sdsdsfdfgfasd',
                     onPressed: _incrementCounter,
                     tooltip: 'Increment',
                     child: const Icon(Icons.add),

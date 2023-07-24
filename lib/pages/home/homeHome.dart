@@ -1,3 +1,4 @@
+import 'package:egitimax/models/egitimax/egitimaxEntities.dart';
 import 'package:egitimax/repositories/appRepository.dart';
 import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:egitimax/utils/helper/localeManager.dart';
@@ -52,6 +53,7 @@ class _HomeHomeState extends State<HomeHome> {
       debugPrint("HomeHome_initState");
     }
     initializePreferences();
+    getx();
   }
 
 
@@ -184,7 +186,6 @@ class _HomeHomeState extends State<HomeHome> {
       if (preferences.containsKey('$currentPageName.isVisible')) {
         floating = preferences.getBool('$currentPageName.isVisible') ?? false;
       }
-      setState(() {});
     }
   }
 
@@ -278,6 +279,28 @@ class _HomeHomeState extends State<HomeHome> {
     );
     return endDrawerScaffold;
   }
+
+  Future<void> getx()
+  async {
+    //var r1=await widget.appRepository.getUser('info@egitimax.com',2);
+    //var r2=await widget.appRepository.getAllTblUserMain();
+    //var r3=await widget.appRepository.getTblUserMain(2);
+
+    TblUserMain tblUserMain=TblUserMain(id: BigInt.parse('0'));
+    tblUserMain.id=BigInt.parse('0');
+    tblUserMain.name='test';
+    tblUserMain.email='ii@i.com';
+
+    var r4=await widget.appRepository.insertTblUserMain(tblUserMain);
+    r4.name='asdasd';
+    var r7=await widget.appRepository.updateTblUserMain(r4);
+    var r3=await widget.appRepository.deleteTblUserMain(BigInt.parse(r4.id.toString()));
+
+    var r5=await widget.appRepository.getQuestion(BigInt.parse('31'),'0',BigInt.parse('2'));
+
+    int bekler=0;
+
+  }
 }
 
 class HomeHomeBody extends StatefulWidget {
@@ -315,6 +338,12 @@ class _HomeHomeBody extends State<HomeHomeBody> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
+  @override
   Widget build(BuildContext context) {
     GlobalKey<ScaffoldState> homeHomeBodyKey = GlobalKey<ScaffoldState>();
     return Center(
@@ -348,4 +377,6 @@ class _HomeHomeBody extends State<HomeHomeBody> {
       ),
     );
   }
+
+
 }

@@ -9,6 +9,8 @@ class Api {
       {Map<String, String>? headers,
       HttpMethod method = HttpMethod.get,
       dynamic data}) async {
+
+    data=_convertBigIntToString(data);//Çok Önemli
     dynamic result;
 
     try {
@@ -42,7 +44,9 @@ class Api {
       showInfoRequestInfo['Data'] = data;
       showInfoRequestInfo['Response'] = result;
 
+      debugPrint("////////////////////////////////////////////////////////////START////////////////////////////////////////////////////////////");
       debugPrint('$showInfoRequestInfo');
+      debugPrint("/////////////////////////////////////////////////////////////END/////////////////////////////////////////////////////////////");
     }
     return result;
   }
@@ -50,12 +54,12 @@ class Api {
   static Future<dynamic> _get(String path,
       {Map<String, String>? headers}) async {
     http.Response response=http.Response('[{}]',501);
-    dynamic data;
+    dynamic dataResult;
     try {
       headers ??= _generateBasicAuthHeaders();
       response = await http.get(Uri.parse(AppConstants.apiBaseUrl + path),
           headers: headers);
-      data = handleResponse(response);
+      dataResult = handleResponse(response);
     } catch (e) {
       if (e is HttpException) {
         if (AppConstants.apiDebugPrintExceptionActive == 1) {
@@ -70,18 +74,18 @@ class Api {
         }
       }
     } finally {}
-    return data;
+    return dataResult;
   }
 
   static Future<dynamic> _post(String path, dynamic data,
       {Map<String, String>? headers}) async {
     http.Response response=http.Response('[{}]',501);
-    dynamic data;
+    dynamic dataResult;
     try {
       headers ??= _generateBasicAuthHeaders();
       response = await http.post(Uri.parse(AppConstants.apiBaseUrl + path),
           headers: headers, body: jsonEncode(data));
-      data = handleResponse(response);
+      dataResult = handleResponse(response);
     } catch (e) {
       if (e is HttpException) {
         if (AppConstants.apiDebugPrintExceptionActive == 1) {
@@ -96,18 +100,18 @@ class Api {
         }
       }
     } finally {}
-    return data;
+    return dataResult;
   }
 
   static Future<dynamic> _put(String path, dynamic data,
       {Map<String, String>? headers}) async {
     http.Response response=http.Response('[{}]',501);
-    dynamic data;
+    dynamic dataResult;
     try {
       headers ??= _generateBasicAuthHeaders();
       response = await http.put(Uri.parse(AppConstants.apiBaseUrl + path),
           headers: headers, body: jsonEncode(data));
-      data = handleResponse(response);
+      dataResult = handleResponse(response);
     } catch (e) {
       if (e is HttpException) {
         if (AppConstants.apiDebugPrintExceptionActive == 1) {
@@ -122,18 +126,18 @@ class Api {
         }
       }
     } finally {}
-    return data;
+    return dataResult;
   }
 
   static Future<dynamic> _delete(String path,
       {Map<String, String>? headers}) async {
     http.Response response=http.Response('[{}]',501);
-    dynamic data;
+    dynamic dataResult;
     try {
       headers ??= _generateBasicAuthHeaders();
       response = await http.delete(Uri.parse(AppConstants.apiBaseUrl + path),
           headers: headers);
-      data = handleResponse(response);
+      dataResult = handleResponse(response);
     } catch (e) {
       if (e is HttpException) {
         if (AppConstants.apiDebugPrintExceptionActive == 1) {
@@ -148,7 +152,7 @@ class Api {
         }
       }
     } finally {}
-    return data;
+    return dataResult;
   }
 
   static Map<String, String> _generateBasicAuthHeaders() {
@@ -159,6 +163,37 @@ class Api {
       'accept': 'application/json',
       'authorization': basicAuth
     };
+  }
+
+  static dynamic _convertBigIntToString(dynamic data) {
+    if (data is Map) {
+      return data.map((key, value) {
+        if (value is BigInt) {
+          return MapEntry(key, value.toString());
+        } else if (value is Map) {
+          return MapEntry(key, _convertBigIntToString(value));
+        } else if (value is List) {
+          return MapEntry(key, _convertListBigIntToString(value));
+        }
+        return MapEntry(key, value);
+      });
+    } else if (data is List) {
+      return _convertListBigIntToString(data);
+    }
+    return data;
+  }
+
+  static List _convertListBigIntToString(List list) {
+    return list.map((item) {
+      if (item is BigInt) {
+        return item.toString();
+      } else if (item is Map) {
+        return _convertBigIntToString(item);
+      } else if (item is List) {
+        return _convertListBigIntToString(item);
+      }
+      return item;
+    }).toList();
   }
 }
 
@@ -183,3 +218,5 @@ dynamic handleResponse(http.Response response) {
     throw HttpException(response.statusCode, response.body);
   }
 }
+
+
