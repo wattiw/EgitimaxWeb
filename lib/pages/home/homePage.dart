@@ -15,7 +15,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
+  String? currentTitle;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -36,6 +37,12 @@ class _HomePageState extends State<HomePage> {
     if (AppConstants.homePageDebugPrintActive == 1) {
       debugPrint("HomePage_initState");
     }
+  }
+
+  void overrideTitle(String newCurrentTitle) {
+    setState(() {
+      widget.currentTitle= newCurrentTitle;
+    });
   }
 
   @override
@@ -59,17 +66,34 @@ class _HomePageState extends State<HomePage> {
       tapPageItemsConvexAppBar: tapPageItemsConvexAppBar,
       itemsConvexAppBar: itemsConvexAppBar,
       titleAppBar: Text(
-        lang.libPagesHomeHomePage_home,
+        widget.currentTitle??lang.libPagesHomeHomePage_home,
         style: theme.textTheme.titleMedium,
       ),
       centerTitleAppBar: true,
       onTapConvexAppBar: (index) {
         debugPrint('Selected Index : $index');
-        if (index == 0) {
-          if (selectedPageIndex != index) {
-            //routeManager.navigateAndRemoveUntil('/',arguments:{'route':false});
-          }
-        } else {
+        if (index == 0)
+        {
+          overrideTitle(lang.libPagesHomeHomePage_home);
+        }
+        else if (index == 1)
+        {
+          overrideTitle(lang.libPagesHomeHomePage_myNetwork);
+        }
+        else if (index == 2)
+        {
+          overrideTitle(lang.libPagesHomeHomePage_menu);
+        }
+        else if (index == 3)
+        {
+          overrideTitle(lang.libPagesHomeHomePage_notifications);
+        }
+        else if (index == 4)
+        {
+          overrideTitle(lang.libPagesHomeHomePage_messages);
+        }
+        else
+        {
 
         }
         selectedPageIndex = index;

@@ -17,8 +17,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final RouteManager routeManager = RouteManager();
-    routeManager.addRoute('/', (context) => const HomePage());
-    routeManager.addRoute('/QuestionPage', (context) => const QuestionPage());
+    routeManager.addRoute('/', (context) => HomePage());
+    routeManager.addRoute('/QuestionPage', (context) => QuestionPage());
 
     return ChangeNotifierProvider(
       create: (context) => LocaleManager(),

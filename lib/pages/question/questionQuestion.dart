@@ -11,7 +11,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:im_stepper/stepper.dart';
 
 class QuestionQuestion extends StatefulWidget {
-  const QuestionQuestion(
+  QuestionQuestion(
       {super.key,
       required this.title,
       required this.routeManager,
@@ -21,6 +21,7 @@ class QuestionQuestion extends StatefulWidget {
       required this.localeManager,
       required this.deviceType});
 
+  String? currentTitle;
   final String title;
   final RouteManager routeManager;
   final AppRepository appRepository;
@@ -39,6 +40,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
   bool snap = false;
   StepperType stepperType = StepperType.vertical;
   StepperList stepper = StepperList.enhance;
+  int stepIndex = 0;
 
   @override
   void initState() {
@@ -120,7 +122,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Text(
-                                    widget.title,
+                                    widget.currentTitle ?? widget.title,
                                     style: widget.theme.textTheme.titleMedium,
                                   )
                                 ],
@@ -322,7 +324,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
 }
 
 class QuestionQuestionBody extends StatefulWidget {
-  const QuestionQuestionBody(
+  QuestionQuestionBody(
       {super.key,
       required this.title,
       required this.routeManager,
@@ -354,7 +356,7 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
   late Widget stepOneBody;
   late Widget stepTwoBody;
   late Widget stepThreeBody;
-  int stepIndex = 0;
+  late int stepIndex;
 
   @override
   void initState() {
@@ -391,6 +393,7 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
       deviceType: widget.deviceType,
     );
     stepItems = getStepItems();
+    stepIndex = 0;
   }
 
   @override
@@ -400,11 +403,16 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width,
-          minHeight: MediaQuery.of(context).size.height),
-      child: getStepper(),
+    return SingleChildScrollView(
+      scrollDirection: widget.stepperType == StepperType.vertical
+          ? Axis.vertical
+          : Axis.horizontal,
+      child: Container(
+        constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width,
+            minHeight: MediaQuery.of(context).size.height),
+        child: getStepper(),
+      ),
     );
   }
 
@@ -479,8 +487,8 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
             ? Axis.vertical
             : Axis.horizontal,
         child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width * (2 / 3),
+            height: MediaQuery.of(context).size.height * (2 / 3),
             child: Stepper(
                 type: widget.stepperType,
                 currentStep: stepIndex,
@@ -518,9 +526,8 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
                   go(1);
                 },
                 onStepTapped: (index) {
-                  setState(() {
-                    stepIndex = index;
-                  });
+                  stepIndex = index;
+                  go(0);
                 },
                 controlsBuilder:
                     (BuildContext context, ControlsDetails details) {
@@ -558,8 +565,8 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
           ? Axis.vertical
           : Axis.horizontal,
       child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width * (2 / 3),
+        height: MediaQuery.of(context).size.height * (2 / 3),
         child: EnhanceStepper(
             stepIconSize: widget.theme.iconTheme.size,
             type: widget.stepperType,
@@ -593,9 +600,8 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
               go(1);
             },
             onStepTapped: (index) {
-              setState(() {
-                stepIndex = index;
-              });
+              stepIndex = index;
+              go(0);
             },
             controlsBuilder: (BuildContext context, ControlsDetails details) {
               return Padding(
@@ -635,8 +641,8 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
           ? Axis.vertical
           : Axis.horizontal,
       child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width * (2 / 3),
+        height: MediaQuery.of(context).size.height * (2 / 3),
         child: Padding(
           padding: const EdgeInsets.all(5.0),
           child: Column(
@@ -655,9 +661,8 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
                 activeStep: stepIndex,
                 enableStepTapping: true,
                 onStepReached: (index) {
-                  setState(() {
-                    stepIndex = index;
-                  });
+                  stepIndex = index;
+                  go(0);
                 },
               ),
               Container(

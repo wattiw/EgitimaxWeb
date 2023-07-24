@@ -11,7 +11,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class QuestionPage extends StatefulWidget {
-  const QuestionPage({super.key});
+   QuestionPage({super.key});
+   String? currentTitle;
 
   @override
   State<QuestionPage> createState() => _QuestionPageState();
@@ -34,6 +35,12 @@ class _QuestionPageState extends State<QuestionPage> {
     }
   }
 
+  void overrideTitle(String newCurrentTitle) {
+    setState(() {
+      widget.currentTitle= newCurrentTitle;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (AppConstants.questionPageDebugPrintActive == 1) {
@@ -54,19 +61,38 @@ class _QuestionPageState extends State<QuestionPage> {
       endDrawerScaffold: endDrawerScaffold,
       tapPageItemsConvexAppBar: tapPageItemsConvexAppBar,
       itemsConvexAppBar: itemsConvexAppBar,
-      titleAppBar: Text(lang.libPagesQuestionQuestionPage_questionPage,style: theme.textTheme.titleMedium,),
+      titleAppBar: Text(widget.currentTitle??lang.libPagesQuestionQuestionPage_questionPage,style: theme.textTheme.titleMedium,),
       centerTitleAppBar: true,
       onTapConvexAppBar: (index) {
         debugPrint('Selected Index : $index');
-        if (index == 0) {
+        if (index == 0)
+        {
           if (selectedPageIndex != index) {
             routeManager.navigateAndRemoveUntil('/', arguments: {'route': false});
           }
-        } else if (index == 2) {
+          overrideTitle(lang.libPagesHomeHomePage_home);
+        }
+        else if (index == 1)
+        {
+          overrideTitle(lang.libPagesQuestionQuestionPage_question);
+        }
+        else if (index == 2)
+        {
           if (Navigator.canPop(context)) {
             routeManager.goBack(context);
           }
-        } else {
+          overrideTitle(lang.libPagesQuestionQuestionPage_back);
+        }
+        else if (index == 3)
+        {
+
+        }
+        else if (index == 4)
+        {
+
+        }
+        else
+        {
 
         }
 

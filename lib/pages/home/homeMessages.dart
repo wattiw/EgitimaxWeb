@@ -10,7 +10,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeMessages extends StatefulWidget {
-  const HomeMessages(
+   HomeMessages(
       {super.key,
         required this.title,
         required this.routeManager,
@@ -20,6 +20,7 @@ class HomeMessages extends StatefulWidget {
         required this.localeManager,
         required this.deviceType});
 
+  String? currentTitle;
   final String title;
   final RouteManager routeManager;
   final AppRepository appRepository;
@@ -51,6 +52,12 @@ class _HomeMessagesState extends State<HomeMessages> {
       debugPrint("HomeMessages_initState");
     }
     initializePreferences();
+  }
+
+  void overrideTitle(String newCurrentTitle) {
+    setState(() {
+      widget.currentTitle= newCurrentTitle;
+    });
   }
 
   @override
@@ -132,7 +139,7 @@ class _HomeMessagesState extends State<HomeMessages> {
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Text(
-                                    widget.title,
+                                    widget.currentTitle??widget.title,
                                     style: widget.theme.textTheme.titleMedium,
                                   )
                                 ],
@@ -155,6 +162,7 @@ class _HomeMessagesState extends State<HomeMessages> {
             lang: widget.lang,
             localeManager: widget.localeManager,
             deviceType: widget.deviceType,
+            overrideTitle: overrideTitle,
           ),
         ),
         endDrawer: getDrawer());
@@ -272,7 +280,7 @@ class _HomeMessagesState extends State<HomeMessages> {
 }
 
 class HomeMessagesBody extends StatefulWidget {
-  const HomeMessagesBody(
+   HomeMessagesBody(
       {super.key,
         required this.title,
         required this.routeManager,
@@ -280,7 +288,8 @@ class HomeMessagesBody extends StatefulWidget {
         required this.theme,
         required this.lang,
         required this.localeManager,
-        required this.deviceType});
+        required this.deviceType,
+      this.overrideTitle});
 
   final String title;
   final RouteManager routeManager;
@@ -289,6 +298,7 @@ class HomeMessagesBody extends StatefulWidget {
   final AppLocalizations lang;
   final LocaleManager localeManager;
   final DeviceType deviceType;
+  final void Function(String newCurrentTitle)? overrideTitle;
 
   @override
   State<HomeMessagesBody> createState() => _HomeMessagesBody();
