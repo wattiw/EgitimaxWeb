@@ -282,7 +282,7 @@ class _HomeHomeState extends State<HomeHome> {
 
   Future<void> getx()
   async {
-    //var r1=await widget.appRepository.getUser('info@egitimax.com',2);
+    var r1=await widget.appRepository.getUser('info@egitimax.com',BigInt.parse('2'));
     //var r2=await widget.appRepository.getAllTblUserMain();
     //var r3=await widget.appRepository.getTblUserMain(2);
 
