@@ -17,9 +17,9 @@ class TblAnnounceClassMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['AnnounceId'] = announceId!;
-    data['ClassId'] = classId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AnnounceId'] = BigInt.parse((announceId??'0').toString());
+    data['ClassId'] = BigInt.parse((classId??'0').toString());
     return data;
   }
 }
@@ -46,10 +46,10 @@ class TblAnnounceDoc {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['AnnounceId'] = announceId!;
-    data['Description'] = "description";
-    data['DocPath'] = "docPath";
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AnnounceId'] = BigInt.parse((announceId??'0').toString());
+    data['Description'] = description;
+    data['DocPath'] = docPath;
     return data;
   }
 }
@@ -97,16 +97,16 @@ class TblAnnounceMain {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['Title'] = "title";
-    data['Description'] = "description";
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['Title'] = title;
+    data['Description'] = description;
     data['StartDate'] = startDate != null ? startDate!.toIso8601String() : null;
     data['EndDate'] = endDate != null ? endDate!.toIso8601String() : null;
-    data['ImagePath'] = "imagePath";
-    data['Status'] = status!;
-    data['CreatedBy'] = createdBy!;
+    data['ImagePath'] = imagePath;
+    data['Status'] = status;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -131,9 +131,9 @@ class TblAnnounceSectionMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['AnnounceId'] = announceId!;
-    data['SectionId'] = sectionId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AnnounceId'] = BigInt.parse((announceId??'0').toString());
+    data['SectionId'] = sectionId;
     return data;
   }
 }
@@ -157,9 +157,9 @@ class TblAssignmentClassMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['AsgnId'] = asgnId!;
-    data['ClassId'] = classId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AsgnId'] = BigInt.parse((asgnId??'0').toString());
+    data['ClassId'] = BigInt.parse((classId??'0').toString());
     return data;
   }
 }
@@ -198,14 +198,14 @@ class TblAssignmentComponent {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['AsgnId'] = asgnId!;
-    data['OrderNo'] = orderNo!;
-    data['CompType'] = compType!;
-    data['CourseId'] = courseId!;
-    data['QuizId'] = quizId!;
-    data['CurrId'] = currId!;
-    data['HomeworkId'] = homeworkId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AsgnId'] = BigInt.parse((asgnId??'0').toString());
+    data['OrderNo'] = orderNo;
+    data['CompType'] = compType;
+    data['CourseId'] = BigInt.parse((courseId??'0').toString());
+    data['QuizId'] = BigInt.parse((quizId??'0').toString());
+    data['CurrId'] = BigInt.parse((currId??'0').toString());
+    data['HomeworkId'] = BigInt.parse((homeworkId??'0').toString());
     return data;
   }
 }
@@ -227,7 +227,7 @@ class TblAssignmentCompType {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['CompType'] = "compType";
+    data['CompType'] = compType;
     return data;
   }
 }
@@ -251,9 +251,9 @@ class TblAssignmentDoc {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['AssignId'] = assignId!;
-    data['DocPath'] = "docPath";
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AssignId'] = BigInt.parse((assignId??'0').toString());
+    data['DocPath'] = docPath;
     return data;
   }
 }
@@ -277,9 +277,9 @@ class TblAssignmentHomework {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['AsgnCompId'] = asgnCompId!;
-    data['HwNote'] = "hwNote";
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AsgnCompId'] = BigInt.parse((asgnCompId??'0').toString());
+    data['HwNote'] = hwNote;
     return data;
   }
 }
@@ -303,9 +303,9 @@ class TblAssignmentHomeworkDoc {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['AsgnHwId'] = asgnHwId!;
-    data['DocPath'] = "docPath";
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AsgnHwId'] = BigInt.parse((asgnHwId??'0').toString());
+    data['DocPath'] = docPath;
     return data;
   }
 }
@@ -359,17 +359,17 @@ class TblAssignmentMain {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['AcademicYear'] = academicYear!;
-    data['AssignType'] = assignType!;
-    data['UserId'] = userId!;
-    data['Title'] = "title";
-    data['AssignNote'] = "assignNote";
-    data['QuestionId'] = questionId!;
-    data['QuizId'] = quizId!;
-    data['LectureId'] = lectureId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AcademicYear'] = academicYear;
+    data['AssignType'] = assignType;
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['Title'] = title;
+    data['AssignNote'] = assignNote;
+    data['QuestionId'] = BigInt.parse((questionId??'0').toString());
+    data['QuizId'] = BigInt.parse((quizId??'0').toString());
+    data['LectureId'] = BigInt.parse((lectureId??'0').toString());
     data['LastRespDate'] = lastRespDate != null ? lastRespDate!.toIso8601String() : null;
-    data['Status'] = status!;
+    data['Status'] = status;
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
@@ -395,9 +395,9 @@ class TblAssignmentSectionMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['AssignId'] = assignId!;
-    data['SectionId'] = sectionId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AssignId'] = BigInt.parse((assignId??'0').toString());
+    data['SectionId'] = sectionId;
     return data;
   }
 }
@@ -421,9 +421,9 @@ class TblAssignmentStuMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['AssignId'] = assignId!;
-    data['UserId'] = userId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AssignId'] = BigInt.parse((assignId??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
     return data;
   }
 }
@@ -445,7 +445,7 @@ class TblAssignmentType {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['AssignType'] = "assignType";
+    data['AssignType'] = assignType;
     return data;
   }
 }
@@ -484,13 +484,13 @@ class TblClassAdmin {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['ClassId'] = classId!;
-    data['UserId'] = userId!;
-    data['IsActive'] = isActive!;
-    data['CreatedBy'] = createdBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['ClassId'] = BigInt.parse((classId??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['IsActive'] = isActive;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -525,11 +525,11 @@ class TblClassGrade {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['SchoolType'] = schoolType!;
-    data['GradeNum'] = gradeNum!;
-    data['GradeName'] = "gradeName";
-    data['CountryId'] = countryId!;
-    data['IsActive'] = isActive!;
+    data['SchoolType'] = schoolType;
+    data['GradeNum'] = gradeNum;
+    data['GradeName'] = gradeName;
+    data['CountryId'] = countryId;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -577,16 +577,16 @@ class TblClassMain {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['GradeId'] = gradeId!;
-    data['ClassName'] = "className";
-    data['IsActive'] = isActive!;
-    data['IsPublic'] = isPublic!;
-    data['AcademicYear'] = academicYear!;
-    data['Description'] = "description";
-    data['CreatedBy'] = createdBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['GradeId'] = gradeId;
+    data['ClassName'] = className;
+    data['IsActive'] = isActive;
+    data['IsPublic'] = isPublic;
+    data['AcademicYear'] = academicYear;
+    data['Description'] = description;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -638,18 +638,18 @@ class TblClassStuMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['ClassId'] = classId!;
-    data['UserId'] = userId!;
-    data['AcademicYear'] = academicYear!;
-    data['InvitedBy'] = invitedBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['ClassId'] = BigInt.parse((classId??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['AcademicYear'] = academicYear;
+    data['InvitedBy'] = BigInt.parse((invitedBy??'0').toString());
     data['InvitedOn'] = invitedOn != null ? invitedOn!.toIso8601String() : null;
-    data['AcceptedBy'] = acceptedBy!;
+    data['AcceptedBy'] = BigInt.parse((acceptedBy??'0').toString());
     data['AcceptedOn'] = acceptedOn != null ? acceptedOn!.toIso8601String() : null;
-    data['StuStatus'] = stuStatus!;
-    data['UpdatedBy'] = updatedBy!;
+    data['StuStatus'] = stuStatus;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
-    data['IsActive'] = isActive!;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -674,8 +674,8 @@ class TblClassStuStatus {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['Status'] = "status";
-    data['IsActive'] = isActive!;
+    data['Status'] = status;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -723,16 +723,16 @@ class TblClassTeacMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['ClassId'] = classId!;
-    data['UserId'] = userId!;
-    data['BranchId'] = branchId!;
-    data['AcademicYear'] = academicYear!;
-    data['IsActive'] = isActive!;
-    data['StuStatus'] = stuStatus!;
-    data['CreatedBy'] = createdBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['ClassId'] = BigInt.parse((classId??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['BranchId'] = branchId;
+    data['AcademicYear'] = academicYear;
+    data['IsActive'] = isActive;
+    data['StuStatus'] = stuStatus;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -772,13 +772,13 @@ class TblCrsCourseDoc {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['CourseId'] = courseId!;
-    data['Description'] = "description";
-    data['DocumentPath'] = "documentPath";
-    data['AggRating'] = aggRating!;
-    data['IsActive'] = isActive!;
-    data['CreatedBy'] = createdBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['CourseId'] = BigInt.parse((courseId??'0').toString());
+    data['Description'] = description;
+    data['DocumentPath'] = documentPath;
+    data['AggRating'] = aggRating;
+    data['IsActive'] = isActive;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
     return data;
   }
@@ -818,14 +818,14 @@ class TblCrsCourseFlow {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['CourseId'] = courseId!;
-    data['OrderNo'] = orderNo!;
-    data['VideoId'] = videoId!;
-    data['QuizId'] = quizId!;
-    data['DocId'] = docId!;
-    data['QuestionId'] = questionId!;
-    data['IsActive'] = isActive!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['CourseId'] = BigInt.parse((courseId??'0').toString());
+    data['OrderNo'] = orderNo;
+    data['VideoId'] = BigInt.parse((videoId??'0').toString());
+    data['QuizId'] = BigInt.parse((quizId??'0').toString());
+    data['DocId'] = BigInt.parse((docId??'0').toString());
+    data['QuestionId'] = BigInt.parse((questionId??'0').toString());
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -858,10 +858,10 @@ class TblCrsCourseFlowStu {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['CrsItemId'] = crsItemId!;
-    data['FlowStatus'] = flowStatus!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['CrsItemId'] = BigInt.parse((crsItemId??'0').toString());
+    data['FlowStatus'] = flowStatus;
     data['StartedOn'] = startedOn != null ? startedOn!.toIso8601String() : null;
     data['FinishedOn'] = finishedOn != null ? finishedOn!.toIso8601String() : null;
     return data;
@@ -896,12 +896,12 @@ class TblCrsCourseLike {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['CourseId'] = courseId!;
-    data['UserId'] = userId!;
-    data['LikeType'] = likeType!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['CourseId'] = BigInt.parse((courseId??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['LikeType'] = likeType;
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['Status'] = status!;
+    data['Status'] = status;
     return data;
   }
 }
@@ -961,20 +961,20 @@ class TblCrsCourseMain {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['LocationId'] = locationId!;
-    data['AcademicYear'] = academicYear!;
-    data['UserId'] = userId!;
-    data['BranchId'] = branchId!;
-    data['GradeId'] = gradeId!;
-    data['SectionId'] = sectionId!;
-    data['Title'] = "title";
-    data['Description'] = "description";
-    data['IsPublic'] = isPublic!;
-    data['Status'] = status!;
-    data['CreatedBy'] = createdBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['LocationId'] = locationId;
+    data['AcademicYear'] = academicYear;
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['BranchId'] = branchId;
+    data['GradeId'] = gradeId;
+    data['SectionId'] = BigInt.parse((sectionId??'0').toString());
+    data['Title'] = title;
+    data['Description'] = description;
+    data['IsPublic'] = isPublic;
+    data['Status'] = status;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -1011,13 +1011,13 @@ class TblCrsCourseRate {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['CourseId'] = courseId!;
-    data['UserId'] = userId!;
-    data['Rating'] = rating!;
-    data['UserComment'] = "userComment";
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['CourseId'] = BigInt.parse((courseId??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['Rating'] = rating;
+    data['UserComment'] = userComment;
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['IsActive'] = isActive!;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -1050,10 +1050,10 @@ class TblCrsCourseStudent {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['CourseId'] = courseId!;
-    data['CrsStatus'] = crsStatus!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['CourseId'] = BigInt.parse((courseId??'0').toString());
+    data['CrsStatus'] = crsStatus;
     data['StartedOn'] = startedOn != null ? startedOn!.toIso8601String() : null;
     data['FinishedOn'] = finishedOn != null ? finishedOn!.toIso8601String() : null;
     return data;
@@ -1082,10 +1082,10 @@ class TblCrsCourseSubdomMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['CourseId'] = courseId!;
-    data['LearnId'] = learnId!;
-    data['IsActive'] = isActive!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['CourseId'] = BigInt.parse((courseId??'0').toString());
+    data['LearnId'] = learnId;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -1133,16 +1133,16 @@ class TblCrsCourseUserMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['AcademicYear'] = academicYear!;
-    data['CourseId'] = courseId!;
-    data['UserType'] = userType!;
-    data['UserId'] = userId!;
-    data['IsAdmin'] = isAdmin!;
-    data['Status'] = status!;
-    data['CreatedBy'] = createdBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AcademicYear'] = academicYear;
+    data['CourseId'] = BigInt.parse((courseId??'0').toString());
+    data['UserType'] = userType;
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['IsAdmin'] = isAdmin;
+    data['Status'] = status;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -1173,11 +1173,11 @@ class TblCrsCurrCourseMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['CurrId'] = currId!;
-    data['CourseId'] = courseId!;
-    data['OrderNo'] = orderNo!;
-    data['IsActive'] = isActive!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['CurrId'] = BigInt.parse((currId??'0').toString());
+    data['CourseId'] = BigInt.parse((courseId??'0').toString());
+    data['OrderNo'] = orderNo;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -1243,22 +1243,22 @@ class TblCrsCurriculum {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['Country'] = country!;
-    data['AcademicYear'] = academicYear!;
-    data['UserId'] = userId!;
-    data['Title'] = "title";
-    data['DomainId'] = domainId!;
-    data['GradeId'] = gradeId!;
-    data['Description'] = "description";
-    data['WelcomeMsg'] = "welcomeMsg";
-    data['GoodbyeMsg'] = "goodbyeMsg";
-    data['IsPublic'] = isPublic!;
-    data['IsActive'] = isActive!;
-    data['AggRating'] = aggRating!;
-    data['CreatedBy'] = createdBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['Country'] = country;
+    data['AcademicYear'] = academicYear;
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['Title'] = title;
+    data['DomainId'] = domainId;
+    data['GradeId'] = gradeId;
+    data['Description'] = description;
+    data['WelcomeMsg'] = welcomeMsg;
+    data['GoodbyeMsg'] = goodbyeMsg;
+    data['IsPublic'] = isPublic;
+    data['IsActive'] = isActive;
+    data['AggRating'] = aggRating;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -1295,13 +1295,13 @@ class TblCrsCurriculumRate {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['CurrId'] = currId!;
-    data['UserId'] = userId!;
-    data['Rating'] = rating!;
-    data['UserComment'] = "userComment";
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['CurrId'] = BigInt.parse((currId??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['Rating'] = rating;
+    data['UserComment'] = userComment;
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['IsActive'] = isActive!;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -1331,11 +1331,11 @@ class TblCrsModuleLectureMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['ModuleId'] = moduleId!;
-    data['LectureId'] = lectureId!;
-    data['OrderNo'] = orderNo!;
-    data['Status'] = status!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['ModuleId'] = BigInt.parse((moduleId??'0').toString());
+    data['LectureId'] = BigInt.parse((lectureId??'0').toString());
+    data['OrderNo'] = orderNo;
+    data['Status'] = status;
     return data;
   }
 }
@@ -1386,17 +1386,17 @@ class TblCrsModuleMain {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['CourseId'] = courseId!;
-    data['ModuleType'] = moduleType!;
-    data['ModuleName'] = "moduleName";
-    data['OrderNo'] = orderNo!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['CourseId'] = BigInt.parse((courseId??'0').toString());
+    data['ModuleType'] = moduleType;
+    data['ModuleName'] = moduleName;
+    data['OrderNo'] = orderNo;
     data['StartDate'] = startDate != null ? startDate!.toIso8601String() : null;
     data['EndDate'] = endDate != null ? endDate!.toIso8601String() : null;
-    data['Status'] = status!;
-    data['CreatedBy'] = createdBy!;
+    data['Status'] = status;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -1422,8 +1422,8 @@ class TblCrsModuleType {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['TypeName'] = "typeName";
-    data['Status'] = status!;
+    data['TypeName'] = typeName;
+    data['Status'] = status;
     return data;
   }
 }
@@ -1450,9 +1450,9 @@ class TblCrsStuAchGapQuest {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['AchGapId'] = achGapId!;
-    data['StuQuestionId'] = stuQuestionId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AchGapId'] = BigInt.parse((achGapId??'0').toString());
+    data['StuQuestionId'] = BigInt.parse((stuQuestionId??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
     return data;
   }
@@ -1480,9 +1480,9 @@ class TblCrsStuAchGapVideo {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['AchGapId'] = achGapId!;
-    data['StuVidId'] = stuVidId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AchGapId'] = BigInt.parse((achGapId??'0').toString());
+    data['StuVidId'] = BigInt.parse((stuVidId??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
     return data;
   }
@@ -1525,13 +1525,13 @@ class TblCrsStudentQuest {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['CrsQuizId'] = crsQuizId!;
-    data['QuestionId'] = questionId!;
-    data['SelectedOpt'] = selectedOpt!;
-    data['IsCorrect'] = isCorrect!;
-    data['LookAgain'] = lookAgain!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['CrsQuizId'] = BigInt.parse((crsQuizId??'0').toString());
+    data['QuestionId'] = BigInt.parse((questionId??'0').toString());
+    data['SelectedOpt'] = BigInt.parse((selectedOpt??'0').toString());
+    data['IsCorrect'] = isCorrect;
+    data['LookAgain'] = lookAgain;
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
@@ -1557,9 +1557,9 @@ class TblCrsStudentQuestText {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['StuQuestionId'] = stuQuestionId!;
-    data['RespText'] = "respText";
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['StuQuestionId'] = BigInt.parse((stuQuestionId??'0').toString());
+    data['RespText'] = respText;
     return data;
   }
 }
@@ -1598,12 +1598,12 @@ class TblCrsStudentQuiz {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['CrsFlowId'] = crsFlowId!;
-    data['QuizId'] = quizId!;
-    data['QuizStatus'] = quizStatus!;
-    data['IterationNo'] = iterationNo!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['CrsFlowId'] = BigInt.parse((crsFlowId??'0').toString());
+    data['QuizId'] = BigInt.parse((quizId??'0').toString());
+    data['QuizStatus'] = quizStatus;
+    data['IterationNo'] = iterationNo;
     data['StartedOn'] = startedOn != null ? startedOn!.toIso8601String() : null;
     data['FinishedOn'] = finishedOn != null ? finishedOn!.toIso8601String() : null;
     return data;
@@ -1638,10 +1638,10 @@ class TblCrsStudentVideo {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['CrsFlowId'] = crsFlowId!;
-    data['VideoId'] = videoId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['CrsFlowId'] = BigInt.parse((crsFlowId??'0').toString());
+    data['VideoId'] = BigInt.parse((videoId??'0').toString());
     data['StartedOn'] = startedOn != null ? startedOn!.toIso8601String() : null;
     data['FinishedOn'] = finishedOn != null ? finishedOn!.toIso8601String() : null;
     return data;
@@ -1671,8 +1671,8 @@ class TblFavCourse {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['UserId'] = userId!;
-    data['CourseId'] = courseId!;
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['CourseId'] = BigInt.parse((courseId??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
     return data;
   }
@@ -1698,8 +1698,8 @@ class TblFavGroupCourse {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['UserId'] = userId!;
-    data['GroupName'] = "groupName";
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['GroupName'] = groupName;
     return data;
   }
 }
@@ -1724,8 +1724,8 @@ class TblFavGroupCourseMap {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['GroupId'] = groupId!;
-    data['FavCourseId'] = favCourseId!;
+    data['GroupId'] = groupId;
+    data['FavCourseId'] = favCourseId;
     return data;
   }
 }
@@ -1749,9 +1749,9 @@ class TblFavGroupLecture {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['GroupName'] = "groupName";
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['GroupName'] = groupName;
     return data;
   }
 }
@@ -1775,9 +1775,9 @@ class TblFavGroupLectureMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['GroupId'] = groupId!;
-    data['FavLectureId'] = favLectureId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['GroupId'] = BigInt.parse((groupId??'0').toString());
+    data['FavLectureId'] = BigInt.parse((favLectureId??'0').toString());
     return data;
   }
 }
@@ -1801,9 +1801,9 @@ class TblFavGroupQuest {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['GroupName'] = "groupName";
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['GroupName'] = groupName;
     return data;
   }
 }
@@ -1827,9 +1827,9 @@ class TblFavGroupQuestMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['GroupId'] = groupId!;
-    data['FavQuestionId'] = favQuestionId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['GroupId'] = BigInt.parse((groupId??'0').toString());
+    data['FavQuestionId'] = BigInt.parse((favQuestionId??'0').toString());
     return data;
   }
 }
@@ -1853,9 +1853,9 @@ class TblFavGroupQuiz {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['GroupName'] = "groupName";
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['GroupName'] = groupName;
     return data;
   }
 }
@@ -1879,9 +1879,9 @@ class TblFavGroupQuizMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['GroupId'] = groupId!;
-    data['FavQuizId'] = favQuizId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['GroupId'] = BigInt.parse((groupId??'0').toString());
+    data['FavQuizId'] = BigInt.parse((favQuizId??'0').toString());
     return data;
   }
 }
@@ -1905,9 +1905,9 @@ class TblFavGroupVid {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['GroupName'] = "groupName";
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['GroupName'] = groupName;
     return data;
   }
 }
@@ -1931,9 +1931,9 @@ class TblFavGroupVidMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['GroupId'] = groupId!;
-    data['FavVideoId'] = favVideoId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['GroupId'] = BigInt.parse((groupId??'0').toString());
+    data['FavVideoId'] = BigInt.parse((favVideoId??'0').toString());
     return data;
   }
 }
@@ -1960,9 +1960,9 @@ class TblFavLecture {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['LectureId'] = lectureId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['LectureId'] = BigInt.parse((lectureId??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
     return data;
   }
@@ -1990,9 +1990,9 @@ class TblFavQuestion {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['QuestionId'] = questionId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['QuestionId'] = BigInt.parse((questionId??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
     return data;
   }
@@ -2020,9 +2020,9 @@ class TblFavQuiz {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['QuizId'] = quizId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['QuizId'] = BigInt.parse((quizId??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
     return data;
   }
@@ -2050,9 +2050,9 @@ class TblFavVideo {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['VideoId'] = videoId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['VideoId'] = BigInt.parse((videoId??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
     return data;
   }
@@ -2090,12 +2090,12 @@ class TblLearnAchivement {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['AchCode'] = "achCode";
-    data['CountryId'] = countryId!;
-    data['AchivementText'] = "achivementText";
-    data['IsActive'] = isActive!;
-    data['AchivementDesc'] = "achivementDesc";
-    data['GradeId'] = gradeId!;
+    data['AchCode'] = achCode;
+    data['CountryId'] = countryId;
+    data['AchivementText'] = achivementText;
+    data['IsActive'] = isActive;
+    data['AchivementDesc'] = achivementDesc;
+    data['GradeId'] = gradeId;
     return data;
   }
 }
@@ -2126,10 +2126,10 @@ class TblLearnBranch {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['BranchName'] = "branchName";
-    data['ShortForm'] = "shortForm";
-    data['CountryId'] = countryId!;
-    data['IsActive'] = isActive!;
+    data['BranchName'] = branchName;
+    data['ShortForm'] = shortForm;
+    data['CountryId'] = countryId;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -2169,12 +2169,12 @@ class TblLearnDomain {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['BranchId'] = branchId!;
-    data['OrderNo'] = orderNo!;
-    data['DomainName'] = "domainName";
-    data['CountryId'] = countryId!;
-    data['IsActive'] = isActive!;
-    data['UpdatedBy'] = updatedBy!;
+    data['BranchId'] = branchId;
+    data['OrderNo'] = orderNo;
+    data['DomainName'] = domainName;
+    data['CountryId'] = countryId;
+    data['IsActive'] = isActive;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -2224,16 +2224,16 @@ class TblLearnMain {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['Type'] = "type";
-    data['ParentId'] = parentId!;
-    data['OrderNo'] = orderNo!;
-    data['BranchId'] = branchId!;
-    data['GradeId'] = gradeId!;
-    data['ItemCode'] = "itemCode";
-    data['Name'] = "name";
-    data['Description'] = "description";
-    data['LocationId'] = locationId!;
-    data['Status'] = status!;
+    data['Type'] = type;
+    data['ParentId'] = parentId;
+    data['OrderNo'] = orderNo;
+    data['BranchId'] = branchId;
+    data['GradeId'] = gradeId;
+    data['ItemCode'] = itemCode;
+    data['Name'] = name;
+    data['Description'] = description;
+    data['LocationId'] = locationId;
+    data['Status'] = status;
     return data;
   }
 }
@@ -2261,9 +2261,9 @@ class TblLearnSubdomAchMap {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['AchvId'] = achvId!;
-    data['SubdomId'] = subdomId!;
-    data['IsActive'] = isActive!;
+    data['AchvId'] = achvId;
+    data['SubdomId'] = subdomId;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -2297,11 +2297,11 @@ class TblLearnSubdomain {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['DomainId'] = domainId!;
-    data['OrderNo'] = orderNo!;
-    data['SubdomName'] = "subdomName";
-    data['Description'] = "description";
-    data['IsActive'] = isActive!;
+    data['DomainId'] = domainId;
+    data['OrderNo'] = orderNo;
+    data['SubdomName'] = subdomName;
+    data['Description'] = description;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -2329,9 +2329,9 @@ class TblLearnSubdomGradeMap {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['SubdomId'] = subdomId!;
-    data['GradeId'] = gradeId!;
-    data['IsActive'] = isActive!;
+    data['SubdomId'] = subdomId;
+    data['GradeId'] = gradeId;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -2364,10 +2364,10 @@ class TblLecFlowStuTracking {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['LecFlowItem'] = lecFlowItem!;
-    data['FlowItemStatus'] = flowItemStatus!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['LecFlowItem'] = BigInt.parse((lecFlowItem??'0').toString());
+    data['FlowItemStatus'] = flowItemStatus;
     data['StartedOn'] = startedOn != null ? startedOn!.toIso8601String() : null;
     data['FinishedOn'] = finishedOn != null ? finishedOn!.toIso8601String() : null;
     return data;
@@ -2405,12 +2405,12 @@ class TblLecLectureDoc {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['LectureId'] = lectureId!;
-    data['Description'] = "description";
-    data['DocPath'] = "docPath";
-    data['Status'] = status!;
-    data['CreatedBy'] = createdBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['LectureId'] = BigInt.parse((lectureId??'0').toString());
+    data['Description'] = description;
+    data['DocPath'] = docPath;
+    data['Status'] = status;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
     return data;
   }
@@ -2450,14 +2450,14 @@ class TblLecLectureFlow {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['LectureId'] = lectureId!;
-    data['OrderNo'] = orderNo!;
-    data['VideoId'] = videoId!;
-    data['QuizId'] = quizId!;
-    data['DocId'] = docId!;
-    data['QuestionId'] = questionId!;
-    data['Status'] = status!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['LectureId'] = BigInt.parse((lectureId??'0').toString());
+    data['OrderNo'] = orderNo;
+    data['VideoId'] = BigInt.parse((videoId??'0').toString());
+    data['QuizId'] = BigInt.parse((quizId??'0').toString());
+    data['DocId'] = BigInt.parse((docId??'0').toString());
+    data['QuestionId'] = BigInt.parse((questionId??'0').toString());
+    data['Status'] = status;
     return data;
   }
 }
@@ -2490,12 +2490,12 @@ class TblLecLectureLike {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['LectureId'] = lectureId!;
-    data['UserId'] = userId!;
-    data['LikeType'] = likeType!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['LectureId'] = BigInt.parse((lectureId??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['LikeType'] = likeType;
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['Status'] = status!;
+    data['Status'] = status;
     return data;
   }
 }
@@ -2558,21 +2558,21 @@ class TblLecLectureMain {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['LocationId'] = locationId!;
-    data['AcademicYear'] = academicYear!;
-    data['UserId'] = userId!;
-    data['BranchId'] = branchId!;
-    data['LearnId'] = learnId!;
-    data['GradeId'] = gradeId!;
-    data['Title'] = "title";
-    data['Description'] = "description";
-    data['Achievemeter'] = achievemeter!;
-    data['IsPublic'] = isPublic!;
-    data['Status'] = status!;
-    data['CreatedBy'] = createdBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['LocationId'] = locationId;
+    data['AcademicYear'] = academicYear;
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['BranchId'] = branchId;
+    data['LearnId'] = learnId;
+    data['GradeId'] = gradeId;
+    data['Title'] = title;
+    data['Description'] = description;
+    data['Achievemeter'] = achievemeter;
+    data['IsPublic'] = isPublic;
+    data['Status'] = status;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -2606,10 +2606,10 @@ class TblLecStudentTracking {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['LectureId'] = lectureId!;
-    data['LectureStatus'] = lectureStatus!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['LectureId'] = BigInt.parse((lectureId??'0').toString());
+    data['LectureStatus'] = lectureStatus;
     data['StartedOn'] = startedOn != null ? startedOn!.toIso8601String() : null;
     data['FinishedOn'] = finishedOn != null ? finishedOn!.toIso8601String() : null;
     return data;
@@ -2642,10 +2642,10 @@ class TblLocL1Country {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['Countrycode'] = "countrycode";
-    data['CountryNameTr'] = "countryNameTr";
-    data['Lang'] = lang!;
-    data['IsActive'] = isActive!;
+    data['Countrycode'] = countrycode;
+    data['CountryNameTr'] = countryNameTr;
+    data['Lang'] = lang;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -2679,11 +2679,11 @@ class TblLocL1CountryTran {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['CountyId'] = countyId!;
-    data['LangId'] = langId!;
-    data['IsDefault'] = isDefault!;
-    data['CountryName'] = "countryName";
-    data['IsActive'] = isActive!;
+    data['CountyId'] = countyId;
+    data['LangId'] = langId;
+    data['IsDefault'] = isDefault;
+    data['CountryName'] = countryName;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -2714,10 +2714,10 @@ class TblLocL2State {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['CountyId'] = countyId!;
-    data['Statecode'] = "statecode";
-    data['StateNameTr'] = "stateNameTr";
-    data['IsActive'] = isActive!;
+    data['CountyId'] = countyId;
+    data['Statecode'] = statecode;
+    data['StateNameTr'] = stateNameTr;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -2751,11 +2751,11 @@ class TblLocL2StateTran {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['StateId'] = stateId!;
-    data['LangId'] = langId!;
-    data['IsDefault'] = isDefault!;
-    data['StateName'] = "stateName";
-    data['IsActive'] = isActive!;
+    data['StateId'] = stateId;
+    data['LangId'] = langId;
+    data['IsDefault'] = isDefault;
+    data['StateName'] = stateName;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -2789,11 +2789,11 @@ class TblLocL3City {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['CountryId'] = countryId!;
-    data['StateId'] = stateId!;
-    data['CityCode'] = "cityCode";
-    data['CityNameTr'] = "cityNameTr";
-    data['IsActive'] = isActive!;
+    data['CountryId'] = countryId;
+    data['StateId'] = stateId;
+    data['CityCode'] = cityCode;
+    data['CityNameTr'] = cityNameTr;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -2827,11 +2827,11 @@ class TblLocL3CityTran {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['CityId'] = cityId!;
-    data['LangId'] = langId!;
-    data['IsDefault'] = isDefault!;
-    data['CityName'] = "cityName";
-    data['IsActive'] = isActive!;
+    data['CityId'] = cityId;
+    data['LangId'] = langId;
+    data['IsDefault'] = isDefault;
+    data['CityName'] = cityName;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -2859,9 +2859,9 @@ class TblPermPermissionMain {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['PermName'] = "permName";
-    data['PermDesc'] = "permDesc";
-    data['Status'] = status!;
+    data['PermName'] = permName;
+    data['PermDesc'] = permDesc;
+    data['Status'] = status;
     return data;
   }
 }
@@ -2889,9 +2889,9 @@ class TblPermRolePermMap {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['RoleId'] = roleId!;
-    data['PermId'] = permId!;
-    data['Status'] = status!;
+    data['RoleId'] = roleId;
+    data['PermId'] = permId;
+    data['Status'] = status;
     return data;
   }
 }
@@ -2916,8 +2916,8 @@ class TblPermUserRole {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['RoleName'] = "roleName";
-    data['Status'] = status!;
+    data['RoleName'] = roleName;
+    data['Status'] = status;
     return data;
   }
 }
@@ -2945,9 +2945,9 @@ class TblPermUserRoleMap {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['UserId'] = userId!;
-    data['RoleId'] = roleId!;
-    data['Status'] = status!;
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['RoleId'] = roleId;
+    data['Status'] = status;
     return data;
   }
 }
@@ -2989,15 +2989,15 @@ class TblPostComment {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['PostId'] = postId!;
-    data['UserId'] = userId!;
-    data['ParentCommentId'] = parentCommentId!;
-    data['CommentText'] = "commentText";
-    data['MediaPath'] = "mediaPath";
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['PostId'] = BigInt.parse((postId??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['ParentCommentId'] = BigInt.parse((parentCommentId??'0').toString());
+    data['CommentText'] = commentText;
+    data['MediaPath'] = mediaPath;
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
-    data['Status'] = status!;
+    data['Status'] = status;
     return data;
   }
 }
@@ -3027,10 +3027,10 @@ class TblPostLike {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['PostId'] = postId!;
-    data['UserId'] = userId!;
-    data['LikeType'] = likeType!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['PostId'] = BigInt.parse((postId??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['LikeType'] = likeType;
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
     return data;
   }
@@ -3070,12 +3070,12 @@ class TblPostMain {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['PostTitle'] = "postTitle";
-    data['PostContent'] = "postContent";
-    data['MediaPath'] = "mediaPath";
-    data['Status'] = status!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['PostTitle'] = postTitle;
+    data['PostContent'] = postContent;
+    data['MediaPath'] = mediaPath;
+    data['Status'] = status;
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
@@ -3104,10 +3104,10 @@ class TblQueQuestionAchvMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['QuestionId'] = questionId!;
-    data['AchvId'] = achvId!;
-    data['Status'] = status!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['QuestionId'] = BigInt.parse((questionId??'0').toString());
+    data['AchvId'] = achvId;
+    data['Status'] = status;
     return data;
   }
 }
@@ -3140,12 +3140,12 @@ class TblQueQuestionLike {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['QuestionId'] = questionId!;
-    data['UserId'] = userId!;
-    data['LikeType'] = likeType!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['QuestionId'] = BigInt.parse((questionId??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['LikeType'] = likeType;
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['Status'] = status!;
+    data['Status'] = status;
     return data;
   }
 }
@@ -3205,20 +3205,20 @@ class TblQueQuestionMain {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['AcademicYear'] = academicYear!;
-    data['DifficultyLev'] = difficultyLev!;
-    data['LocationId'] = locationId!;
-    data['UserId'] = userId!;
-    data['GradeId'] = gradeId!;
-    data['LearnId'] = learnId!;
-    data['QuestionText'] = "questionText";
-    data['Resolution'] = "resolution";
-    data['IsPublic'] = isPublic!;
-    data['Status'] = status!;
-    data['CreatedBy'] = createdBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AcademicYear'] = academicYear;
+    data['DifficultyLev'] = difficultyLev;
+    data['LocationId'] = locationId;
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['GradeId'] = gradeId;
+    data['LearnId'] = learnId;
+    data['QuestionText'] = questionText;
+    data['Resolution'] = resolution;
+    data['IsPublic'] = isPublic;
+    data['Status'] = status;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -3252,12 +3252,12 @@ class TblQueQuestionOption {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['QuestionId'] = questionId!;
-    data['OptIdentifier'] = "optIdentifier";
-    data['OptText'] = "optText";
-    data['IsCorrect'] = isCorrect!;
-    data['Status'] = status!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['QuestionId'] = BigInt.parse((questionId??'0').toString());
+    data['OptIdentifier'] = optIdentifier;
+    data['OptText'] = optText;
+    data['IsCorrect'] = isCorrect;
+    data['Status'] = status;
     return data;
   }
 }
@@ -3290,12 +3290,12 @@ class TblQuizLike {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['QuizId'] = quizId!;
-    data['UserId'] = userId!;
-    data['LikeType'] = likeType!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['QuizId'] = BigInt.parse((quizId??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['LikeType'] = likeType;
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['Status'] = status!;
+    data['Status'] = status;
     return data;
   }
 }
@@ -3358,21 +3358,21 @@ class TblQuizMain {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['LocationId'] = locationId!;
-    data['AcademicYear'] = academicYear!;
-    data['UserId'] = userId!;
-    data['GradeId'] = gradeId!;
-    data['Title'] = "title";
-    data['Description'] = "description";
-    data['Duration'] = duration!;
-    data['HeaderText'] = "headerText";
-    data['FooterText'] = "footerText";
-    data['IsPublic'] = isPublic!;
-    data['Status'] = status!;
-    data['CreatedBy'] = createdBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['LocationId'] = locationId;
+    data['AcademicYear'] = academicYear;
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['GradeId'] = gradeId;
+    data['Title'] = title;
+    data['Description'] = description;
+    data['Duration'] = duration;
+    data['HeaderText'] = headerText;
+    data['FooterText'] = footerText;
+    data['IsPublic'] = isPublic;
+    data['Status'] = status;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -3409,13 +3409,13 @@ class TblQuizRate {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['QuizId'] = quizId!;
-    data['UserId'] = userId!;
-    data['Rating'] = rating!;
-    data['UserComment'] = "userComment";
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['QuizId'] = BigInt.parse((quizId??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['Rating'] = rating;
+    data['UserComment'] = userComment;
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['IsActive'] = isActive!;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -3448,12 +3448,12 @@ class TblQuizSection {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['QuizId'] = quizId!;
-    data['BranchId'] = branchId!;
-    data['OrderNo'] = orderNo!;
-    data['SectionDesc'] = "sectionDesc";
-    data['Status'] = status!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['QuizId'] = BigInt.parse((quizId??'0').toString());
+    data['BranchId'] = branchId;
+    data['OrderNo'] = orderNo;
+    data['SectionDesc'] = sectionDesc;
+    data['Status'] = status;
     return data;
   }
 }
@@ -3483,11 +3483,11 @@ class TblQuizSectQuestMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['SectionId'] = sectionId!;
-    data['QuestionId'] = questionId!;
-    data['OrderNo'] = orderNo!;
-    data['Status'] = status!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['SectionId'] = BigInt.parse((sectionId??'0').toString());
+    data['QuestionId'] = BigInt.parse((questionId??'0').toString());
+    data['OrderNo'] = orderNo;
+    data['Status'] = status;
     return data;
   }
 }
@@ -3526,13 +3526,13 @@ class TblSchAdmin {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['SchoolId'] = schoolId!;
-    data['UserId'] = userId!;
-    data['IsActive'] = isActive!;
-    data['CreatedBy'] = createdBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['SchoolId'] = BigInt.parse((schoolId??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['IsActive'] = isActive;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -3572,13 +3572,13 @@ class TblSchClassMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['ClassId'] = classId!;
-    data['SchoolId'] = schoolId!;
-    data['IsActive'] = isActive!;
-    data['CreatedBy'] = createdBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['ClassId'] = BigInt.parse((classId??'0').toString());
+    data['SchoolId'] = BigInt.parse((schoolId??'0').toString());
+    data['IsActive'] = isActive;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -3607,9 +3607,9 @@ class TblSchOrgType {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['OrgTypeName'] = "orgTypeName";
-    data['LocationId'] = locationId!;
-    data['Status'] = status!;
+    data['OrgTypeName'] = orgTypeName;
+    data['LocationId'] = locationId;
+    data['Status'] = status;
     return data;
   }
 }
@@ -3667,18 +3667,18 @@ class TblSchSchoolMain {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['Name'] = "name";
-    data['SchoolType'] = schoolType!;
-    data['OrgType'] = orgType!;
-    data['Address'] = "address";
-    data['LocationId'] = locationId!;
-    data['Telephone'] = "telephone";
-    data['Fax'] = "fax";
-    data['Email'] = "email";
-    data['Status'] = status!;
-    data['CreatedBy'] = createdBy!;
+    data['Name'] = name;
+    data['SchoolType'] = schoolType;
+    data['OrgType'] = orgType;
+    data['Address'] = address;
+    data['LocationId'] = locationId;
+    data['Telephone'] = telephone;
+    data['Fax'] = fax;
+    data['Email'] = email;
+    data['Status'] = status;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -3707,9 +3707,9 @@ class TblSchSchoolType {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['TypeName'] = "typeName";
-    data['LocationId'] = locationId!;
-    data['Status'] = status!;
+    data['TypeName'] = typeName;
+    data['LocationId'] = locationId;
+    data['Status'] = status;
     return data;
   }
 }
@@ -3761,16 +3761,16 @@ class TblSchSectionMain {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['AcademicYear'] = academicYear!;
-    data['SchoolId'] = schoolId!;
-    data['GradeId'] = gradeId!;
-    data['SectionName'] = "sectionName";
-    data['Description'] = "description";
-    data['IsPublic'] = isPublic!;
-    data['Status'] = status!;
-    data['CreatedBy'] = createdBy!;
+    data['AcademicYear'] = academicYear;
+    data['SchoolId'] = schoolId;
+    data['GradeId'] = gradeId;
+    data['SectionName'] = sectionName;
+    data['Description'] = description;
+    data['IsPublic'] = isPublic;
+    data['Status'] = status;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -3807,12 +3807,12 @@ class TblSchSectionStuMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['AcademicYear'] = academicYear!;
-    data['SectionId'] = sectionId!;
-    data['UserId'] = userId!;
-    data['Status'] = status!;
-    data['UpdatedBy'] = updatedBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AcademicYear'] = academicYear;
+    data['SectionId'] = sectionId;
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['Status'] = status;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -3840,10 +3840,10 @@ class TblSchSubschool {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['MainId'] = mainId!;
-    data['SubId'] = subId!;
-    data['IsActive'] = isActive!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['MainId'] = BigInt.parse((mainId??'0').toString());
+    data['SubId'] = BigInt.parse((subId??'0').toString());
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -3885,14 +3885,14 @@ class TblSchTeacMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['SchoolId'] = schoolId!;
-    data['UserId'] = userId!;
-    data['AcademicYear'] = academicYear!;
-    data['IsActive'] = isActive!;
-    data['CreatedBy'] = createdBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['SchoolId'] = BigInt.parse((schoolId??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['AcademicYear'] = academicYear;
+    data['IsActive'] = isActive;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -3941,16 +3941,16 @@ class TblSchUserMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['AcademicYear'] = academicYear!;
-    data['SchoolId'] = schoolId!;
-    data['UserType'] = userType!;
-    data['UserId'] = userId!;
-    data['IsAdmin'] = isAdmin!;
-    data['Status'] = status!;
-    data['CreatedBy'] = createdBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AcademicYear'] = academicYear;
+    data['SchoolId'] = BigInt.parse((schoolId??'0').toString());
+    data['UserType'] = userType;
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['IsAdmin'] = isAdmin;
+    data['Status'] = status;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -3990,12 +3990,12 @@ class TblStudentAnsweredQuest {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['QuestionId'] = questionId!;
-    data['SelectedOpt'] = selectedOpt!;
-    data['IsCorrect'] = isCorrect!;
-    data['LookAgain'] = lookAgain!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['QuestionId'] = BigInt.parse((questionId??'0').toString());
+    data['SelectedOpt'] = BigInt.parse((selectedOpt??'0').toString());
+    data['IsCorrect'] = isCorrect;
+    data['LookAgain'] = lookAgain;
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
@@ -4024,9 +4024,9 @@ class TblStudentQuestAchGap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['AchvId'] = achvId!;
-    data['QuestionId'] = questionId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AchvId'] = achvId;
+    data['QuestionId'] = BigInt.parse((questionId??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
     return data;
   }
@@ -4063,11 +4063,11 @@ class TblStudentTakenQuiz {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['QuizId'] = quizId!;
-    data['QuizStatus'] = quizStatus!;
-    data['IterationNo'] = iterationNo!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['QuizId'] = BigInt.parse((quizId??'0').toString());
+    data['QuizStatus'] = quizStatus;
+    data['IterationNo'] = iterationNo;
     data['StartedOn'] = startedOn != null ? startedOn!.toIso8601String() : null;
     data['FinishedOn'] = finishedOn != null ? finishedOn!.toIso8601String() : null;
     return data;
@@ -4099,10 +4099,10 @@ class TblStudentVideoFillAchGap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['AchvId'] = achvId!;
-    data['VideoId'] = videoId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['AchvId'] = achvId;
+    data['VideoId'] = BigInt.parse((videoId??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
     return data;
   }
@@ -4133,9 +4133,9 @@ class TblStudentWatchedVideo {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['VideoId'] = videoId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['VideoId'] = BigInt.parse((videoId??'0').toString());
     data['StartedOn'] = startedOn != null ? startedOn!.toIso8601String() : null;
     data['FinishedOn'] = finishedOn != null ? finishedOn!.toIso8601String() : null;
     return data;
@@ -4177,13 +4177,13 @@ class TblTheaBranMap {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['UserId'] = userId!;
-    data['BranchId'] = branchId!;
-    data['CreatedBy'] = createdBy!;
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['BranchId'] = branchId;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
-    data['IsActive'] = isActive!;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -4210,9 +4210,9 @@ class TblUserActivity {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['AccessUrl'] = "accessUrl";
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['AccessUrl'] = accessUrl;
     data['AccessTimestamp'] = accessTimestamp != null ? accessTimestamp!.toIso8601String() : null;
     return data;
   }
@@ -4252,13 +4252,13 @@ class TblUserChild {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['ParentUserId'] = parentUserId!;
-    data['UserId'] = userId!;
-    data['IsActive'] = isActive!;
-    data['CreatedBy'] = createdBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['ParentUserId'] = BigInt.parse((parentUserId??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['IsActive'] = isActive;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -4292,10 +4292,10 @@ class TblUserContractGdpr {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['GdprVer'] = "gdprVer";
-    data['ContractVer'] = "contractVer";
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['GdprVer'] = gdprVer;
+    data['ContractVer'] = contractVer;
     data['GdprAppDate'] = gdprAppDate != null ? gdprAppDate!.toIso8601String() : null;
     data['ContractAppDate'] = contractAppDate != null ? contractAppDate!.toIso8601String() : null;
     return data;
@@ -4331,9 +4331,9 @@ class TblUserFollow {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['Follower'] = follower!;
-    data['Following'] = following!;
-    data['FollowStatus'] = followStatus!;
+    data['Follower'] = BigInt.parse((follower??'0').toString());
+    data['Following'] = BigInt.parse((following??'0').toString());
+    data['FollowStatus'] = followStatus;
     data['ReqestedOn'] = reqestedOn != null ? reqestedOn!.toIso8601String() : null;
     data['AcceptedOn'] = acceptedOn != null ? acceptedOn!.toIso8601String() : null;
     return data;
@@ -4357,7 +4357,7 @@ class TblUserFollowStatus {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['StatusName'] = "statusName";
+    data['StatusName'] = statusName;
     return data;
   }
 }
@@ -4456,33 +4456,33 @@ class TblUserMain {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserType'] = userType!;
-    data['Email'] = "email";
-    data['UserPassword'] = "userPassword";
-    data['NationalId'] = "nationalId";
-    data['TeacherBranchId'] = teacherBranchId!;
-    data['StudentGradeId'] = studentGradeId!;
-    data['Name'] = "name";
-    data['Surname'] = "surname";
-    data['Mobile'] = "mobile";
-    data['ProfilePhotoPath'] = "profilePhotoPath";
-    data['FirebaseUserid'] = "firebaseUserid";
-    data['LocationId'] = locationId!;
-    data['TeachEmpType'] = teachEmpType!;
-    data['TeachDutyCert'] = "teachDutyCert";
-    data['RefCode'] = "refCode";
-    data['RefUser'] = refUser!;
-    data['ParentName'] = "parentName";
-    data['ParentSurname'] = "parentSurname";
-    data['HeadlineText'] = "headlineText";
-    data['IsPublic'] = isPublic!;
-    data['Status'] = status!;
-    data['CreatedBy'] = createdBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserType'] = userType;
+    data['Email'] = email;
+    data['UserPassword'] = userPassword;
+    data['NationalId'] = nationalId;
+    data['TeacherBranchId'] = teacherBranchId;
+    data['StudentGradeId'] = studentGradeId;
+    data['Name'] = name;
+    data['Surname'] = surname;
+    data['Mobile'] = mobile;
+    data['ProfilePhotoPath'] = profilePhotoPath;
+    data['FirebaseUserid'] = firebaseUserid;
+    data['LocationId'] = locationId;
+    data['TeachEmpType'] = teachEmpType;
+    data['TeachDutyCert'] = teachDutyCert;
+    data['RefCode'] = refCode;
+    data['RefUser'] = BigInt.parse((refUser??'0').toString());
+    data['ParentName'] = parentName;
+    data['ParentSurname'] = parentSurname;
+    data['HeadlineText'] = headlineText;
+    data['IsPublic'] = isPublic;
+    data['Status'] = status;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
-    data['ApprovedBy'] = approvedBy!;
+    data['ApprovedBy'] = BigInt.parse((approvedBy??'0').toString());
     data['ApprovedOn'] = approvedOn != null ? approvedOn!.toIso8601String() : null;
     return data;
   }
@@ -4519,13 +4519,13 @@ class TblUsersLogin {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
     data['LoginDatetime'] = loginDatetime != null ? loginDatetime!.toIso8601String() : null;
-    data['LoginIp'] = "loginIp";
-    data['LoginPort'] = "loginPort";
+    data['LoginIp'] = loginIp;
+    data['LoginPort'] = loginPort;
     data['LogoffDatetime'] = logoffDatetime != null ? logoffDatetime!.toIso8601String() : null;
-    data['IsSuccesfull'] = isSuccesfull!;
+    data['IsSuccesfull'] = isSuccesfull;
     return data;
   }
 }
@@ -4573,16 +4573,16 @@ class TblUserSubuser {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['MainUserId'] = mainUserId!;
-    data['SubUserId'] = subUserId!;
-    data['IsActive'] = isActive!;
-    data['IsApproved'] = isApproved!;
-    data['CreatedBy'] = createdBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['MainUserId'] = BigInt.parse((mainUserId??'0').toString());
+    data['SubUserId'] = BigInt.parse((subUserId??'0').toString());
+    data['IsActive'] = isActive;
+    data['IsApproved'] = isApproved;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
-    data['ApprovedBy'] = approvedBy!;
+    data['ApprovedBy'] = BigInt.parse((approvedBy??'0').toString());
     data['ApprovedOn'] = approvedOn != null ? approvedOn!.toIso8601String() : null;
     return data;
   }
@@ -4608,8 +4608,8 @@ class TblUserType {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['TypeName'] = "typeName";
-    data['Status'] = status!;
+    data['TypeName'] = typeName;
+    data['Status'] = status;
     return data;
   }
 }
@@ -4637,9 +4637,9 @@ class TblUtilAcademicYear {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['AcademicYear'] = "academicYear";
-    data['IsDefault'] = isDefault!;
-    data['Status'] = status!;
+    data['AcademicYear'] = academicYear;
+    data['IsDefault'] = isDefault;
+    data['Status'] = status;
     return data;
   }
 }
@@ -4670,10 +4670,10 @@ class TblUtilBranch {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['BranchName'] = "branchName";
-    data['ShortForm'] = "shortForm";
-    data['LocationId'] = locationId!;
-    data['Status'] = status!;
+    data['BranchName'] = branchName;
+    data['ShortForm'] = shortForm;
+    data['LocationId'] = locationId;
+    data['Status'] = status;
     return data;
   }
 }
@@ -4704,10 +4704,10 @@ class TblUtilCurrency {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['CurencyName'] = "curencyName";
-    data['LocationId'] = locationId!;
-    data['ShortForm'] = "shortForm";
-    data['Status'] = status!;
+    data['CurencyName'] = curencyName;
+    data['LocationId'] = locationId;
+    data['ShortForm'] = shortForm;
+    data['Status'] = status;
     return data;
   }
 }
@@ -4732,8 +4732,8 @@ class TblUtilDifficulty {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['DifficultyLev'] = "difficultyLev";
-    data['Status'] = status!;
+    data['DifficultyLev'] = difficultyLev;
+    data['Status'] = status;
     return data;
   }
 }
@@ -4767,11 +4767,11 @@ class TblUtilGrade {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['SchoolType'] = schoolType!;
-    data['GradeNumber'] = gradeNumber!;
-    data['GradeName'] = "gradeName";
-    data['LocationId'] = locationId!;
-    data['Status'] = status!;
+    data['SchoolType'] = schoolType;
+    data['GradeNumber'] = gradeNumber;
+    data['GradeName'] = gradeName;
+    data['LocationId'] = locationId;
+    data['Status'] = status;
     return data;
   }
 }
@@ -4799,9 +4799,9 @@ class TblUtilLanguage {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['Language'] = "language";
-    data['ShortForm'] = "shortForm";
-    data['Status'] = status!;
+    data['Language'] = language;
+    data['ShortForm'] = shortForm;
+    data['Status'] = status;
     return data;
   }
 }
@@ -4826,8 +4826,8 @@ class TblUtilLikeType {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['LikeType'] = "likeType";
-    data['Status'] = status!;
+    data['LikeType'] = likeType;
+    data['Status'] = status;
     return data;
   }
 }
@@ -4861,11 +4861,11 @@ class TblUtilLocation {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['Type'] = "type";
-    data['ParentId'] = parentId!;
-    data['LocCode'] = "locCode";
-    data['Name'] = "name";
-    data['Status'] = status!;
+    data['Type'] = type;
+    data['ParentId'] = parentId;
+    data['LocCode'] = locCode;
+    data['Name'] = name;
+    data['Status'] = status;
     return data;
   }
 }
@@ -4890,8 +4890,8 @@ class TblUtilLocationType {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['LocTypeName'] = "locTypeName";
-    data['Status'] = status!;
+    data['LocTypeName'] = locTypeName;
+    data['Status'] = status;
     return data;
   }
 }
@@ -4922,10 +4922,10 @@ class TblUtilStatus {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Id'] = id;
-    data['StatusId'] = statusId!;
-    data['StatusName'] = "statusName";
-    data['StatusDesc'] = "statusDesc";
-    data['IsActive'] = isActive!;
+    data['StatusId'] = statusId;
+    data['StatusName'] = statusName;
+    data['StatusDesc'] = statusDesc;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -4952,10 +4952,10 @@ class TblVidVideoAchvMap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['VideoId'] = videoId!;
-    data['AchvId'] = achvId!;
-    data['Status'] = status!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['VideoId'] = BigInt.parse((videoId??'0').toString());
+    data['AchvId'] = achvId;
+    data['Status'] = status;
     return data;
   }
 }
@@ -4988,12 +4988,12 @@ class TblVidVideoLike {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['VideoId'] = videoId!;
-    data['UserId'] = userId!;
-    data['LikeType'] = likeType!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['VideoId'] = BigInt.parse((videoId??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['LikeType'] = likeType;
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['Status'] = status!;
+    data['Status'] = status;
     return data;
   }
 }
@@ -5053,20 +5053,20 @@ class TblVidVideoMain {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['AcademicYear'] = academicYear!;
-    data['LocationId'] = locationId!;
-    data['UserId'] = userId!;
-    data['GradeId'] = gradeId!;
-    data['LearnId'] = learnId!;
-    data['Title'] = "title";
-    data['Description'] = "description";
-    data['VideoPath'] = "videoPath";
-    data['IsPublic'] = isPublic!;
-    data['Status'] = status!;
-    data['CreatedBy'] = createdBy!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AcademicYear'] = academicYear;
+    data['LocationId'] = locationId;
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['GradeId'] = gradeId;
+    data['LearnId'] = learnId;
+    data['Title'] = title;
+    data['Description'] = description;
+    data['VideoPath'] = videoPath;
+    data['IsPublic'] = isPublic;
+    data['Status'] = status;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['UpdatedBy'] = updatedBy!;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
     data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
     return data;
   }
@@ -5103,13 +5103,13 @@ class TblVidVideoRate {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['VideoId'] = videoId!;
-    data['UserId'] = userId!;
-    data['Rating'] = rating!;
-    data['UserComment'] = "userComment";
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['VideoId'] = BigInt.parse((videoId??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['Rating'] = rating;
+    data['UserComment'] = userComment;
     data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
-    data['IsActive'] = isActive!;
+    data['IsActive'] = isActive;
     return data;
   }
 }
@@ -5133,9 +5133,9 @@ class ViewCrsStuAchGap {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
-    data['UserId'] = userId!;
-    data['AchvId'] = achvId!;
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['AchvId'] = achvId;
     return data;
   }
 }

@@ -282,19 +282,19 @@ class _HomeHomeState extends State<HomeHome> {
 
   Future<void> getx()
   async {
-    var r1=await widget.appRepository.getUser('info@egitimax.com',BigInt.parse('2'));
+   // var r1=await widget.appRepository.getUser('info@egitimax.com',BigInt.parse('2'));
     //var r2=await widget.appRepository.getAllTblUserMain();
     //var r3=await widget.appRepository.getTblUserMain(2);
 
-    TblUserMain tblUserMain=TblUserMain(id: BigInt.parse('0'));
-    tblUserMain.id=BigInt.parse('0');
-    tblUserMain.name='test';
-    tblUserMain.email='ii@i.com';
+    //TblUserMain tblUserMain=TblUserMain(id: BigInt.parse('0'));
+    //tblUserMain.id=BigInt.parse('0');
+    //tblUserMain.name='test';
+    //tblUserMain.email='ii@i.com';
 
-    var r4=await widget.appRepository.insertTblUserMain(tblUserMain);
-    r4.name='asdasd';
-    var r7=await widget.appRepository.updateTblUserMain(r4);
-    var r3=await widget.appRepository.deleteTblUserMain(BigInt.parse(r4.id.toString()));
+    //var r4=await widget.appRepository.insertTblUserMain(tblUserMain);
+    //r4.name='asdasd';
+    //var r7=await widget.appRepository.updateTblUserMain(r4);
+    //var r3=await widget.appRepository.deleteTblUserMain(BigInt.parse(r4.id.toString()));
 
     var r5=await widget.appRepository.getQuestion(BigInt.parse('31'),'0',BigInt.parse('2'));
 

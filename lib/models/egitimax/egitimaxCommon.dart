@@ -49,7 +49,7 @@ class User {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
+    data['Id'] =  BigInt.parse((id??'0').toString());
     if (tblUserMain != null) {
       data['tblUserMain'] = tblUserMain!.toMap();
     }
@@ -93,7 +93,7 @@ class Question {
   Question.fromJson(Map<String, dynamic> json) {
     id = BigInt.parse((json['id']??'0').toString());
     connectionId = json['connectionId'];
-    userId = json['userId'];
+    userId =BigInt.parse((json['userId']??'0').toString());
     tblQueQuestionMain = json['tblQueQuestionMain'] != null ? TblQueQuestionMain.fromJson(json['tblQueQuestionMain']) : null;
     if (json['tblQueQuestionOptions'] != null) {
       tblQueQuestionOptions = <TblQueQuestionOption>[];
@@ -118,9 +118,9 @@ class Question {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Id'] = id;
+    data['Id'] =  BigInt.parse((id??'0').toString());
     data['ConnectionId'] = connectionId;
-    data['UserId'] = userId;
+    data['UserId'] =  BigInt.parse((userId??'0').toString());
     if (tblQueQuestionMain != null) {
       data['tblQueQuestionMain'] = tblQueQuestionMain!.toMap();
     }
