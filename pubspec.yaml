@@ -58,7 +58,12 @@ dependencies:
   webview_flutter_platform_interface: ^2.4.0
   webview_flutter_wkwebview: ^3.7.2
   path_provider: ^2.0.15
-  webview_all: ^0.3.7
+  url_launcher: ^6.1.12
+  flutter_quill: ^7.2.18
+
+
+
+
 
 
 

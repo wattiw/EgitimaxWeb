@@ -5,12 +5,13 @@ import 'package:egitimax/utils/helper/localeManager.dart';
 import 'package:egitimax/utils/helper/routeManager.dart';
 import 'package:egitimax/utils/provider/imager.dart';
 import 'package:egitimax/utils/widget/deviceInfo.dart';
-import 'package:egitimax/utils/widget/summernote.dart';
 import 'package:enhance_stepper/enhance_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:im_stepper/stepper.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class QuestionQuestion extends StatefulWidget {
   QuestionQuestion(
@@ -828,21 +829,6 @@ class _StepOneBody extends State<StepOneBody> {
   @override
   Widget build(BuildContext context) {
 
-
-    return SizedBox(
-      //width: MediaQuery.of(context).size.width,
-      height: kToolbarHeight * 7, // MediaQuery.of(context).size.height,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            MyBrowser()
-          ],
-        ),
-      ),
-    );
-
-
     return SizedBox(
       //width: MediaQuery.of(context).size.width,
       height: kToolbarHeight * 7, // MediaQuery.of(context).size.height,
@@ -853,7 +839,7 @@ class _StepOneBody extends State<StepOneBody> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: SizedBox(
-                width: MediaQuery.of(context).size.width,
+                width: MediaQuery.of(context).size.width *2,
                 child: ToolBar.scroll(
                   toolBarColor: widget.theme.colorScheme.primaryContainer,
                   padding: const EdgeInsets.all(8),
@@ -951,10 +937,17 @@ class StepTwoBody extends StatefulWidget {
 class _StepTwoBody extends State<StepTwoBody> {
   int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  Future<void> _incrementCounter() async {
+    var url=Uri.parse('http://138.68.82.103:100/index.html?id=12');
+
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url,mode: LaunchMode.externalApplication);
+    } else {
+
+    await launchUrl(url,mode: LaunchMode.externalApplication);
+    //throw 'Could not launch $url';
+
+    }
   }
 
   @override
