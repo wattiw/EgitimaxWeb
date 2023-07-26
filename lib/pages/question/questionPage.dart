@@ -11,8 +11,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class QuestionPage extends StatefulWidget {
-   QuestionPage({super.key});
-   String? currentTitle;
+  QuestionPage({super.key});
+
+  String? currentTitle;
 
   @override
   State<QuestionPage> createState() => _QuestionPageState();
@@ -37,7 +38,7 @@ class _QuestionPageState extends State<QuestionPage> {
 
   void overrideTitle(String newCurrentTitle) {
     setState(() {
-      widget.currentTitle= newCurrentTitle;
+      widget.currentTitle = newCurrentTitle;
     });
   }
 
@@ -61,40 +62,29 @@ class _QuestionPageState extends State<QuestionPage> {
       endDrawerScaffold: endDrawerScaffold,
       tapPageItemsConvexAppBar: tapPageItemsConvexAppBar,
       itemsConvexAppBar: itemsConvexAppBar,
-      titleAppBar: Text(widget.currentTitle??lang.libPagesQuestionQuestionPage_questionPage,style: theme.textTheme.titleMedium,),
+      titleAppBar: Text(
+        widget.currentTitle ?? lang.libPagesQuestionQuestionPage_questionPage,
+        style: theme.textTheme.titleMedium,
+      ),
       centerTitleAppBar: true,
       onTapConvexAppBar: (index) {
         debugPrint('Selected Index : $index');
-        if (index == 0)
-        {
+        if (index == 0) {
           if (selectedPageIndex != index) {
-            routeManager.navigateAndRemoveUntil('/', arguments: {'route': false});
+            routeManager
+                .navigateAndRemoveUntil('/', arguments: {'route': false});
           }
           overrideTitle(lang.libPagesHomeHomePage_home);
-        }
-        else if (index == 1)
-        {
+        } else if (index == 1) {
           overrideTitle(lang.libPagesQuestionQuestionPage_question);
-        }
-        else if (index == 2)
-        {
+        } else if (index == 2) {
           if (Navigator.canPop(context)) {
             routeManager.goBack(context);
           }
           overrideTitle(lang.libPagesQuestionQuestionPage_back);
-        }
-        else if (index == 3)
-        {
-
-        }
-        else if (index == 4)
-        {
-
-        }
-        else
-        {
-
-        }
+        } else if (index == 3) {
+        } else if (index == 4) {
+        } else {}
 
         selectedPageIndex = index;
       },
@@ -117,7 +107,7 @@ class _QuestionPageState extends State<QuestionPage> {
           return Align(
             alignment: Alignment.centerRight,
             child: IconButton(
-              icon:  Icon(Icons.menu,size:theme.iconTheme.size),
+              icon: Icon(Icons.menu, size: theme.iconTheme.size),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
@@ -136,20 +126,32 @@ class _QuestionPageState extends State<QuestionPage> {
   }
 
   Drawer getDrawerScaffold() {
-    var endDrawerScaffold =  Drawer(
+    var endDrawerScaffold = Drawer(
       //drawer navigation on scaffold
       child: SafeArea(
         child: Column(
           children: [
             ListTile(
-              leading: Icon(Icons.home,size:theme.iconTheme.size),
-              title: Text("Soru Page",style: theme.textTheme.titleMedium,),
-              subtitle: Text("Subtitle menu 1",style: theme.textTheme.titleSmall,),
+              leading: Icon(Icons.home, size: theme.iconTheme.size),
+              title: Text(
+                "Soru Page",
+                style: theme.textTheme.titleMedium,
+              ),
+              subtitle: Text(
+                "Subtitle menu 1",
+                style: theme.textTheme.titleSmall,
+              ),
             ),
             ListTile(
-              leading: Icon(Icons.search,size:theme.iconTheme.size),
-              title: Text("Test Page",style: theme.textTheme.titleMedium,),
-              subtitle: Text("Subtitle menu 1",style: theme.textTheme.titleSmall,),
+              leading: Icon(Icons.search, size: theme.iconTheme.size),
+              title: Text(
+                "Test Page",
+                style: theme.textTheme.titleMedium,
+              ),
+              subtitle: Text(
+                "Subtitle menu 1",
+                style: theme.textTheme.titleSmall,
+              ),
             ),
 
             //put more menu items here
@@ -177,7 +179,13 @@ class _QuestionPageState extends State<QuestionPage> {
     var tapPageItemsConvexAppBar = <Widget>[
       Container(),
       QuestionQuestion(
-        title: lang.libPagesQuestionQuestionPage_question, routeManager: routeManager, appRepository: appRepository, theme: theme, lang: lang, localeManager: localeManager, deviceType: deviceType,
+        title: lang.libPagesQuestionQuestionPage_question,
+        routeManager: routeManager,
+        appRepository: appRepository,
+        theme: theme,
+        lang: lang,
+        localeManager: localeManager,
+        deviceType: deviceType,
       ),
       Container()
     ];

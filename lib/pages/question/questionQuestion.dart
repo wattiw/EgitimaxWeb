@@ -5,10 +5,12 @@ import 'package:egitimax/utils/helper/localeManager.dart';
 import 'package:egitimax/utils/helper/routeManager.dart';
 import 'package:egitimax/utils/provider/imager.dart';
 import 'package:egitimax/utils/widget/deviceInfo.dart';
+import 'package:egitimax/utils/widget/summernote.dart';
 import 'package:enhance_stepper/enhance_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:im_stepper/stepper.dart';
+import 'package:quill_html_editor/quill_html_editor.dart';
 
 class QuestionQuestion extends StatefulWidget {
   QuestionQuestion(
@@ -427,7 +429,9 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
   }
 
   List<StepItem> getStepItems() {
+
     List<StepItem> stepItems = List.empty(growable: true);
+
     var step1 = StepItem(
         icon: Icons.question_mark_outlined,
         stepState: StepState.indexed,
@@ -794,22 +798,37 @@ class StepOneBody extends StatefulWidget {
 }
 
 class _StepOneBody extends State<StepOneBody> {
-  int _counter = 0;
+  late QuillEditorController controller;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+
+  final customToolBarList = [
+    ToolBarStyle.bold,
+    ToolBarStyle.italic,
+    ToolBarStyle.align,
+    ToolBarStyle.color,
+    ToolBarStyle.background,
+    ToolBarStyle.listBullet,
+    ToolBarStyle.listOrdered,
+    ToolBarStyle.clean,
+    ToolBarStyle.addTable,
+    ToolBarStyle.editTable,
+  ];
+  bool _hasFocus = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    controller = QuillEditorController();
   }
-
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
+
+
     return SizedBox(
       //width: MediaQuery.of(context).size.width,
       height: kToolbarHeight * 7, // MediaQuery.of(context).size.height,
@@ -817,29 +836,88 @@ class _StepOneBody extends State<StepOneBody> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  FloatingActionButton(
-                    heroTag: 'sdfdhdfhsdsasd',
-                    onPressed: _incrementCounter,
-                    tooltip: 'Increment',
-                    child: const Icon(Icons.add),
-                  ),
-                ],
+            MyBrowser()
+          ],
+        ),
+      ),
+    );
+
+
+    return SizedBox(
+      //width: MediaQuery.of(context).size.width,
+      height: kToolbarHeight * 7, // MediaQuery.of(context).size.height,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: ToolBar.scroll(
+                  toolBarColor: widget.theme.colorScheme.primaryContainer,
+                  padding: const EdgeInsets.all(8),
+                  iconSize: widget.theme.iconTheme.size,
+                  iconColor: widget.theme.iconTheme.color,
+                  activeIconColor: Colors.greenAccent.shade400,
+                  controller: controller,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  direction: Axis.horizontal,
+                  customButtons: [
+                    Container(
+                      width: 25,
+                      height: 25,
+                      decoration: BoxDecoration(
+                          color: _hasFocus ? Colors.green : Colors.grey,
+                          borderRadius: BorderRadius.circular(15)),
+                    ),
+                    InkWell(
+                        onTap: () async {
+                          var selectedText = await controller.getSelectedText();
+                          debugPrint('selectedText $selectedText');
+                          var selectedHtmlText =
+                          await controller.getSelectedHtmlText();
+                          debugPrint('selectedHtmlText $selectedHtmlText');
+                        },
+                        child: const Icon(
+                          Icons.add_circle,
+                          color: Colors.black,
+                        )),
+                  ],
+                ),
               ),
-            )
+            ),
+            Flexible(
+              fit: FlexFit.tight,
+              child: QuillHtmlEditor(
+                  text: "<h1>Hello</h1>This is a quill html editor example 😊",
+                  hintText: 'Hint text goes here',
+                  controller: controller,
+                  isEnabled: true,
+                  ensureVisible: false,
+                  minHeight: kToolbarHeight * 7,
+                  textStyle: widget.theme.textTheme.bodyMedium,
+                  hintTextStyle: widget.theme.textTheme.bodyMedium,
+                  hintTextAlign: TextAlign.start,
+                  padding: const EdgeInsets.only(left: 10, top: 10),
+                  hintTextPadding: const EdgeInsets.only(left: 20),
+                  backgroundColor: widget.theme.colorScheme.background,
+                  loadingBuilder: (context) {
+                    return const Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 0.4,
+                        ));
+                  },
+                  onFocusChanged: (focus) {
+                    debugPrint('has focus $focus');
+                    setState(() {
+                      _hasFocus = focus;
+                    });
+                  },
+                  onTextChanged: (text) => debugPrint('widget text change $text'),
+                  onEditorCreated: () { }
+              ),
+            ),
           ],
         ),
       ),
