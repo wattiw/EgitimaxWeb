@@ -938,7 +938,9 @@ class _StepTwoBody extends State<StepTwoBody> {
   int _counter = 0;
 
   Future<void> _incrementCounter() async {
-    var url=Uri.parse('http://138.68.82.103:100/index.html?id=12');
+
+    var languageParam="culture=${widget.localeManager.locale.languageCode}-${widget.localeManager.countryCode.toUpperCase()}";
+    var url=Uri.parse('http://138.68.82.103:100/?qId=1&qToken=www&${languageParam}');
 
     if (await canLaunchUrl(url)) {
       await launchUrl(url,mode: LaunchMode.externalApplication);
@@ -982,7 +984,7 @@ class _StepTwoBody extends State<StepTwoBody> {
                   FloatingActionButton(
                     heroTag: 'sdsdsasdfsfsdfsd',
                     onPressed: _incrementCounter,
-                    tooltip: 'Increment',
+                    tooltip: 'Open Editor Page',
                     child: const Icon(Icons.add),
                   ),
                 ],

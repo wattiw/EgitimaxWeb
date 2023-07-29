@@ -3158,6 +3158,8 @@ class TblQueQuestionMain {
   BigInt? userId ;
   int? gradeId ;
   int? learnId ;
+  String? relationId ;
+  String? questionToken ;
   String? questionText ;
   String? resolution ;
   int? isPublic ;
@@ -3175,6 +3177,8 @@ class TblQueQuestionMain {
     this.userId,
     this.gradeId,
     this.learnId,
+    this.relationId,
+    this.questionToken,
     this.questionText,
     this.resolution,
     this.isPublic,
@@ -3193,6 +3197,8 @@ class TblQueQuestionMain {
     userId = BigInt.parse((json['userId']??'0').toString());
     gradeId = json['gradeId'] as int?;
     learnId = json['learnId'] as int?;
+    relationId = json['relationId'] as String?;
+    questionToken = json['questionToken'] as String?;
     questionText = json['questionText'] as String?;
     resolution = json['resolution'] as String?;
     isPublic = json['isPublic'] as int?;
@@ -3212,6 +3218,8 @@ class TblQueQuestionMain {
     data['UserId'] = BigInt.parse((userId??'0').toString());
     data['GradeId'] = gradeId;
     data['LearnId'] = learnId;
+    data['RelationId'] = relationId;
+    data['QuestionToken'] = questionToken;
     data['QuestionText'] = questionText;
     data['Resolution'] = resolution;
     data['IsPublic'] = isPublic;
@@ -5005,9 +5013,11 @@ class TblVidVideoMain {
   BigInt? userId ;
   int? gradeId ;
   int? learnId ;
+  String? relationId ;
   String? title ;
   String? description ;
   String? videoPath ;
+  List<int>? videoData ;
   int? isPublic ;
   int? status ;
   BigInt? createdBy ;
@@ -5022,9 +5032,11 @@ class TblVidVideoMain {
     this.userId,
     this.gradeId,
     this.learnId,
+    this.relationId,
     this.title,
     this.description,
     this.videoPath,
+    this.videoData,
     this.isPublic,
     this.status,
     this.createdBy,
@@ -5040,9 +5052,11 @@ class TblVidVideoMain {
     userId = BigInt.parse((json['userId']??'0').toString());
     gradeId = json['gradeId'] as int?;
     learnId = json['learnId'] as int?;
+    relationId = json['relationId'] as String?;
     title = json['title'] as String?;
     description = json['description'] as String?;
     videoPath = json['videoPath'] as String?;
+    videoData = json['videoData'] as List<int>?;
     isPublic = json['isPublic'] as int?;
     status = json['status'] as int?;
     createdBy = BigInt.parse((json['createdBy']??'0').toString());
@@ -5059,9 +5073,11 @@ class TblVidVideoMain {
     data['UserId'] = BigInt.parse((userId??'0').toString());
     data['GradeId'] = gradeId;
     data['LearnId'] = learnId;
+    data['RelationId'] = relationId;
     data['Title'] = title;
     data['Description'] = description;
     data['VideoPath'] = videoPath;
+    data['VideoData'] = videoData;
     data['IsPublic'] = isPublic;
     data['Status'] = status;
     data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
