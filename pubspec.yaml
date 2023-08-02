@@ -60,6 +60,7 @@ dependencies:
   path_provider: ^2.0.15
   url_launcher: ^6.1.12
   flutter_quill: ^7.2.18
+  dropdown_search: ^5.0.6
 
 
 

@@ -169,6 +169,26 @@ class AppRepository {
     return result;
   }
 
+  Future<List<TblLearnMain>> getParentsTblLearnMain(int branchId,int gradeId ,int locationId) async {
+    var jsonDecode =
+    await Api.request('TblLearnMain/GetParents/$branchId/$gradeId/$locationId', method: HttpMethod.get);
+    List<TblLearnMain> result = [];
+    for (var jsonItem in jsonDecode) {
+      result.add(TblLearnMain.fromJson(jsonItem));
+    }
+    return result;
+  }
+
+  Future<List<TblLearnMain>> getChildrenTblLearnMain(int parentId) async {
+    var jsonDecode =
+    await Api.request('TblLearnMain/GetChildren/$parentId', method: HttpMethod.get);
+    List<TblLearnMain> result = [];
+    for (var jsonItem in jsonDecode) {
+      result.add(TblLearnMain.fromJson(jsonItem));
+    }
+    return result;
+  }
+
   ///TblPermPermissionMain
 
   Future<List<TblPermPermissionMain>> getAllTblPermPermissionMain() async {

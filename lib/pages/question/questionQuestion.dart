@@ -1,17 +1,19 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:egitimax/models/common/stepItem.dart';
+import 'package:egitimax/models/egitimax/egitimaxEntities.dart';
 import 'package:egitimax/repositories/appRepository.dart';
 import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:egitimax/utils/helper/localeManager.dart';
 import 'package:egitimax/utils/helper/routeManager.dart';
 import 'package:egitimax/utils/provider/imager.dart';
+import 'package:egitimax/utils/widget/checkboxList.dart';
 import 'package:egitimax/utils/widget/deviceInfo.dart';
+import 'package:egitimax/utils/widget/dropdownSearchHelper.dart';
 import 'package:enhance_stepper/enhance_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:im_stepper/stepper.dart';
-import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 
 class QuestionQuestion extends StatefulWidget {
   QuestionQuestion(
@@ -362,51 +364,23 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
   late Widget stepFourBody;
   late int stepIndex;
 
+  int selectedCountry = 225;
+  int selectedAcademicYear = 0;
+  int selectedDifficultyLevel = 0;
+  int selectedGrade = 0;
+  int selectedBranch = 0;
+
+  int selectedLearnsItemCount=2;
+  TblLearnMain? selectedLearnParent;
+  List<TblLearnMain> selectedLearns = List.empty(growable: true);
+  List<TblLearnMain> selectedAchievements = List.empty(growable: true);
+
   @override
   void initState() {
     super.initState();
     if (AppConstants.questionPageDebugPrintActive == 1) {
       debugPrint("QuestionQuestion_initState");
     }
-
-    stepOneBody = StepOneBody(
-      title: widget.lang.libPagesHomeHomePage_home,
-      routeManager: widget.routeManager,
-      appRepository: widget.appRepository,
-      theme: widget.theme,
-      lang: widget.lang,
-      localeManager: widget.localeManager,
-      deviceType: widget.deviceType,
-    );
-    stepTwoBody = StepTwoBody(
-      title: widget.lang.libPagesHomeHomePage_home,
-      routeManager: widget.routeManager,
-      appRepository: widget.appRepository,
-      theme: widget.theme,
-      lang: widget.lang,
-      localeManager: widget.localeManager,
-      deviceType: widget.deviceType,
-    );
-    stepThreeBody = StepThreeBody(
-      title: widget.lang.libPagesHomeHomePage_home,
-      routeManager: widget.routeManager,
-      appRepository: widget.appRepository,
-      theme: widget.theme,
-      lang: widget.lang,
-      localeManager: widget.localeManager,
-      deviceType: widget.deviceType,
-    );
-    stepFourBody = StepFourBody(
-      title: widget.lang.libPagesHomeHomePage_home,
-      routeManager: widget.routeManager,
-      appRepository: widget.appRepository,
-      theme: widget.theme,
-      lang: widget.lang,
-      localeManager: widget.localeManager,
-      deviceType: widget.deviceType,
-    );
-    stepItems = getStepItems();
-    stepIndex = 0;
   }
 
   @override
@@ -416,66 +390,344 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
 
   @override
   Widget build(BuildContext context) {
+    stepItems = getStepItems();
+    stepIndex = 0;
     return SingleChildScrollView(
       scrollDirection: widget.stepperType == StepperType.vertical
           ? Axis.vertical
           : Axis.horizontal,
       child: Container(
-        constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width,
-            minHeight: MediaQuery.of(context).size.height),
+        // constraints: BoxConstraints(
+        //     maxWidth: MediaQuery.of(context).size.width,
+        //     minHeight: MediaQuery.of(context).size.height
+        // ),
         child: getStepper(),
       ),
     );
   }
 
   List<StepItem> getStepItems() {
-
     List<StepItem> stepItems = List.empty(growable: true);
 
     var step1 = StepItem(
         icon: Icons.question_mark_outlined,
         stepState: StepState.indexed,
         isActive: true,
-        title: 'Question',
-        subtitle: 'Please define question !',
-        content: stepOneBody,
-        imagePath:
-            'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
+        title: 'Question Details',
+        subtitle: 'Please define details of question !',
+        content: Column(
+          children: [
+            Wrap(
+              alignment: WrapAlignment.start,
+              spacing: 5,
+              runSpacing: 5,
+              children: [
+                const SizedBox(
+                  height: 5,
+                ),
+                FutureBuilder<List<TblUtilAcademicYear>>(
+                  future: widget.appRepository.getAllTblUtilAcademicYear(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text("Error: ${snapshot.error}"));
+                    } else if (snapshot.hasData) {
+                      return DropdownSearchHelper.singleSelectionDropdown<
+                          TblUtilAcademicYear>(
+                        context: context,
+                        labelText: 'Academic Year',
+                        hintText: 'Please select academic year !',
+                        searchBoxLabelText: 'Search',
+                        showSearchBox: true,
+                        items: snapshot.data!,
+                        itemAsString: (selectedItem) {
+                          return selectedItem.academicYear.toString();
+                        },
+                        selectedItem: snapshot.data!.any(
+                                (element) => element.id == selectedAcademicYear)
+                            ? snapshot.data!.firstWhere(
+                                (element) => element.id == selectedAcademicYear)
+                            : null,
+                        onChanged: (selectedItem) {
+                          selectedAcademicYear = selectedItem!.id;
+                        },
+                      );
+                    } else {
+                      return const Center(child: Text("No data found."));
+                    }
+                  },
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                FutureBuilder<List<TblUtilDifficulty>>(
+                  future: widget.appRepository.getAllTblUtilDifficulty(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text("Error: ${snapshot.error}"));
+                    } else if (snapshot.hasData) {
+                      return DropdownSearchHelper.singleSelectionDropdown<
+                          TblUtilDifficulty>(
+                        context: context,
+                        labelText: 'Difficulty Level',
+                        hintText: 'Please select difficulty level !',
+                        searchBoxLabelText: 'Search',
+                        showSearchBox: true,
+                        items: snapshot.data!,
+                        itemAsString: (selectedItem) {
+                          return selectedItem.difficultyLev.toString();
+                        },
+                        selectedItem: snapshot.data!.any((element) =>
+                                element.id == selectedDifficultyLevel)
+                            ? snapshot.data!.firstWhere((element) =>
+                                element.id == selectedDifficultyLevel)
+                            : null,
+                        onChanged: (selectedItem) {
+                          selectedDifficultyLevel = selectedItem!.id;
+                        },
+                      );
+                    } else {
+                      return const Center(child: Text("No data found."));
+                    }
+                  },
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                FutureBuilder<List<TblUtilGrade>>(
+                  future: widget.appRepository
+                      .getByLocationIdTblUtilGrade(selectedCountry),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text("Error: ${snapshot.error}"));
+                    } else if (snapshot.hasData) {
+                      return DropdownSearchHelper.singleSelectionDropdown<
+                          TblUtilGrade>(
+                        context: context,
+                        labelText: 'Grade',
+                        hintText: 'Please select grade !',
+                        searchBoxLabelText: 'Search',
+                        showSearchBox: true,
+                        items: snapshot.data!,
+                        itemAsString: (selectedItem) {
+                          return selectedItem.gradeName.toString();
+                        },
+                        selectedItem: snapshot.data!
+                                .any((element) => element.id == selectedGrade)
+                            ? snapshot.data!.firstWhere(
+                                (element) => element.id == selectedGrade)
+                            : null,
+                        onChanged: (selectedItem) {
+                          setState(() {
+                            selectedGrade = selectedItem!.id;
+                            selectedLearnParent = null;
+                            selectedLearns.clear();
+                          });
+                        },
+                      );
+                    } else {
+                      return const Center(child: Text("No data found."));
+                    }
+                  },
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                FutureBuilder<List<TblUtilBranch>>(
+                  future: widget.appRepository
+                      .getByLocationIdTblUtilBranch(selectedCountry),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text("Error: ${snapshot.error}"));
+                    } else if (snapshot.hasData) {
+                      return DropdownSearchHelper.singleSelectionDropdown<
+                          TblUtilBranch>(
+                        context: context,
+                        labelText: 'Branch',
+                        hintText: 'Please select branch !',
+                        searchBoxLabelText: 'Search',
+                        showSearchBox: true,
+                        items: snapshot.data!,
+                        itemAsString: (selectedItem) {
+                          return selectedItem.branchName.toString();
+                        },
+                        selectedItem: snapshot.data!
+                                .any((element) => element.id == selectedBranch)
+                            ? snapshot.data!.firstWhere(
+                                (element) => element.id == selectedBranch)
+                            : null,
+                        onChanged: (selectedItem) {
+                          setState(() {
+                            selectedBranch = selectedItem!.id;
+                            selectedLearnParent = null;
+                            selectedLearns.clear();
+                          });
+                        },
+                      );
+                    } else {
+                      return const Center(child: Text("No data found."));
+                    }
+                  },
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                FutureBuilder<List<TblLearnMain>>(
+                  future: widget.appRepository.getParentsTblLearnMain(
+                      selectedBranch, selectedGrade, selectedCountry),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text("Error: ${snapshot.error}"));
+                    } else if (snapshot.hasData) {
+                      return DropdownSearchHelper.singleSelectionDropdown<
+                          TblLearnMain>(
+                        context: context,
+                        labelText: 'Domain',
+                        hintText: 'Please select domain !',
+                        searchBoxLabelText: 'Search',
+                        showSearchBox: true,
+                        items: snapshot.data!,
+                        itemAsString: (selectedItem) {
+                          return selectedItem.name.toString();
+                        },
+                        selectedItem: selectedLearnParent,
+                        onChanged: (selectedItem) {
+                          setState(() {
+                            selectedLearnParent = selectedItem;
+                          });
+                        },
+                      );
+                    } else {
+                      return const Center(child: Text("No data found."));
+                    }
+                  },
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            if (selectedLearnParent != null)
+              SizedBox(
+                height:  MediaQuery.of(context).size.height,
+                child: ListView.builder(
+                  itemCount: selectedLearns.length + 1,
+                  itemBuilder: (context, index) {
+                    var parentId = selectedLearns.isNotEmpty && index != 0
+                        ? selectedLearns[index - 1].id
+                        : selectedLearnParent?.id;
+                    if (parentId == null) {
+                      return Container();
+                    }
+
+                    return Column(
+                      children: [
+                        FutureBuilder<List<TblLearnMain>>(
+                          future: widget.appRepository
+                              .getChildrenTblLearnMain(parentId),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            } else if (snapshot.hasError) {
+                              return Center(
+                                  child: Text("Error: ${snapshot.error}"));
+                            } else if (snapshot.hasData) {
+
+                              if (snapshot.data != null && snapshot.data!.first.type == 'ct_achv') {
+                                selectedLearnsItemCount=selectedLearns.isEmpty ? 1 :selectedLearns.length+1;
+                                selectedLearnsItemCount+=snapshot.data!.length;
+
+                                return Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: CheckboxList<TblLearnMain>(
+                                    items: snapshot.data!,
+                                    selectedItems: selectedAchievements,
+                                    onChanged: (selectedItems) {
+                                      selectedAchievements = selectedItems;
+                                    },
+                                    getTitle: (item) {
+                                      return item.itemCode ?? '';
+                                    },
+                                    getSubtitle: (item) {
+                                      return "${item.name}";
+                                    },
+                                    boxDecoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      border: Border.all(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                selectedLearnsItemCount=selectedLearns.isEmpty ? 1 :selectedLearns.length+1;
+                                return DropdownSearchHelper
+                                    .singleSelectionDropdown<TblLearnMain>(
+                                  context: context,
+                                  labelText: 'Domain',
+                                  hintText: 'Please select domain !',
+                                  searchBoxLabelText: 'Search',
+                                  showSearchBox: true,
+                                  items: snapshot.data!,
+                                  itemAsString: (selectedItem) {
+                                    return selectedItem.name.toString();
+                                  },
+                                  selectedItem: selectedLearns.isNotEmpty &&
+                                          selectedLearns.length >= index + 1
+                                      ? selectedLearns[index]
+                                      : null,
+                                  onChanged: (selectedItem) {
+                                    setState(() {
+                                      selectedLearns.insert(
+                                          index, selectedItem!);
+                                      selectedLearns.removeRange(
+                                          index + 1, selectedLearns.length);
+                                    });
+                                  },
+                                );
+                              }
+                            } else {
+                              return const Center(
+                                  child: Text("No data found."));
+                            }
+                          },
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              )
+          ],
+        ),
+        imagePath: 'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
 
     var step2 = StepItem(
         icon: Icons.fact_check,
         stepState: StepState.indexed,
         isActive: true,
-        title: 'Question Options And Resolution',
-        subtitle: 'Please add options and resolutions !',
-        content: stepTwoBody,
-        imagePath:
-        'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
-
-    var step3 = StepItem(
-        icon: Icons.details_outlined,
-        stepState: StepState.editing,
-        isActive: true,
-        title: 'Question Details',
-        subtitle: 'Please define details of question !',
-        content: stepThreeBody,
-        imagePath:
-            'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
-
-    var step4 = StepItem(
-        icon: Icons.summarize_outlined,
-        stepState: StepState.indexed,
-        isActive: true,
         title: 'Summary And Submit',
         subtitle: 'Please check and submit !',
-        content: stepFourBody,
+        content: Container(),
         imagePath:
             'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
 
-
-
-    stepItems = [step1, step2, step3,step4];
+    stepItems = [step1, step2];
 
     return stepItems;
   }
@@ -514,8 +766,8 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
             ? Axis.vertical
             : Axis.horizontal,
         child: SizedBox(
-            width: MediaQuery.of(context).size.width * (2 / 3),
-            height: MediaQuery.of(context).size.height * (2 / 3),
+             width: MediaQuery.of(context).size.width * (2 / 3),
+             height: MediaQuery.of(context).size.height * (2 / 3),
             child: Stepper(
                 type: widget.stepperType,
                 currentStep: stepIndex,
@@ -592,8 +844,8 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
           ? Axis.vertical
           : Axis.horizontal,
       child: SizedBox(
-        width: MediaQuery.of(context).size.width * (2 / 3),
-        height: MediaQuery.of(context).size.height * (2 / 3),
+         width: MediaQuery.of(context).size.width * (2 / 3),
+         height: MediaQuery.of(context).size.height * (2 / 3),
         child: EnhanceStepper(
             stepIconSize: widget.theme.iconTheme.size,
             type: widget.stepperType,
@@ -668,8 +920,8 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
           ? Axis.vertical
           : Axis.horizontal,
       child: SizedBox(
-        width: MediaQuery.of(context).size.width * (2 / 3),
-        height: MediaQuery.of(context).size.height * (2 / 3),
+         width: MediaQuery.of(context).size.width * (2 / 3),
+         height: MediaQuery.of(context).size.height * (2 / 3),
         child: Padding(
           padding: const EdgeInsets.all(5.0),
           child: Column(
@@ -769,384 +1021,6 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class StepOneBody extends StatefulWidget {
-  const StepOneBody(
-      {super.key,
-      required this.title,
-      required this.routeManager,
-      required this.appRepository,
-      required this.theme,
-      required this.lang,
-      required this.localeManager,
-      required this.deviceType});
-
-  final String title;
-  final RouteManager routeManager;
-  final AppRepository appRepository;
-  final ThemeData theme;
-  final AppLocalizations lang;
-  final LocaleManager localeManager;
-  final DeviceType deviceType;
-
-  @override
-  State<StepOneBody> createState() => _StepOneBody();
-}
-
-class _StepOneBody extends State<StepOneBody> {
-  late QuillEditorController controller;
-
-
-  final customToolBarList = [
-    ToolBarStyle.bold,
-    ToolBarStyle.italic,
-    ToolBarStyle.align,
-    ToolBarStyle.color,
-    ToolBarStyle.background,
-    ToolBarStyle.listBullet,
-    ToolBarStyle.listOrdered,
-    ToolBarStyle.clean,
-    ToolBarStyle.addTable,
-    ToolBarStyle.editTable,
-  ];
-  bool _hasFocus = false;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = QuillEditorController();
-  }
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-  @override
-  Widget build(BuildContext context) {
-
-    return SizedBox(
-      //width: MediaQuery.of(context).size.width,
-      height: kToolbarHeight * 7, // MediaQuery.of(context).size.height,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width *2,
-                child: ToolBar.scroll(
-                  toolBarColor: widget.theme.colorScheme.primaryContainer,
-                  padding: const EdgeInsets.all(8),
-                  iconSize: widget.theme.iconTheme.size,
-                  iconColor: widget.theme.iconTheme.color,
-                  activeIconColor: Colors.greenAccent.shade400,
-                  controller: controller,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  direction: Axis.horizontal,
-                  customButtons: [
-                    Container(
-                      width: 25,
-                      height: 25,
-                      decoration: BoxDecoration(
-                          color: _hasFocus ? Colors.green : Colors.grey,
-                          borderRadius: BorderRadius.circular(15)),
-                    ),
-                    InkWell(
-                        onTap: () async {
-                          var selectedText = await controller.getSelectedText();
-                          debugPrint('selectedText $selectedText');
-                          var selectedHtmlText =
-                          await controller.getSelectedHtmlText();
-                          debugPrint('selectedHtmlText $selectedHtmlText');
-                        },
-                        child: const Icon(
-                          Icons.add_circle,
-                          color: Colors.black,
-                        )),
-                  ],
-                ),
-              ),
-            ),
-            Flexible(
-              fit: FlexFit.tight,
-              child: QuillHtmlEditor(
-                  text: "<h1>Hello</h1>This is a quill html editor example 😊",
-                  hintText: 'Hint text goes here',
-                  controller: controller,
-                  isEnabled: true,
-                  ensureVisible: false,
-                  minHeight: kToolbarHeight * 7,
-                  textStyle: widget.theme.textTheme.bodyMedium,
-                  hintTextStyle: widget.theme.textTheme.bodyMedium,
-                  hintTextAlign: TextAlign.start,
-                  padding: const EdgeInsets.only(left: 10, top: 10),
-                  hintTextPadding: const EdgeInsets.only(left: 20),
-                  backgroundColor: widget.theme.colorScheme.background,
-                  loadingBuilder: (context) {
-                    return const Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 0.4,
-                        ));
-                  },
-                  onFocusChanged: (focus) {
-                    debugPrint('has focus $focus');
-                    setState(() {
-                      _hasFocus = focus;
-                    });
-                  },
-                  onTextChanged: (text) => debugPrint('widget text change $text'),
-                  onEditorCreated: () { }
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class StepTwoBody extends StatefulWidget {
-  const StepTwoBody(
-      {super.key,
-      required this.title,
-      required this.routeManager,
-      required this.appRepository,
-      required this.theme,
-      required this.lang,
-      required this.localeManager,
-      required this.deviceType});
-
-  final String title;
-  final RouteManager routeManager;
-  final AppRepository appRepository;
-  final ThemeData theme;
-  final AppLocalizations lang;
-  final LocaleManager localeManager;
-  final DeviceType deviceType;
-
-  @override
-  State<StepTwoBody> createState() => _StepTwoBody();
-}
-
-class _StepTwoBody extends State<StepTwoBody> {
-  int _counter = 0;
-
-  Future<void> _incrementCounter() async {
-
-    var languageParam="culture=${widget.localeManager.locale.languageCode}-${widget.localeManager.countryCode.toUpperCase()}";
-    var url=Uri.parse('http://138.68.82.103:100/?qId=1&qToken=www&${languageParam}');
-
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url,mode: LaunchMode.externalApplication);
-    } else {
-
-    await launchUrl(url,mode: LaunchMode.externalApplication);
-    //throw 'Could not launch $url';
-
-    }
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      //width: MediaQuery.of(context).size.width,
-      height: kToolbarHeight * 7, // MediaQuery.of(context).size.height,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  FloatingActionButton(
-                    heroTag: 'sdsdsasdfsfsdfsd',
-                    onPressed: _incrementCounter,
-                    tooltip: 'Open Editor Page',
-                    child: const Icon(Icons.add),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class StepThreeBody extends StatefulWidget {
-  StepThreeBody(
-      {super.key,
-      required this.title,
-      required this.routeManager,
-      required this.appRepository,
-      required this.theme,
-      required this.lang,
-      required this.localeManager,
-      required this.deviceType});
-
-  String title;
-  final RouteManager routeManager;
-  final AppRepository appRepository;
-  final ThemeData theme;
-  final AppLocalizations lang;
-  final LocaleManager localeManager;
-  final DeviceType deviceType;
-
-  @override
-  State<StepThreeBody> createState() => _StepThreeBody();
-}
-
-class _StepThreeBody extends State<StepThreeBody> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-      widget.title = _counter.toString();
-    });
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      //width: MediaQuery.of(context).size.width,
-      height: kToolbarHeight * 7, // MediaQuery.of(context).size.height,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:${widget.title}',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  FloatingActionButton(
-                    heroTag: 'sdsdsasd',
-                    onPressed: _incrementCounter,
-                    tooltip: 'Increment',
-                    child: const Icon(Icons.add),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class StepFourBody extends StatefulWidget {
-  StepFourBody(
-      {super.key,
-        required this.title,
-        required this.routeManager,
-        required this.appRepository,
-        required this.theme,
-        required this.lang,
-        required this.localeManager,
-        required this.deviceType});
-
-  String title;
-  final RouteManager routeManager;
-  final AppRepository appRepository;
-  final ThemeData theme;
-  final AppLocalizations lang;
-  final LocaleManager localeManager;
-  final DeviceType deviceType;
-
-  @override
-  State<StepFourBody> createState() => _StepFourBody();
-}
-
-class _StepFourBody extends State<StepFourBody> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-      widget.title = _counter.toString();
-    });
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      //width: MediaQuery.of(context).size.width,
-      height: kToolbarHeight * 7, // MediaQuery.of(context).size.height,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:${widget.title}',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  FloatingActionButton(
-                    heroTag: 'sdsdsfdfgfasd',
-                    onPressed: _incrementCounter,
-                    tooltip: 'Increment',
-                    child: const Icon(Icons.add),
-                  ),
-                ],
-              ),
-            )
-          ],
         ),
       ),
     );
