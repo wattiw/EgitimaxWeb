@@ -45,7 +45,20 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
   bool snap = false;
   StepperType stepperType = StepperType.vertical;
   StepperList stepper = StepperList.enhance;
+
   int stepIndex = 0;
+  late List<StepItem> stepItems;
+
+  int selectedCountry = 225;
+  int selectedAcademicYear = 0;
+  int selectedDifficultyLevel = 0;
+  int selectedGrade = 0;
+  int selectedBranch = 0;
+
+  int selectedLearnsItemCount = 2;
+  TblLearnMain? selectedLearnParent;
+  List<TblLearnMain> selectedLearns = List.empty(growable: true);
+  List<TblLearnMain> selectedAchievements = List.empty(growable: true);
 
   @override
   void initState() {
@@ -67,102 +80,105 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
     }
     GlobalKey<ScaffoldState> questionQuestionKey = GlobalKey<ScaffoldState>();
 
+    stepItems = getStepItems();
+
     return Scaffold(
-        key: questionQuestionKey,
-        body: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                backgroundColor: Theme.of(context).colorScheme.background,
-                foregroundColor: Theme.of(context).colorScheme.secondary,
-                shadowColor: Theme.of(context).colorScheme.shadow,
-                surfaceTintColor: Theme.of(context).colorScheme.surface,
-                actions: [
-                  IconButton(
-                    icon:
-                        Icon(Icons.settings, size: widget.theme.iconTheme.size),
-                    onPressed: () {
-                      questionQuestionKey.currentState?.openEndDrawer();
-                    },
-                  ),
-                ],
-                automaticallyImplyLeading: false,
-                pinned: pinned,
-                snap: snap,
-                floating: floating,
-                expandedHeight: kToolbarHeight * 3,
-                flexibleSpace: FutureBuilder(
-                  future: Future.delayed(const Duration(seconds: 0), () {
-                    return Imager.get(
-                        'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
-                  }),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (snapshot.hasError) {
-                      return const Center(
-                        child: Text('Error loading image'),
-                      );
-                    } else {
-                      return Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: snapshot.data!,
-                            fit: BoxFit.cover,
-                          ),
-                          color: widget.theme.colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Text(
-                                    widget.currentTitle ?? widget.title,
-                                    style: widget.theme.textTheme.titleMedium,
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  },
-                ),
+      key: questionQuestionKey,
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            backgroundColor: Theme.of(context).colorScheme.background,
+            foregroundColor: Theme.of(context).colorScheme.secondary,
+            shadowColor: Theme.of(context).colorScheme.shadow,
+            surfaceTintColor: Theme.of(context).colorScheme.surface,
+            actions: [
+              IconButton(
+                icon: Icon(Icons.settings, size: widget.theme.iconTheme.size),
+                onPressed: () {
+                  questionQuestionKey.currentState?.openEndDrawer();
+                },
               ),
-            ];
-          },
-          body: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Container(
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width,
-                  minHeight: MediaQuery.of(context).size.height),
-              child: QuestionQuestionBody(
-                title: widget.title,
-                routeManager: widget.routeManager,
-                appRepository: widget.appRepository,
-                theme: widget.theme,
-                lang: widget.lang,
-                localeManager: widget.localeManager,
-                deviceType: widget.deviceType,
-                stepper: stepper,
-                stepperType: stepperType,
+            ],
+            automaticallyImplyLeading: false,
+            pinned: pinned,
+            snap: snap,
+            floating: floating,
+            expandedHeight: kToolbarHeight * 3,
+            flexibleSpace: FutureBuilder(
+              future: Future.delayed(const Duration(seconds: 0), () {
+                return Imager.get(
+                    'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
+              }),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return const Center(
+                    child: Text('Error loading image'),
+                  );
+                } else {
+                  return Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: snapshot.data!,
+                        fit: BoxFit.cover,
+                      ),
+                      color: widget.theme.colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Text(
+                                widget.currentTitle ?? widget.title,
+                                style: widget.theme.textTheme.titleMedium,
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.all(5.0),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width,
+                        minHeight: MediaQuery.of(context).size.height,
+                      ),
+                      child: getStepper(),
+                    ),
+                  );
+                },
+                childCount: 1,
               ),
             ),
           ),
-        ),
-        endDrawer: getDrawer());
+        ],
+      ),
+      endDrawer: getDrawer(),
+    );
   }
 
   Drawer getDrawer() {
@@ -325,85 +341,6 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
       ),
     );
     return endDrawerScaffold;
-  }
-}
-
-class QuestionQuestionBody extends StatefulWidget {
-  QuestionQuestionBody(
-      {super.key,
-      required this.title,
-      required this.routeManager,
-      required this.appRepository,
-      required this.theme,
-      required this.lang,
-      required this.localeManager,
-      required this.deviceType,
-      this.stepperType = StepperType.vertical,
-      this.stepper = StepperList.enhance});
-
-  final String title;
-  final RouteManager routeManager;
-  final AppRepository appRepository;
-  final ThemeData theme;
-  final AppLocalizations lang;
-  final LocaleManager localeManager;
-  final DeviceType deviceType;
-
-  final StepperType stepperType;
-  final StepperList stepper;
-
-  @override
-  State<QuestionQuestionBody> createState() => _QuestionQuestionBody();
-}
-
-class _QuestionQuestionBody extends State<QuestionQuestionBody> {
-  late List<StepItem> stepItems;
-  late Widget stepOneBody;
-  late Widget stepTwoBody;
-  late Widget stepThreeBody;
-  late Widget stepFourBody;
-  late int stepIndex;
-
-  int selectedCountry = 225;
-  int selectedAcademicYear = 0;
-  int selectedDifficultyLevel = 0;
-  int selectedGrade = 0;
-  int selectedBranch = 0;
-
-  int selectedLearnsItemCount=2;
-  TblLearnMain? selectedLearnParent;
-  List<TblLearnMain> selectedLearns = List.empty(growable: true);
-  List<TblLearnMain> selectedAchievements = List.empty(growable: true);
-
-  @override
-  void initState() {
-    super.initState();
-    if (AppConstants.questionPageDebugPrintActive == 1) {
-      debugPrint("QuestionQuestion_initState");
-    }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    stepItems = getStepItems();
-    stepIndex = 0;
-    return SingleChildScrollView(
-      scrollDirection: widget.stepperType == StepperType.vertical
-          ? Axis.vertical
-          : Axis.horizontal,
-      child: Container(
-        // constraints: BoxConstraints(
-        //     maxWidth: MediaQuery.of(context).size.width,
-        //     minHeight: MediaQuery.of(context).size.height
-        // ),
-        child: getStepper(),
-      ),
-    );
   }
 
   List<StepItem> getStepItems() {
@@ -591,8 +528,9 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
                       return DropdownSearchHelper.singleSelectionDropdown<
                           TblLearnMain>(
                         context: context,
-                        labelText: 'Domain',
-                        hintText: 'Please select domain !',
+                        labelText: snapshot.data!.first.type,
+                        hintText:
+                            'Please select ${snapshot.data!.first.type} !',
                         searchBoxLabelText: 'Search',
                         showSearchBox: true,
                         items: snapshot.data!,
@@ -616,13 +554,11 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
                 ),
               ],
             ),
-            const SizedBox(
-              height: 10,
-            ),
             if (selectedLearnParent != null)
               SizedBox(
-                height:  MediaQuery.of(context).size.height,
+                height: MediaQuery.of(context).size.height / 2,
                 child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
                   itemCount: selectedLearns.length + 1,
                   itemBuilder: (context, index) {
                     var parentId = selectedLearns.isNotEmpty && index != 0
@@ -631,29 +567,32 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
                     if (parentId == null) {
                       return Container();
                     }
-
                     return Column(
                       children: [
-                        FutureBuilder<List<TblLearnMain>>(
-                          future: widget.appRepository
-                              .getChildrenTblLearnMain(parentId),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            } else if (snapshot.hasError) {
-                              return Center(
-                                  child: Text("Error: ${snapshot.error}"));
-                            } else if (snapshot.hasData) {
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: FutureBuilder<List<TblLearnMain>>(
+                            future: widget.appRepository
+                                .getChildrenTblLearnMain(parentId),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                    child: Text("Error: ${snapshot.error}"));
+                              } else if (snapshot.hasData) {
+                                if (snapshot.data != null &&
+                                    snapshot.data!.first.type == 'ct_achv') {
+                                  selectedLearnsItemCount =
+                                      selectedLearns.isEmpty
+                                          ? 1
+                                          : selectedLearns.length + 1;
+                                  selectedLearnsItemCount +=
+                                      snapshot.data!.length;
 
-                              if (snapshot.data != null && snapshot.data!.first.type == 'ct_achv') {
-                                selectedLearnsItemCount=selectedLearns.isEmpty ? 1 :selectedLearns.length+1;
-                                selectedLearnsItemCount+=snapshot.data!.length;
-
-                                return Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: CheckboxList<TblLearnMain>(
+                                  return CheckboxList<TblLearnMain>(
                                     items: snapshot.data!,
                                     selectedItems: selectedAchievements,
                                     onChanged: (selectedItems) {
@@ -670,43 +609,44 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
                                       border: Border.all(color: Colors.grey),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
-                                  ),
-                                );
+                                  );
+                                } else {
+                                  selectedLearnsItemCount =
+                                      selectedLearns.isEmpty
+                                          ? 1
+                                          : selectedLearns.length + 1;
+                                  return DropdownSearchHelper
+                                      .singleSelectionDropdown<TblLearnMain>(
+                                    context: context,
+                                    labelText: snapshot.data!.first.type ?? '',
+                                    hintText:
+                                        'Please select ${snapshot.data!.first.type} !',
+                                    searchBoxLabelText: 'Search',
+                                    showSearchBox: true,
+                                    items: snapshot.data!,
+                                    itemAsString: (selectedItem) {
+                                      return selectedItem.name.toString();
+                                    },
+                                    selectedItem: selectedLearns.isNotEmpty &&
+                                            selectedLearns.length >= index + 1
+                                        ? selectedLearns[index]
+                                        : null,
+                                    onChanged: (selectedItem) {
+                                      setState(() {
+                                        selectedLearns.insert(
+                                            index, selectedItem!);
+                                        selectedLearns.removeRange(
+                                            index + 1, selectedLearns.length);
+                                      });
+                                    },
+                                  );
+                                }
                               } else {
-                                selectedLearnsItemCount=selectedLearns.isEmpty ? 1 :selectedLearns.length+1;
-                                return DropdownSearchHelper
-                                    .singleSelectionDropdown<TblLearnMain>(
-                                  context: context,
-                                  labelText: 'Domain',
-                                  hintText: 'Please select domain !',
-                                  searchBoxLabelText: 'Search',
-                                  showSearchBox: true,
-                                  items: snapshot.data!,
-                                  itemAsString: (selectedItem) {
-                                    return selectedItem.name.toString();
-                                  },
-                                  selectedItem: selectedLearns.isNotEmpty &&
-                                          selectedLearns.length >= index + 1
-                                      ? selectedLearns[index]
-                                      : null,
-                                  onChanged: (selectedItem) {
-                                    setState(() {
-                                      selectedLearns.insert(
-                                          index, selectedItem!);
-                                      selectedLearns.removeRange(
-                                          index + 1, selectedLearns.length);
-                                    });
-                                  },
-                                );
+                                return const Center(
+                                    child: Text("No data found."));
                               }
-                            } else {
-                              return const Center(
-                                  child: Text("No data found."));
-                            }
-                          },
-                        ),
-                        const SizedBox(
-                          height: 5,
+                            },
+                          ),
                         ),
                       ],
                     );
@@ -715,7 +655,8 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
               )
           ],
         ),
-        imagePath: 'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
+        imagePath:
+            'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
 
     var step2 = StepItem(
         icon: Icons.fact_check,
@@ -733,15 +674,31 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
   }
 
   Widget getStepper() {
-    if (widget.stepper == StepperList.enhance) {
-      return buildEnhanceStepper();
-    } else if (widget.stepper == StepperList.classic) {
-      return buildClassicStepper();
-    } else if (widget.stepper == StepperList.icon) {
-      return buildIconStepper();
+    Widget currentStepper;
+    if (stepper == StepperList.enhance) {
+      currentStepper = buildEnhanceStepper();
+    } else if (stepper == StepperList.classic) {
+      currentStepper = buildClassicStepper();
+    } else if (stepper == StepperList.icon) {
+      currentStepper = buildIconStepper();
     } else {
-      return buildIconStepper();
+      currentStepper = buildIconStepper();
     }
+
+    return SingleChildScrollView(
+      scrollDirection: stepperType == StepperType.horizontal
+          ? Axis.horizontal
+          : Axis.vertical,
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height,
+          minWidth: MediaQuery.of(context).size.width,
+        ),
+        child: currentStepper,
+      ),
+    );
   }
 
   void go(int index) {
@@ -761,267 +718,239 @@ class _QuestionQuestionBody extends State<QuestionQuestionBody> {
   }
 
   Widget buildClassicStepper() {
-    return SingleChildScrollView(
-        scrollDirection: widget.stepperType == StepperType.vertical
-            ? Axis.vertical
-            : Axis.horizontal,
-        child: SizedBox(
-             width: MediaQuery.of(context).size.width * (2 / 3),
-             height: MediaQuery.of(context).size.height * (2 / 3),
-            child: Stepper(
-                type: widget.stepperType,
-                currentStep: stepIndex,
-                steps: stepItems
-                    .map((e) => Step(
-                        state: e.stepState,
-                        isActive: stepIndex == stepItems.indexOf(e),
-                        title: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Icon(e.icon,
-                                color: stepIndex == stepItems.indexOf(e)
-                                    ? Colors.red
-                                    : null,
-                                size: widget.theme.iconTheme.size),
-                            Text(
-                              e.title,
-                              style: widget.theme.textTheme.titleMedium,
-                            )
-                          ],
-                        ),
-                        //Text("step ${tuples.indexOf(e)}"),
-                        subtitle: Text(
-                          e.subtitle,
-                          style: widget.theme.textTheme.titleSmall,
-                        ),
-                        content: e.content))
-                    .toList(),
-                onStepCancel: () {
-                  go(-1);
-                },
-                onStepContinue: () {
-                  go(1);
-                },
-                onStepTapped: (index) {
-                  stepIndex = index;
-                  go(0);
-                },
-                controlsBuilder:
-                    (BuildContext context, ControlsDetails details) {
-                  return Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: ElevatedButton(
-                            onPressed: details.onStepCancel,
-                            child: Text("Back",
-                                style: widget.theme.textTheme.bodyMedium),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: ElevatedButton(
-                            onPressed: details.onStepContinue,
-                            child: Text("Next",
-                                style: widget.theme.textTheme.bodyMedium),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                })));
+    return Stepper(
+        type: stepperType,
+        currentStep: stepIndex,
+        steps: stepItems
+            .map((e) => Step(
+                state: e.stepState,
+                isActive: stepIndex == stepItems.indexOf(e),
+                title: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(e.icon,
+                        color: stepIndex == stepItems.indexOf(e)
+                            ? Colors.red
+                            : null,
+                        size: widget.theme.iconTheme.size),
+                    Text(
+                      e.title,
+                      style: widget.theme.textTheme.titleMedium,
+                    )
+                  ],
+                ),
+                //Text("step ${tuples.indexOf(e)}"),
+                subtitle: Text(
+                  e.subtitle,
+                  style: widget.theme.textTheme.titleSmall,
+                ),
+                content: e.content))
+            .toList(),
+        onStepCancel: () {
+          go(-1);
+        },
+        onStepContinue: () {
+          go(1);
+        },
+        onStepTapped: (index) {
+          stepIndex = index;
+          go(0);
+        },
+        controlsBuilder: (BuildContext context, ControlsDetails details) {
+          return Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ElevatedButton(
+                    onPressed: details.onStepCancel,
+                    child:
+                        Text("Back", style: widget.theme.textTheme.bodyMedium),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ElevatedButton(
+                    onPressed: details.onStepContinue,
+                    child:
+                        Text("Next", style: widget.theme.textTheme.bodyMedium),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   Widget buildEnhanceStepper() {
-    return SingleChildScrollView(
-      scrollDirection: widget.stepperType == StepperType.vertical
-          ? Axis.vertical
-          : Axis.horizontal,
-      child: SizedBox(
-         width: MediaQuery.of(context).size.width * (2 / 3),
-         height: MediaQuery.of(context).size.height * (2 / 3),
-        child: EnhanceStepper(
-            stepIconSize: widget.theme.iconTheme.size,
-            type: widget.stepperType,
-            horizontalTitlePosition: HorizontalTitlePosition.bottom,
-            horizontalLinePosition: HorizontalLinePosition.top,
-            currentStep: stepIndex,
-            steps: stepItems
-                .map((e) => EnhanceStep(
-                      icon: Icon(e.icon,
-                          color: stepIndex == stepItems.indexOf(e)
-                              ? Colors.red
-                              : null,
-                          size: widget.theme.iconTheme.size),
-                      state: e.stepState,
-                      isActive: stepIndex == stepItems.indexOf(e),
-                      title: Text(
-                        e.title,
-                        style: widget.theme.textTheme.titleMedium,
-                      ),
-                      subtitle: Text(
-                        e.subtitle,
-                        style: widget.theme.textTheme.titleSmall,
-                      ),
-                      content: e.content,
-                    ))
-                .toList(),
-            onStepCancel: () {
-              go(-1);
-            },
-            onStepContinue: () {
-              go(1);
-            },
-            onStepTapped: (index) {
-              stepIndex = index;
-              go(0);
-            },
-            controlsBuilder: (BuildContext context, ControlsDetails details) {
-              return Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: ElevatedButton(
-                        onPressed: details.onStepCancel,
-                        child: Text("Back",
-                            style: widget.theme.textTheme.bodyMedium),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: ElevatedButton(
-                        onPressed: details.onStepContinue,
-                        child: Text("Next",
-                            style: widget.theme.textTheme.bodyMedium),
-                      ),
-                    ),
-                  ],
+    return EnhanceStepper(
+        stepIconSize: widget.theme.iconTheme.size,
+        type: stepperType,
+        horizontalTitlePosition: HorizontalTitlePosition.bottom,
+        horizontalLinePosition: HorizontalLinePosition.top,
+        currentStep: stepIndex,
+        steps: stepItems
+            .map((e) => EnhanceStep(
+                  icon: Icon(e.icon,
+                      color:
+                          stepIndex == stepItems.indexOf(e) ? Colors.red : null,
+                      size: widget.theme.iconTheme.size),
+                  state: e.stepState,
+                  isActive: stepIndex == stepItems.indexOf(e),
+                  title: Text(
+                    e.title,
+                    style: widget.theme.textTheme.titleMedium,
+                  ),
+                  subtitle: Text(
+                    e.subtitle,
+                    style: widget.theme.textTheme.titleSmall,
+                  ),
+                  content: e.content,
+                ))
+            .toList(),
+        onStepCancel: () {
+          go(-1);
+        },
+        onStepContinue: () {
+          go(1);
+        },
+        onStepTapped: (index) {
+          stepIndex = index;
+          go(0);
+        },
+        controlsBuilder: (BuildContext context, ControlsDetails details) {
+          return Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ElevatedButton(
+                    onPressed: details.onStepCancel,
+                    child:
+                        Text("Back", style: widget.theme.textTheme.bodyMedium),
+                  ),
                 ),
-              );
-            }),
-      ),
-    );
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ElevatedButton(
+                    onPressed: details.onStepContinue,
+                    child:
+                        Text("Next", style: widget.theme.textTheme.bodyMedium),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   Widget buildIconStepper() {
     ScrollController scrollController = ScrollController();
-    return SingleChildScrollView(
-      scrollDirection: widget.stepperType == StepperType.vertical
-          ? Axis.vertical
-          : Axis.horizontal,
-      child: SizedBox(
-         width: MediaQuery.of(context).size.width * (2 / 3),
-         height: MediaQuery.of(context).size.height * (2 / 3),
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Column(
-            children: [
-              IconStepper(
-                stepColor: widget.theme.colorScheme.primaryContainer,
-                lineColor: widget.theme.colorScheme.primary,
-                activeStepColor: widget.theme.colorScheme.onPrimaryContainer,
-                icons: stepItems.map((e) {
-                  IconData iconData;
-                  return Icon(e.icon,
-                      color:
-                          stepIndex == stepItems.indexOf(e) ? Colors.red : null,
-                      size: widget.theme.iconTheme.size);
-                }).toList(),
-                activeStep: stepIndex,
-                enableStepTapping: true,
-                onStepReached: (index) {
-                  stepIndex = index;
-                  go(0);
-                },
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: Imager.get(stepItems[stepIndex].imagePath),
-                    // Replace with your image path
-                    fit: BoxFit
-                        .cover, // Adjust the image to cover the whole container
-                  ),
-                  color: widget.theme.colorScheme.inversePrimary,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text(
-                            stepItems[stepIndex].title,
-                            style: widget.theme.textTheme.titleMedium,
-                          ),
-                          Text(
-                            stepItems[stepIndex].subtitle,
-                            style: widget.theme.textTheme.titleSmall,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: ListView(
-                    controller: scrollController,
-                    scrollDirection: Axis.vertical,
-                    children: [
-                      SizedBox(
-                        width: double.infinity,
-                        child: stepItems[stepIndex].content,
-                      )
-                    ]),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          go(-1);
-                        },
-                        child: Text("Back",
-                            style: widget.theme.textTheme.bodyMedium),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          go(1);
-                        },
-                        child: Text("Next",
-                            style: widget.theme.textTheme.bodyMedium),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: Column(
+        children: [
+          IconStepper(
+            stepColor: widget.theme.colorScheme.primaryContainer,
+            lineColor: widget.theme.colorScheme.primary,
+            activeStepColor: widget.theme.colorScheme.onPrimaryContainer,
+            icons: stepItems.map((e) {
+              IconData iconData;
+              return Icon(e.icon,
+                  color: stepIndex == stepItems.indexOf(e) ? Colors.red : null,
+                  size: widget.theme.iconTheme.size);
+            }).toList(),
+            activeStep: stepIndex,
+            enableStepTapping: true,
+            onStepReached: (index) {
+              stepIndex = index;
+              go(0);
+            },
           ),
-        ),
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: Imager.get(stepItems[stepIndex].imagePath),
+                // Replace with your image path
+                fit: BoxFit
+                    .cover, // Adjust the image to cover the whole container
+              ),
+              color: widget.theme.colorScheme.inversePrimary,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text(
+                        stepItems[stepIndex].title,
+                        style: widget.theme.textTheme.titleMedium,
+                      ),
+                      Text(
+                        stepItems[stepIndex].subtitle,
+                        style: widget.theme.textTheme.titleSmall,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView(
+                controller: scrollController,
+                scrollDirection: Axis.vertical,
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: stepItems[stepIndex].content,
+                  )
+                ]),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      go(-1);
+                    },
+                    child:
+                        Text("Back", style: widget.theme.textTheme.bodyMedium),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      go(1);
+                    },
+                    child:
+                        Text("Next", style: widget.theme.textTheme.bodyMedium),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

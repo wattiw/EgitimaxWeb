@@ -21,7 +21,7 @@ class AppConstants {
   static  double appBarLogoRatio = 3.176;
   static  double appBarLogoMargin = 3;
   static  double appBarUserImageMargin = 3;
-  static  double appBarLogoSizeCorrectionFactor = 0.1;
+  static  double appBarLogoSizeCorrectionFactor = 1;
   static  double appBarUserImageSizeCorrectionFactor = 0.6;
   static  double appBarMobilScreenWidthLimitSize = 500;
   static const TabStyle? convexAppBarStyle = null;

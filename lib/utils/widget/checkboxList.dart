@@ -33,30 +33,29 @@ class _CheckboxListState<T> extends State<CheckboxList<T>> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       decoration: widget.boxDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Checkbox(
-                value: _selectAll,
-                onChanged: (value) {
-                  setState(() {
-                    _selectAll = value ?? false;
-                    if (_selectAll) {
-                      widget.onChanged(widget.items);
-                      widget.selectedItems = List.from(widget.items); // Tüm öğeleri seçtiğimizde selectedItems'ı güncelle
-                    } else {
-                      widget.onChanged([]);
-                      widget.selectedItems = []; // Tüm seçimleri kaldırdığımızda selectedItems'ı sıfırla
-                    }
-                  });
-                },
-              ),
-              Text("Select All"),
-            ],
+          CheckboxListTile(
+            value:_selectAll,
+            onChanged: (value) {
+              setState(() {
+                _selectAll = value ?? false;
+                if (_selectAll) {
+                  widget.onChanged(widget.items);
+                  widget.selectedItems = List.from(widget.items);
+                } else {
+                  widget.onChanged([]);
+                  widget.selectedItems = [];
+                }
+              });
+            },
+            title:  Text(_selectAll ? 'Remove All Selection': 'Select All'),
+            subtitle:Text(_selectAll ? 'All items are unselected' :'All items are selected.'),
           ),
+          const Divider(height: 0),
           for (T item in widget.items)
             CheckboxListTile(
               value: widget.selectedItems.contains(item),
