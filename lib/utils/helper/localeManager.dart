@@ -18,12 +18,12 @@ class LocaleManager extends ChangeNotifier {
   ];
 
   Map<String, String> countryNames = {
-    'de': 'German (Germany)',
-    'fr': 'French (France)',
-    'tr': 'Turkish (Turkey)',
-    'en': 'English (United States)',
-    'az': 'Azerice (Azerbaycan)',
-    'ar': 'Arabian (Saudi Arabia)'
+    'de': 'Deutsch',
+    'fr': 'Français',
+    'tr': 'Türkçe',
+    'en': 'English',
+    'az': 'Azərbaycanca',
+    'ar': 'العربية'
   };
 
   String getCountryCodeFromLanguageCode(String languageCode) {

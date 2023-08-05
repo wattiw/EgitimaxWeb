@@ -83,92 +83,104 @@ class _HomeHomeState extends State<HomeHome> {
       debugPrint("HomeHome_build");
     }
     GlobalKey<ScaffoldState> homeHomeKey = GlobalKey<ScaffoldState>();
+
     return Scaffold(
-        key: homeHomeKey,
-        body: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                backgroundColor: Theme.of(context).colorScheme.background,
-                foregroundColor: Theme.of(context).colorScheme.secondary,
-                shadowColor: Theme.of(context).colorScheme.shadow,
-                surfaceTintColor: Theme.of(context).colorScheme.surface,
-                actions: [
-                  IconButton(
-                    icon:
-                        Icon(Icons.settings, size: widget.theme.iconTheme.size),
-                    onPressed: () {
-                      homeHomeKey.currentState?.openEndDrawer();
-                    },
-                  ),
-                ],
-                automaticallyImplyLeading: true,
-                pinned: pinned,
-                snap: snap,
-                floating: floating,
-                expandedHeight: kToolbarHeight * 3,
-                flexibleSpace: FutureBuilder(
-                  future: Future.delayed(const Duration(seconds: 0), () {
-                    return Imager.get(AppConstants.appBarLargeLogoPath);
-                  }),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (snapshot.hasError) {
-                      return const Center(
-                        child: Text('Error loading image'),
-                      );
-                    } else {
-                      return Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: snapshot.data!,
-                            fit: BoxFit.scaleDown,
-                          ),
-                          color: widget.theme.colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Text(
-                                    widget.currentTitle??widget.title,
-                                    style: widget.theme.textTheme.titleMedium,
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  },
-                ),
+      key: homeHomeKey,
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            backgroundColor: Theme.of(context).colorScheme.background,
+            foregroundColor: Theme.of(context).colorScheme.secondary,
+            shadowColor: Theme.of(context).colorScheme.shadow,
+            surfaceTintColor: Theme.of(context).colorScheme.surface,
+            actions: [
+              IconButton(
+                icon: Icon(Icons.settings, size: widget.theme.iconTheme.size),
+                onPressed: () {
+                  homeHomeKey.currentState?.openEndDrawer();
+                },
               ),
-            ];
-          },
-          body: HomeHomeBody(
-            title: widget.lang.libPagesHomeHomePage_notifications,
-            routeManager: widget.routeManager,
-            appRepository: widget.appRepository,
-            theme: widget.theme,
-            lang: widget.lang,
-            localeManager: widget.localeManager,
-            deviceType: widget.deviceType,
-            overrideTitle: overrideTitle,
+            ],
+            automaticallyImplyLeading: false,
+            pinned: pinned,
+            snap: snap,
+            floating: floating,
+            expandedHeight: kToolbarHeight * 3,
+            flexibleSpace: FutureBuilder(
+              future: Future.delayed(const Duration(seconds: 0), () {
+                return Imager.get(
+                    'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
+              }),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return const Center(
+                    child: Text('Error loading image'),
+                  );
+                } else {
+                  return Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: snapshot.data!,
+                        fit: BoxFit.cover,
+                      ),
+                      color: widget.theme.colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Text(
+                                widget.currentTitle ?? widget.title,
+                                style: widget.theme.textTheme.titleMedium,
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
+            ),
           ),
-        ),
-        endDrawer: getDrawer());
+          SliverPadding(
+            padding: const EdgeInsets.all(5.0),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width,
+                        minHeight: MediaQuery.of(context).size.height,
+                      ),
+                      child: Container(child: Text('Body'),),
+                    ),
+                  );
+                },
+                childCount: 1,
+              ),
+            ),
+          ),
+        ],
+      ),
+      endDrawer: getDrawer(),
+    );
   }
 
   Future<void> initializePreferences() async {
@@ -301,82 +313,4 @@ class _HomeHomeState extends State<HomeHome> {
     int bekler=0;
 
   }
-}
-
-class HomeHomeBody extends StatefulWidget {
-  const HomeHomeBody(
-      {super.key,
-      required this.title,
-      required this.routeManager,
-      required this.appRepository,
-      required this.theme,
-      required this.lang,
-      required this.localeManager,
-      required this.deviceType,
-      this.overrideTitle});
-
-  final String title;
-  final RouteManager routeManager;
-  final AppRepository appRepository;
-  final ThemeData theme;
-  final AppLocalizations lang;
-  final LocaleManager localeManager;
-  final DeviceType deviceType;
-  final void Function(String newCurrentTitle)? overrideTitle;
-
-  @override
-  State<HomeHomeBody> createState() => _HomeHomeBody();
-}
-
-class _HomeHomeBody extends State<HomeHomeBody> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-  }
-  @override
-  Widget build(BuildContext context) {
-    GlobalKey<ScaffoldState> homeHomeBodyKey = GlobalKey<ScaffoldState>();
-    return Center(
-      key: homeHomeBodyKey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            'You have pushed the button this many times:',
-          ),
-          Text(
-            '$_counter',
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                FloatingActionButton(
-                  onPressed: _incrementCounter,
-                  tooltip: 'Increment',
-                  child: const Icon(Icons.add),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-
 }

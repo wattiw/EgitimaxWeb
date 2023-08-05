@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage> {
     theme = Theme.of(context);
     lang = AppLocalizations.of(context)!;
     localeManager = Provider.of<LocaleManager>(context, listen: false);
-    deviceType = DeviceInfo(context).getDeviceType();
+    deviceType = DeviceInfo().getDeviceType();
   }
 
   List<Widget>? getActionsAppBar() {

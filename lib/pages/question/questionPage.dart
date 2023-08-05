@@ -47,6 +47,7 @@ class _QuestionPageState extends State<QuestionPage> {
     if (AppConstants.questionPageDebugPrintActive == 1) {
       debugPrint("QuestionPage_build");
     }
+
     loadComponent();
 
     List<Widget> tapPageItemsConvexAppBar = getTapPageItemsConvexAppBar();
@@ -97,7 +98,7 @@ class _QuestionPageState extends State<QuestionPage> {
     theme = Theme.of(context);
     lang = AppLocalizations.of(context)!;
     localeManager = Provider.of<LocaleManager>(context, listen: false);
-    deviceType = DeviceInfo(context).getDeviceType();
+    deviceType = DeviceInfo().getDeviceType();
   }
 
   List<Widget>? getActionsAppBar() {
@@ -134,22 +135,22 @@ class _QuestionPageState extends State<QuestionPage> {
             ListTile(
               leading: Icon(Icons.home, size: theme.iconTheme.size),
               title: Text(
-                "Soru Page",
+                "Question Page Drawer -1",
                 style: theme.textTheme.titleMedium,
               ),
               subtitle: Text(
-                "Subtitle menu 1",
+                "Any descriptive expression.",
                 style: theme.textTheme.titleSmall,
               ),
             ),
             ListTile(
               leading: Icon(Icons.search, size: theme.iconTheme.size),
               title: Text(
-                "Test Page",
+                "Question Page Drawer -2",
                 style: theme.textTheme.titleMedium,
               ),
               subtitle: Text(
-                "Subtitle menu 1",
+                "Any descriptive expression.",
                 style: theme.textTheme.titleSmall,
               ),
             ),

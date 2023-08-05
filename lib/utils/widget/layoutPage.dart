@@ -204,7 +204,7 @@ class _LayoutPageState extends State<LayoutPage> {
     widget.theme = Theme.of(context);
     widget.lang = AppLocalizations.of(context)!;
     widget.localeManager = Provider.of<LocaleManager>(context, listen: false);
-    widget.deviceType = DeviceInfo(context).getDeviceType();
+    widget.deviceType = DeviceInfo().getDeviceType();
 
     var logoWidthFactor = (widget.deviceType == DeviceType.web &&
             MediaQuery.of(context).size.width >

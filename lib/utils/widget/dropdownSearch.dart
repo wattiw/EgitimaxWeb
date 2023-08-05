@@ -8,7 +8,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class DropdownSearchHelper {
-
   static RouteManager? routeManager;
   static AppRepository? appRepository;
   static ThemeData? theme;
@@ -25,6 +24,7 @@ class DropdownSearchHelper {
     String? hintText,
     bool showSearchBox = false,
     List<T> items = const [],
+    double maxWidth = double.infinity,
     Future<List<T>> Function(String)? asyncItems,
     DropDownDecoratorProps? dropdownDecoratorProps,
     ClearButtonProps? clearButtonProps,
@@ -37,12 +37,13 @@ class DropdownSearchHelper {
     PopupPropsMultiSelection<T>? popupProps,
     void Function(T?)? onSaved,
     void Function(T?)? onChanged,
-    Future<bool?> Function(T?, T?)? onBeforeChange, // Change the parameter types to T?
+    Future<bool?> Function(T?, T?)?
+        onBeforeChange, // Change the parameter types to T?
     Future<bool?> Function()? onBeforePopupOpening, // Remove the parameter
     String? Function(T?)? validator, // Change the parameter type to T?
-    Widget Function(BuildContext, T?)? dropdownBuilder, // Change the parameter type to T?
+    Widget Function(BuildContext, T?)?
+        dropdownBuilder, // Change the parameter type to T?
   }) {
-
     loadComponent(context);
 
     return DropdownSearch<T>(
@@ -53,7 +54,7 @@ class DropdownSearchHelper {
       dropdownDecoratorProps: dropdownDecoratorProps ??
           DropDownDecoratorProps(
             dropdownSearchDecoration: InputDecoration(
-              constraints: const BoxConstraints(maxHeight: 40),
+              constraints: BoxConstraints(maxHeight: 40, maxWidth: maxWidth),
               alignLabelWithHint: true,
               filled: true,
               fillColor: Colors.transparent,
@@ -76,7 +77,7 @@ class DropdownSearchHelper {
             ),
             baseStyle: theme?.textTheme.bodyMedium,
           ),
-      clearButtonProps: clearButtonProps ?? const ClearButtonProps(),
+      clearButtonProps: clearButtonProps ?? const ClearButtonProps(isVisible: true),
       dropdownButtonProps: dropdownButtonProps ??
           const DropdownButtonProps(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -85,16 +86,19 @@ class DropdownSearchHelper {
       filterFn: filterFn,
       itemAsString: itemAsString,
       compareFn: compareFn,
-      selectedItem: selectedItem, // Add the selectedItem parameter here
+      selectedItem: selectedItem,
+      // Add the selectedItem parameter here
       popupProps: popupProps ??
-          PopupProps.menu( // Use PopupPropsSingleSelection for single selection
+          PopupProps.menu(
+            // Use PopupPropsSingleSelection for single selection
             fit: FlexFit.tight,
             showSearchBox: showSearchBox,
             searchFieldProps: TextFieldProps(
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.search),
                 labelText: searchBoxLabelText,
-                labelStyle: theme?.textTheme.titleMedium, // Font size set to 10
+                labelStyle: theme?.textTheme.titleMedium,
+                // Font size set to 10
                 contentPadding: const EdgeInsets.all(8),
                 isDense: true,
                 enabledBorder: OutlineInputBorder(
@@ -119,7 +123,6 @@ class DropdownSearchHelper {
     );
   }
 
-
   static Widget multiSelectionDropdown<T>({
     required BuildContext context,
     Key? key,
@@ -129,6 +132,7 @@ class DropdownSearchHelper {
     String? hintText,
     bool showSearchBox = false,
     List<T> items = const [],
+    double maxWidth = double.infinity,
     Future<List<T>> Function(String)? asyncItems,
     DropDownDecoratorProps? dropdownDecoratorProps,
     ClearButtonProps? clearButtonProps,
@@ -146,7 +150,6 @@ class DropdownSearchHelper {
     String? Function(List<T>?)? validator,
     Widget Function(BuildContext, List<T>)? dropdownBuilder,
   }) {
-
     loadComponent(context);
 
     return DropdownSearch<T>.multiSelection(
@@ -157,7 +160,7 @@ class DropdownSearchHelper {
       dropdownDecoratorProps: dropdownDecoratorProps ??
           DropDownDecoratorProps(
             dropdownSearchDecoration: InputDecoration(
-              constraints: const BoxConstraints(maxHeight: 50),
+              constraints: BoxConstraints(maxHeight: 50, maxWidth: maxWidth),
               alignLabelWithHint: true,
               filled: true,
               fillColor: Colors.transparent,
@@ -180,7 +183,7 @@ class DropdownSearchHelper {
             ),
             baseStyle: theme?.textTheme.bodyMedium,
           ),
-      clearButtonProps: clearButtonProps ?? const ClearButtonProps(),
+      clearButtonProps: clearButtonProps ?? const ClearButtonProps(isVisible: true),
       dropdownButtonProps: dropdownButtonProps ??
           const DropdownButtonProps(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -193,13 +196,14 @@ class DropdownSearchHelper {
       popupProps: popupProps ??
           PopupPropsMultiSelection.menu(
             fit: FlexFit.tight,
-            showSelectedItems: T is String ? true :false,
+            showSelectedItems: T is String ? true : false,
             showSearchBox: showSearchBox,
             searchFieldProps: TextFieldProps(
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.search),
                 labelText: searchBoxLabelText,
-                labelStyle: theme?.textTheme.titleMedium, // Font size set to 10
+                labelStyle: theme?.textTheme.titleMedium,
+                // Font size set to 10
                 contentPadding: const EdgeInsets.all(8),
                 isDense: true,
                 enabledBorder: OutlineInputBorder(
@@ -231,8 +235,42 @@ class DropdownSearchHelper {
     theme = Theme.of(context);
     lang = AppLocalizations.of(context)!;
     localeManager = Provider.of<LocaleManager>(context, listen: false);
-    deviceType = DeviceInfo(context).getDeviceType();
+    deviceType = DeviceInfo().getDeviceType();
+  }
+
+  static double getDropdownWidth(BuildContext context, List<String> displayText) {
+    var stringWidth = getTextWidth(
+        context,
+        findLongestText(displayText),
+        theme?.textTheme.titleMedium ?? const TextStyle(fontSize: 10),
+        localeManager?.locale.languageCode != 'ar'
+            ? TextDirection.ltr
+            : TextDirection.rtl);
+
+    return stringWidth;
+  }
+
+  static double getTextWidth(BuildContext context, String text, TextStyle textStyle, TextDirection td) {
+    TextPainter textPainter = TextPainter(
+      text: TextSpan(text: text, style: textStyle),
+      textDirection: td,
+    );
+    textPainter.layout();
+
+    return textPainter.width*3 <200 ? 200 : (textPainter.width*3 >300 ? 300 : textPainter.width*3);
+  }
+
+  static String findLongestText(List<String> displayText) {
+    if (displayText.isEmpty) {
+      return 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+    }
+    String longestText = displayText[0];
+    for (int i = 1; i < displayText.length; i++) {
+      if (displayText[i].length > longestText.length) {
+        longestText = displayText[i];
+      }
+    }
+
+    return longestText;
   }
 }
-
-
