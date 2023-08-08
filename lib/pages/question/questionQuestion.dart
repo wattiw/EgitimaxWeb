@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:egitimax/models/common/stepItem.dart';
 import 'package:egitimax/models/egitimax/egitimaxEntities.dart';
+import 'package:egitimax/models/question/receivedQuestionStatus.dart';
 import 'package:egitimax/repositories/appRepository.dart';
 import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:egitimax/utils/helper/localeManager.dart';
 import 'package:egitimax/utils/helper/routeManager.dart';
+import 'package:egitimax/utils/helper/webSocketClientManager.dart';
 
 import 'package:egitimax/utils/provider/imager.dart';
 import 'package:egitimax/utils/widget/checkboxList.dart';
@@ -13,10 +17,9 @@ import 'package:enhance_stepper/enhance_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:im_stepper/stepper.dart';
-import 'package:mqtt_client/mqtt_client.dart';
-
-
-import '../../utils/helper/signalRHelper.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:uuid/uuid.dart';
+import 'package:uuid/uuid_util.dart';
 
 class QuestionQuestion extends StatefulWidget {
   QuestionQuestion(
@@ -27,7 +30,9 @@ class QuestionQuestion extends StatefulWidget {
       required this.theme,
       required this.lang,
       required this.localeManager,
-      required this.deviceType});
+      required this.deviceType,
+      required this.userId,
+      required this.questionId});
 
   String? currentTitle;
   final String title;
@@ -37,6 +42,9 @@ class QuestionQuestion extends StatefulWidget {
   final AppLocalizations lang;
   final LocaleManager localeManager;
   final DeviceType deviceType;
+
+  BigInt userId;
+  BigInt questionId;
 
   @override
   State<QuestionQuestion> createState() => _QuestionQuestionState();
@@ -57,14 +65,18 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
     5: "If Defined Question & Options , press !",
   };
 
- Map<String,String> currentStepButtonNames={};
+  Map<String, String> currentStepButtonNames = {};
 
+  TblUserMain? tblUserMain;
+  TblQueQuestionMain? tblQueQuestionMain;
+  List<TblQueQuestionOption>? tblQueQuestionOption;
+  List<TblQueQuestionAchvMap>? tblQueQuestionAchvMap;
 
   int stepIndex = 0;
   late List<StepItem> stepItems;
 
-  List<TblUtilLocation>? countryList;
-  int selectedCountry = 225;
+  List<TblUtilLocation>? locationList;
+  int selectedLocation = 1;
 
   List<TblUtilAcademicYear>? academicYearList;
   int selectedAcademicYear = 0;
@@ -78,83 +90,87 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
   List<TblUtilBranch>? branchList;
   int selectedBranch = 0;
 
-  List<TblLearnMain>? learnMainParentList;
   TblLearnMain? selectedLearnParent;
 
   List<TblLearnMain> selectedLearns = List.empty(growable: true);
   List<TblLearnMain> selectedAchievements = List.empty(growable: true);
 
-
-
-  bool isActiveMqtt=false;
-
-  MQTTClientManager? mqttClientManager ;
-  final String pubTopic = "question/ReceiveQuestionStatus";
-
-  WebSocketClientManager? webSocketClientManager;
-  WebSocketClientManagerWeb? webSocketClientManagerWeb ;
-
+  var uuid = const Uuid();
+  String? questionEditorUrl;
+  String? questionToken;
+  bool isLoadedData = false;
+  late WebSocketClientManager webSocketClientManager;
 
   @override
   void initState() {
     super.initState();
+
     if (AppConstants.questionPageDebugPrintActive == 1) {
       debugPrint("QuestionQuestion_initState");
     }
 
-    currentStepButtonNames['Back']= stepButtonDescriptions[1]!;
-    currentStepButtonNames['Next']= stepButtonDescriptions[2]!;
-    currentStepButtonNames['Save']= stepButtonDescriptions[3]!;
+    currentStepButtonNames['Back'] = stepButtonDescriptions[1]!;
+    currentStepButtonNames['Next'] = stepButtonDescriptions[2]!;
+    currentStepButtonNames['Save'] = stepButtonDescriptions[3]!;
+
+    webSocketClientManager = WebSocketClientManager('ws://138.68.82.103:100/ws');
+    startListenWebSocket();
 
 
-    isActiveMqtt=DeviceInfo().getDeviceType()!=DeviceType.web ? true :false;
+  }
 
-    if(isActiveMqtt) {
+  Future<Widget> loadQuestion() async {
 
-      // mqttClientManager = MQTTClientManager();
-      // setupMqttClient();
-      // setupUpdatesListener();
-
-      webSocketClientManager=WebSocketClientManager();
-      webSocketClientManager?.connect();
-      webSocketClientManager?.startListening();
+    if (isLoadedData) {
+      return Container();
     }
-    else
-      {
-        webSocketClientManagerWeb=WebSocketClientManagerWeb();
-        webSocketClientManagerWeb?.connect();
-        webSocketClientManagerWeb?.startListening();
+
+    tblUserMain = await widget.appRepository.getTblUserMain(widget.userId);
+
+    if (widget.questionId != null && widget.questionId != BigInt.parse('0') &&  widget.userId != BigInt.parse('0')) {
+      tblQueQuestionMain =
+          await widget.appRepository.getTblQueQuestionMain(widget.questionId);
+      tblQueQuestionOption = await widget.appRepository
+          .getByQuestionIdTblQueQuestionOption(widget.questionId);
+      tblQueQuestionAchvMap = await widget.appRepository
+          .getByQuestionIdTblQueQuestionAchvMap(widget.questionId);
+
+      selectedLocation = tblQueQuestionMain?.locationId ?? 0;
+      selectedAcademicYear = tblQueQuestionMain?.academicYear ?? 0;
+      selectedDifficultyLevel = tblQueQuestionMain?.difficultyLev ?? 0;
+      selectedGrade = tblQueQuestionMain?.gradeId ?? 0;
+
+      selectedLearnParent = await widget.appRepository
+          .getTblLearnMain(tblQueQuestionMain?.learnId ?? 0);
+      selectedBranch = selectedLearnParent!.branchId!;
+    } else {
+      if (!isLoadedData) {
+        tblQueQuestionMain = TblQueQuestionMain(id: BigInt.parse('0'));
+        selectedLocation = tblUserMain?.locationId ?? 0;
+
+        academicYearList =
+            await widget.appRepository.getAllTblUtilAcademicYear();
+        selectedAcademicYear = academicYearList!
+            .firstWhere((element) => element.isDefault == 1)
+            .id;
+
+        difficultyList = await widget.appRepository.getAllTblUtilDifficulty();
+        selectedDifficultyLevel = difficultyList!
+            .firstWhere((element) => element.difficultyLev == 'dif_medium')
+            .id;
+
+        selectedGrade = 0;
+        selectedBranch = tblUserMain!.teacherBranchId ?? 0;
       }
-
-
-
-  }
-
-  Future<void> webSocket() async {
-
-    if(isActiveMqtt) {
-      mqttClientManager?.publishMessage(pubTopic, "Increment button pushed ${DateTime.now()} times.");
     }
-  }
 
-  Future<void> setupMqttClient() async {
-    await mqttClientManager?.connect();
-    mqttClientManager?.subscribe(pubTopic);
-  }
-  void setupUpdatesListener() {
-    mqttClientManager
-        ?.getMessagesStream()!
-        .listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
-      final recMess = c![0].payload as MqttPublishMessage;
-      final pt =
-      MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
-      debugPrint('MQTTClient::Message received on topic: <${c[0].topic}> is $pt\n');
-    });
+    isLoadedData = true;
+    return Container();
   }
 
   @override
   void dispose() {
-
+    webSocketClientManager!.close();
     super.dispose();
   }
 
@@ -166,7 +182,6 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
     GlobalKey<ScaffoldState> questionQuestionKey = GlobalKey<ScaffoldState>();
 
     stepItems = getStepItems();
-
     return Scaffold(
       key: questionQuestionKey,
       body: CustomScrollView(
@@ -252,15 +267,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                         maxWidth: MediaQuery.of(context).size.width,
                         minHeight: MediaQuery.of(context).size.height,
                       ),
-                      child:  const Column(
-                        children: [
-
-
-
-
-                          //getStepper(),
-                        ],
-                      ),
+                      child: getStepper(),
                     ),
                   );
                 },
@@ -271,11 +278,6 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
         ],
       ),
       endDrawer: getDrawer(),
-      floatingActionButton: FloatingActionButton(onPressed: () async {
-
-        webSocket();
-
-      },child: Text(true ? "Disconnect ":"Connect")),
     );
   }
 
@@ -450,389 +452,405 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
         isActive: true,
         title: 'Question Details',
         subtitle: 'Please define details of question !',
-        content: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: Wrap(
-                  alignment: WrapAlignment.start,
-                  runAlignment: WrapAlignment.start,
-                  spacing: 3,
-                  runSpacing: 5,
+        content:FutureBuilder<Widget>(
+          future: loadQuestion(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState ==
+                ConnectionState.waiting) {
+              return const Center(
+                  child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(
+                  child: Text("Error: ${snapshot.error}"));
+            } else if (snapshot.hasData) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
                   children: [
-                    FutureBuilder<List<TblUtilAcademicYear>>(
-                      future: academicYearList != null
-                          ? Future.delayed(const Duration(seconds: 0), () {
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Wrap(
+                        alignment: WrapAlignment.start,
+                        runAlignment: WrapAlignment.start,
+                        spacing: 3,
+                        runSpacing: 5,
+                        children: [
+                          FutureBuilder<List<TblUtilAcademicYear>>(
+                            future: academicYearList != null
+                                ? Future.delayed(const Duration(seconds: 0), () {
                               return academicYearList!;
                             })
-                          : widget.appRepository.getAllTblUtilAcademicYear(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(
-                              child: Text("Error: ${snapshot.error}"));
-                        } else if (snapshot.hasData) {
-                          academicYearList = snapshot.data;
-                          if (snapshot.data!.isEmpty) {
-                            return Container();
-                          }
+                                : widget.appRepository.getAllTblUtilAcademicYear(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                    child: Text("Error: ${snapshot.error}"));
+                              } else if (snapshot.hasData) {
+                                academicYearList = snapshot.data;
+                                if (snapshot.data!.isEmpty) {
+                                  return Container();
+                                }
 
-                          return DropdownSearchHelper.singleSelectionDropdown<
-                              TblUtilAcademicYear>(
-                            context: context,
-                            labelText: 'Academic Year',
-                            hintText: 'Please select academic year !',
-                            searchBoxLabelText: 'Search',
-                            showSearchBox: true,
-                            items: snapshot.data!,
-                            maxWidth: DropdownSearchHelper.getDropdownWidth(
-                                context,
-                                snapshot.data!
-                                    .map((item) => item.academicYear ?? '')
-                                    .toList()),
-                            itemAsString: (selectedItem) {
-                              return selectedItem.academicYear.toString();
+                                return DropdownSearchHelper.singleSelectionDropdown<
+                                    TblUtilAcademicYear>(
+                                  context: context,
+                                  labelText: 'Academic Year',
+                                  hintText: 'Please select academic year !',
+                                  searchBoxLabelText: 'Search',
+                                  showSearchBox: true,
+                                  items: snapshot.data!,
+                                  maxWidth: DropdownSearchHelper.getDropdownWidth(
+                                      context,
+                                      snapshot.data!
+                                          .map((item) => item.academicYear ?? '')
+                                          .toList()),
+                                  itemAsString: (selectedItem) {
+                                    return selectedItem.academicYear.toString();
+                                  },
+                                  selectedItem: snapshot.data!.any((element) =>
+                                  element.id == selectedAcademicYear)
+                                      ? snapshot.data!.firstWhere((element) =>
+                                  element.id == selectedAcademicYear)
+                                      : null,
+                                  onChanged: (selectedItem) {
+                                    selectedAcademicYear =
+                                    selectedItem != null ? selectedItem!.id : 0;
+                                  },
+                                );
+                              } else {
+                                return const Center(child: Text("No data found."));
+                              }
                             },
-                            selectedItem: snapshot.data!.any((element) =>
-                                    element.id == selectedAcademicYear)
-                                ? snapshot.data!.firstWhere((element) =>
-                                    element.id == selectedAcademicYear)
-                                : null,
-                            onChanged: (selectedItem) {
-                              selectedAcademicYear =
-                                  selectedItem != null ? selectedItem!.id : 0;
-                            },
-                          );
-                        } else {
-                          return const Center(child: Text("No data found."));
-                        }
-                      },
-                    ),
-                    FutureBuilder<List<TblUtilDifficulty>>(
-                      future: difficultyList != null
-                          ? Future.delayed(const Duration(seconds: 0), () {
+                          ),
+                          FutureBuilder<List<TblUtilDifficulty>>(
+                            future: difficultyList != null
+                                ? Future.delayed(const Duration(seconds: 0), () {
                               return difficultyList!;
                             })
-                          : widget.appRepository.getAllTblUtilDifficulty(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(
-                              child: Text("Error: ${snapshot.error}"));
-                        } else if (snapshot.hasData) {
-                          difficultyList = snapshot.data;
-                          if (snapshot.data!.isEmpty) {
-                            return Container();
-                          }
-                          return DropdownSearchHelper.singleSelectionDropdown<
-                              TblUtilDifficulty>(
-                            context: context,
-                            labelText: 'Difficulty Level',
-                            hintText: 'Please select difficulty level !',
-                            searchBoxLabelText: 'Search',
-                            showSearchBox: true,
-                            items: snapshot.data!,
-                            maxWidth: DropdownSearchHelper.getDropdownWidth(
-                                context,
-                                snapshot.data!
-                                    .map((item) => item.difficultyLev ?? '')
-                                    .toList()),
-                            itemAsString: (selectedItem) {
-                              return selectedItem.difficultyLev.toString();
+                                : widget.appRepository.getAllTblUtilDifficulty(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                    child: Text("Error: ${snapshot.error}"));
+                              } else if (snapshot.hasData) {
+                                difficultyList = snapshot.data;
+                                if (snapshot.data!.isEmpty) {
+                                  return Container();
+                                }
+                                return DropdownSearchHelper.singleSelectionDropdown<
+                                    TblUtilDifficulty>(
+                                  context: context,
+                                  labelText: 'Difficulty Level',
+                                  hintText: 'Please select difficulty level !',
+                                  searchBoxLabelText: 'Search',
+                                  showSearchBox: true,
+                                  items: snapshot.data!,
+                                  maxWidth: DropdownSearchHelper.getDropdownWidth(
+                                      context,
+                                      snapshot.data!
+                                          .map((item) => item.difficultyLev ?? '')
+                                          .toList()),
+                                  itemAsString: (selectedItem) {
+                                    return selectedItem.difficultyLev.toString();
+                                  },
+                                  selectedItem: snapshot.data!.any((element) =>
+                                  element.id == selectedDifficultyLevel)
+                                      ? snapshot.data!.firstWhere((element) =>
+                                  element.id == selectedDifficultyLevel)
+                                      : null,
+                                  onChanged: (selectedItem) {
+                                    selectedDifficultyLevel =
+                                    selectedItem != null ? selectedItem!.id : 0;
+                                  },
+                                );
+                              } else {
+                                return const Center(child: Text("No data found."));
+                              }
                             },
-                            selectedItem: snapshot.data!.any((element) =>
-                                    element.id == selectedDifficultyLevel)
-                                ? snapshot.data!.firstWhere((element) =>
-                                    element.id == selectedDifficultyLevel)
-                                : null,
-                            onChanged: (selectedItem) {
-                              selectedDifficultyLevel =
-                                  selectedItem != null ? selectedItem!.id : 0;
-                            },
-                          );
-                        } else {
-                          return const Center(child: Text("No data found."));
-                        }
-                      },
-                    ),
-                    FutureBuilder<List<TblUtilGrade>>(
-                      future: gradeList != null
-                          ? Future.delayed(const Duration(seconds: 0), () {
+                          ),
+                          FutureBuilder<List<TblUtilGrade>>(
+                            future: gradeList != null
+                                ? Future.delayed(const Duration(seconds: 0), () {
                               return gradeList!;
                             })
-                          : widget.appRepository
-                              .getByLocationIdTblUtilGrade(selectedCountry),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(
-                              child: Text("Error: ${snapshot.error}"));
-                        } else if (snapshot.hasData) {
-                          gradeList = snapshot.data;
-                          if (snapshot.data!.isEmpty) {
-                            return Container();
-                          }
+                                : widget.appRepository
+                                .getByLocationIdTblUtilGrade(selectedLocation),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                    child: Text("Error: ${snapshot.error}"));
+                              } else if (snapshot.hasData) {
+                                gradeList = snapshot.data;
+                                if (snapshot.data!.isEmpty) {
+                                  return Container();
+                                }
 
-                          return DropdownSearchHelper.singleSelectionDropdown<
-                              TblUtilGrade>(
-                            context: context,
-                            labelText: 'Grade',
-                            hintText: 'Please select grade !',
-                            searchBoxLabelText: 'Search',
-                            showSearchBox: true,
-                            items: snapshot.data!,
-                            maxWidth: DropdownSearchHelper.getDropdownWidth(
-                                context,
-                                snapshot.data!
-                                    .map((item) => item.gradeName ?? '')
-                                    .toList()),
-                            itemAsString: (selectedItem) {
-                              return selectedItem.gradeName.toString();
+                                return DropdownSearchHelper.singleSelectionDropdown<
+                                    TblUtilGrade>(
+                                  context: context,
+                                  labelText: 'Grade',
+                                  hintText: 'Please select grade !',
+                                  searchBoxLabelText: 'Search',
+                                  showSearchBox: true,
+                                  items: snapshot.data!,
+                                  maxWidth: DropdownSearchHelper.getDropdownWidth(
+                                      context,
+                                      snapshot.data!
+                                          .map((item) => item.gradeName ?? '')
+                                          .toList()),
+                                  itemAsString: (selectedItem) {
+                                    return selectedItem.gradeName.toString();
+                                  },
+                                  selectedItem: snapshot.data!.any(
+                                          (element) => element.id == selectedGrade)
+                                      ? snapshot.data!.firstWhere(
+                                          (element) => element.id == selectedGrade)
+                                      : null,
+                                  onChanged: (selectedItem) {
+                                    setState(() {
+                                      selectedGrade =
+                                      selectedItem != null ? selectedItem!.id : 0;
+                                      selectedLearnParent = null;
+                                      selectedLearns.clear();
+                                    });
+                                  },
+                                );
+                              } else {
+                                return const Center(child: Text("No data found."));
+                              }
                             },
-                            selectedItem: snapshot.data!.any(
-                                    (element) => element.id == selectedGrade)
-                                ? snapshot.data!.firstWhere(
-                                    (element) => element.id == selectedGrade)
-                                : null,
-                            onChanged: (selectedItem) {
-                              setState(() {
-                                selectedGrade =
-                                    selectedItem != null ? selectedItem!.id : 0;
-                                selectedLearnParent = null;
-                                selectedLearns.clear();
-                              });
-                            },
-                          );
-                        } else {
-                          return const Center(child: Text("No data found."));
-                        }
-                      },
-                    ),
-                    FutureBuilder<List<TblUtilBranch>>(
-                      future: branchList != null
-                          ? Future.delayed(const Duration(seconds: 0), () {
+                          ),
+                          FutureBuilder<List<TblUtilBranch>>(
+                            future: branchList != null
+                                ? Future.delayed(const Duration(seconds: 0), () {
                               return branchList!;
                             })
-                          : widget.appRepository
-                              .getByLocationIdTblUtilBranch(selectedCountry),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(
-                              child: Text("Error: ${snapshot.error}"));
-                        } else if (snapshot.hasData) {
-                          branchList = snapshot.data;
-                          if (snapshot.data!.isEmpty) {
-                            return Container();
-                          }
+                                : widget.appRepository
+                                .getByLocationIdTblUtilBranch(selectedLocation),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                    child: Text("Error: ${snapshot.error}"));
+                              } else if (snapshot.hasData) {
+                                branchList = snapshot.data;
+                                if (snapshot.data!.isEmpty) {
+                                  return Container();
+                                }
 
-                          return DropdownSearchHelper.singleSelectionDropdown<
-                              TblUtilBranch>(
-                            context: context,
-                            labelText: 'Branch',
-                            hintText: 'Please select branch !',
-                            searchBoxLabelText: 'Search',
-                            showSearchBox: true,
-                            items: snapshot.data!,
-                            maxWidth: DropdownSearchHelper.getDropdownWidth(
-                                context,
-                                snapshot.data!
-                                    .map((item) => item.branchName ?? '')
-                                    .toList()),
-                            itemAsString: (selectedItem) {
-                              return selectedItem.branchName.toString();
+                                return DropdownSearchHelper.singleSelectionDropdown<
+                                    TblUtilBranch>(
+                                  context: context,
+                                  labelText: 'Branch',
+                                  hintText: 'Please select branch !',
+                                  searchBoxLabelText: 'Search',
+                                  showSearchBox: true,
+                                  items: snapshot.data!,
+                                  maxWidth: DropdownSearchHelper.getDropdownWidth(
+                                      context,
+                                      snapshot.data!
+                                          .map((item) => item.branchName ?? '')
+                                          .toList()),
+                                  itemAsString: (selectedItem) {
+                                    return selectedItem.branchName.toString();
+                                  },
+                                  selectedItem: snapshot.data!.any(
+                                          (element) => element.id == selectedBranch)
+                                      ? snapshot.data!.firstWhere(
+                                          (element) => element.id == selectedBranch)
+                                      : null,
+                                  onChanged: (selectedItem) {
+                                    setState(() {
+                                      selectedBranch =
+                                      selectedItem != null ? selectedItem!.id : 0;
+                                      selectedLearnParent = null;
+                                      selectedLearns.clear();
+                                    });
+                                  },
+                                );
+                              } else {
+                                return const Center(child: Text("No data found."));
+                              }
                             },
-                            selectedItem: snapshot.data!.any(
-                                    (element) => element.id == selectedBranch)
-                                ? snapshot.data!.firstWhere(
-                                    (element) => element.id == selectedBranch)
-                                : null,
-                            onChanged: (selectedItem) {
-                              setState(() {
-                                selectedBranch =
-                                    selectedItem != null ? selectedItem!.id : 0;
-                                selectedLearnParent = null;
-                                selectedLearns.clear();
-                              });
-                            },
-                          );
-                        } else {
-                          return const Center(child: Text("No data found."));
-                        }
-                      },
-                    ),
-                    FutureBuilder<List<TblLearnMain>>(
-                      future: widget.appRepository.getParentsTblLearnMain(
-                          selectedBranch, selectedGrade, selectedCountry),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(
-                              child: Text("Error: ${snapshot.error}"));
-                        } else if (snapshot.hasData) {
-                          if (snapshot.data!.isEmpty) {
-                            return Container();
-                          }
+                          ),
+                          FutureBuilder<List<TblLearnMain>>(
+                            future: widget.appRepository.getParentsTblLearnMain(
+                                selectedBranch, selectedGrade, selectedLocation),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                    child: Text("Error: ${snapshot.error}"));
+                              } else if (snapshot.hasData) {
+                                if (snapshot.data!.isEmpty) {
+                                  return Container();
+                                }
 
-                          return DropdownSearchHelper.singleSelectionDropdown<
-                              TblLearnMain>(
-                            context: context,
-                            labelText: snapshot.data!.first.type,
-                            hintText:
-                                'Please select ${snapshot.data!.first.type} !',
-                            searchBoxLabelText: 'Search',
-                            showSearchBox: true,
-                            items: snapshot.data!,
-                            maxWidth: DropdownSearchHelper.getDropdownWidth(
-                                context,
-                                snapshot.data!
-                                    .map((item) => item.name ?? '')
-                                    .toList()),
-                            itemAsString: (selectedItem) {
-                              return selectedItem.name.toString();
+                                return DropdownSearchHelper.singleSelectionDropdown<
+                                    TblLearnMain>(
+                                  context: context,
+                                  labelText: snapshot.data!.first.type,
+                                  hintText:
+                                  'Please select ${snapshot.data!.first.type} !',
+                                  searchBoxLabelText: 'Search',
+                                  showSearchBox: true,
+                                  items: snapshot.data!,
+                                  maxWidth: DropdownSearchHelper.getDropdownWidth(
+                                      context,
+                                      snapshot.data!
+                                          .map((item) => item.name ?? '')
+                                          .toList()),
+                                  itemAsString: (selectedItem) {
+                                    return selectedItem.name.toString();
+                                  },
+                                  selectedItem: selectedLearnParent,
+                                  onChanged: (selectedItem) {
+                                    setState(() {
+                                      selectedAchievements.clear();
+                                      selectedLearns.clear();
+                                      selectedLearnParent = selectedItem;
+                                    });
+                                  },
+                                );
+                              } else {
+                                return const Center(child: Text("No data found."));
+                              }
                             },
-                            selectedItem: selectedLearnParent,
-                            onChanged: (selectedItem) {
-                              setState(() {
-                                selectedAchievements.clear();
-                                selectedLearns.clear();
-                                selectedLearnParent = selectedItem;
-                              });
-                            },
-                          );
-                        } else {
-                          return const Center(child: Text("No data found."));
-                        }
-                      },
-                    ),
-                    if (selectedLearnParent != null)
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height / 2,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          itemCount: selectedLearns.length + 1,
-                          itemBuilder: (context, index) {
-                            var parentId =
-                                selectedLearns.isNotEmpty && index != 0
-                                    ? selectedLearns[index - 1].id
-                                    : selectedLearnParent?.id;
-                            if (parentId == null) {
-                              return Container();
-                            }
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5),
-                              child: FutureBuilder<List<TblLearnMain>>(
-                                future: widget.appRepository
-                                    .getChildrenTblLearnMain(parentId),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const Center(
-                                        child: CircularProgressIndicator());
-                                  } else if (snapshot.hasError) {
-                                    return Center(
-                                        child:
-                                            Text("Error: ${snapshot.error}"));
-                                  } else if (snapshot.hasData) {
-                                    if (snapshot.data != null &&
-                                        snapshot.data!.first.type ==
-                                            'ct_achv') {
-                                      return CheckboxList<TblLearnMain>(
-                                        items: snapshot.data!,
-                                        selectedItems: selectedAchievements,
-                                        onChanged: (selectedItems) {
-                                          selectedAchievements = selectedItems;
-                                        },
-                                        getTitle: (item) {
-                                          return item.itemCode ?? '';
-                                        },
-                                        getSubtitle: (item) {
-                                          return "${item.name}";
-                                        },
-                                        boxDecoration: BoxDecoration(
-                                          color: Colors.transparent,
-                                          border:
-                                              Border.all(color: Colors.grey),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                      );
-                                    } else {
-                                      return DropdownSearchHelper
-                                          .singleSelectionDropdown<
-                                              TblLearnMain>(
-                                        context: context,
-                                        labelText:
-                                            snapshot.data!.first.type ?? '',
-                                        hintText:
-                                            'Please select ${snapshot.data!.first.type} !',
-                                        searchBoxLabelText: 'Search',
-                                        showSearchBox: true,
-                                        items: snapshot.data!,
-                                        maxWidth: DropdownSearchHelper
-                                            .getDropdownWidth(
-                                                context,
-                                                snapshot.data!
-                                                    .map((item) =>
-                                                        item.name ?? '')
-                                                    .toList()),
-                                        itemAsString: (selectedItem) {
-                                          return selectedItem.name.toString();
-                                        },
-                                        selectedItem:
-                                            selectedLearns.isNotEmpty &&
-                                                    selectedLearns.length >=
-                                                        index + 1
-                                                ? selectedLearns[index]
-                                                : null,
-                                        onChanged: (selectedItem) {
-                                          if (selectedItem != null) {
-                                            setState(() {
-                                              selectedLearns.insert(
-                                                  index, selectedItem!);
-                                              selectedLearns.removeRange(
-                                                  index + 1,
-                                                  selectedLearns.length);
-                                            });
-                                          }
-                                        },
-                                      );
-                                    }
-                                  } else {
-                                    return const Center(
-                                        child: Text("No data found."));
+                          ),
+                          if (selectedLearnParent != null)
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height / 2,
+                              child: ListView.builder(
+                                padding: const EdgeInsets.symmetric(vertical: 5),
+                                itemCount: selectedLearns.length + 1,
+                                itemBuilder: (context, index) {
+                                  var parentId =
+                                  selectedLearns.isNotEmpty && index != 0
+                                      ? selectedLearns[index - 1].id
+                                      : selectedLearnParent?.id;
+                                  if (parentId == null) {
+                                    return Container();
                                   }
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 5),
+                                    child: FutureBuilder<List<TblLearnMain>>(
+                                      future: widget.appRepository
+                                          .getChildrenTblLearnMain(parentId),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return const Center(
+                                              child: CircularProgressIndicator());
+                                        } else if (snapshot.hasError) {
+                                          return Center(
+                                              child:
+                                              Text("Error: ${snapshot.error}"));
+                                        } else if (snapshot.hasData) {
+                                          if (snapshot.data != null &&
+                                              snapshot.data!.first.type ==
+                                                  'ct_achv') {
+                                            return CheckboxList<TblLearnMain>(
+                                              items: snapshot.data!,
+                                              selectedItems: selectedAchievements,
+                                              onChanged: (selectedItems) {
+                                                selectedAchievements = selectedItems;
+                                              },
+                                              getTitle: (item) {
+                                                return item.itemCode ?? '';
+                                              },
+                                              getSubtitle: (item) {
+                                                return "${item.name}";
+                                              },
+                                              boxDecoration: BoxDecoration(
+                                                color: Colors.transparent,
+                                                border:
+                                                Border.all(color: Colors.grey),
+                                                borderRadius:
+                                                BorderRadius.circular(8),
+                                              ),
+                                            );
+                                          } else {
+                                            return DropdownSearchHelper
+                                                .singleSelectionDropdown<
+                                                TblLearnMain>(
+                                              context: context,
+                                              labelText:
+                                              snapshot.data!.first.type ?? '',
+                                              hintText:
+                                              'Please select ${snapshot.data!.first.type} !',
+                                              searchBoxLabelText: 'Search',
+                                              showSearchBox: true,
+                                              items: snapshot.data!,
+                                              maxWidth: DropdownSearchHelper
+                                                  .getDropdownWidth(
+                                                  context,
+                                                  snapshot.data!
+                                                      .map((item) =>
+                                                  item.name ?? '')
+                                                      .toList()),
+                                              itemAsString: (selectedItem) {
+                                                return selectedItem.name.toString();
+                                              },
+                                              selectedItem:
+                                              selectedLearns.isNotEmpty &&
+                                                  selectedLearns.length >=
+                                                      index + 1
+                                                  ? selectedLearns[index]
+                                                  : null,
+                                              onChanged: (selectedItem) {
+                                                if (selectedItem != null) {
+                                                  setState(() {
+                                                    selectedLearns.insert(
+                                                        index, selectedItem!);
+                                                    selectedLearns.removeRange(
+                                                        index + 1,
+                                                        selectedLearns.length);
+                                                  });
+                                                }
+                                              },
+                                            );
+                                          }
+                                        } else {
+                                          return const Center(
+                                              child: Text("No data found."));
+                                        }
+                                      },
+                                    ),
+                                  );
                                 },
                               ),
-                            );
-                          },
-                        ),
-                      )
+                            )
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            ],
-          ),
+              );
+            } else {
+              return const Center(child: Text("No data found."));
+            }
+          },
         ),
         imagePath:
             'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
@@ -857,7 +875,17 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                   runAlignment: WrapAlignment.start,
                   spacing: 3,
                   runSpacing: 5,
-                  children: [],
+                  children: [
+                    if(tblQueQuestionMain!=null)
+                    Column(
+                      children: [
+                        Text("Qid:${tblQueQuestionMain!.id}"),
+                        Text("Qid:${tblQueQuestionMain!.questionText}"),
+                        Text("Qid:${tblQueQuestionMain!.resolution}"),
+                      ],
+                    ),
+
+                  ],
                 ),
               ),
             ],
@@ -911,9 +939,12 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
       debugPrint("it's last Step!");
       return;
     }
-
     setState(() {
       stepIndex += index;
+
+      if (stepIndex == 1) {
+        saveQuestion();
+      }
     });
   }
 
@@ -988,7 +1019,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: ElevatedButton(
-                      onPressed: (){},
+                      onPressed: () {},
                       child: Text("Save",
                           style: widget.theme.textTheme.bodyMedium),
                     ),
@@ -1043,14 +1074,14 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 if (!(stepIndex <= 0))
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: ElevatedButton(
-                    onPressed: details.onStepCancel,
-                    child:
-                        Text("Back", style: widget.theme.textTheme.bodyMedium),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ElevatedButton(
+                      onPressed: details.onStepCancel,
+                      child: Text("Back",
+                          style: widget.theme.textTheme.bodyMedium),
+                    ),
                   ),
-                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: ElevatedButton(
@@ -1167,6 +1198,106 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
       ),
     );
   }
+
+
+  Future<void> saveQuestion() async {
+    questionToken = uuid.v4(options: {'rng': UuidUtil.cryptoRNG});
+
+    BigInt rootUserId = tblUserMain?.refUser ?? BigInt.parse('0');
+    if (rootUserId <= BigInt.parse('0')) {
+      rootUserId = widget.userId;
+    }
+
+    final learnId = (selectedLearns?.isNotEmpty ?? false)
+        ? selectedLearns!.last.id
+        : (selectedLearnParent?.id ?? 0);
+
+    tblQueQuestionMain?.academicYear = selectedAcademicYear;
+    tblQueQuestionMain?.difficultyLev = selectedDifficultyLevel;
+    tblQueQuestionMain?.locationId = selectedLocation;
+    tblQueQuestionMain?.userId = rootUserId; // if exist parent put it
+    tblQueQuestionMain?.gradeId = selectedGrade;
+    tblQueQuestionMain?.learnId = learnId;
+    tblQueQuestionMain?.relationId = '0';
+    tblQueQuestionMain?.questionToken = questionToken;
+    tblQueQuestionMain?.questionText = tblQueQuestionMain?.questionText ?? '';
+    tblQueQuestionMain?.resolution = tblQueQuestionMain?.resolution ?? '';
+    tblQueQuestionMain?.isPublic = tblQueQuestionMain?.isPublic ?? 1;
+    tblQueQuestionMain?.status =
+    tblQueQuestionMain!.id > BigInt.parse('0') ? 1 : 3; // Create/Edit
+    tblQueQuestionMain?.createdBy = tblQueQuestionMain?.createdBy ??
+        widget.userId; // if exist parent put it
+    tblQueQuestionMain?.createdOn =
+        tblQueQuestionMain?.createdOn ?? DateTime.now();
+    tblQueQuestionMain?.updatedBy = widget.userId; // if exist parent put it
+    tblQueQuestionMain?.updatedOn = DateTime.now();
+
+    if (tblQueQuestionMain!.id > BigInt.parse('0')) {
+      tblQueQuestionMain = await widget.appRepository
+          .updateTblQueQuestionMain(tblQueQuestionMain!);
+    } else {
+      tblQueQuestionMain = await widget.appRepository
+          .insertTblQueQuestionMain(tblQueQuestionMain!);
+    }
+
+    widget.questionId = tblQueQuestionMain!.id;
+
+    questionEditorUrl =
+    "http://138.68.82.103:100/${tblQueQuestionMain?.id}/${tblQueQuestionMain?.userId}/${tblQueQuestionMain?.questionToken}/${widget.localeManager.locale.languageCode}-${widget.localeManager.locale.countryCode}";
+
+    if (questionEditorUrl != null) {
+      await launchEditorURL(questionEditorUrl!);
+    }
+  }
+
+  launchEditorURL(String editorUrl) async {
+    final Uri url = Uri.parse(editorUrl);
+    if (!await launchUrl(url)) {
+      if (AppConstants.questionPageDebugPrintActive == 1) {
+        debugPrint('Could not launch $url');
+      } else {}
+    }
+  }
+
+  void startListenWebSocket() {
+    webSocketClientManager!.listen((data) {
+      debugPrint('WebSocketClientHelper Topic/Message: $data');
+
+      final message = data;
+      final Map<String, dynamic> jsonMessage = jsonDecode(message);
+      final receivedStatus = ReceivedQuestionStatus.fromJson({
+        'topic': jsonMessage['topic'],
+        'message': jsonDecode(jsonMessage['message']),
+      });
+
+      debugPrint('Received topic: ${receivedStatus.topic}');
+      debugPrint('Received message qToken: ${receivedStatus.message.qToken}');
+      debugPrint('Received message qId: ${receivedStatus.message.qId}');
+      debugPrint('Received message userId: ${receivedStatus.message.userId}');
+      debugPrint(
+          'Received message isCompleted: ${receivedStatus.message.isCompleted}');
+
+      reloadStep(receivedStatus);
+    });
+
+    debugPrint('Listening websocket...');
+  }
+
+  Future<void> reloadStep(ReceivedQuestionStatus receivedStatus) async {
+    if (receivedStatus.message.isCompleted == true) {
+
+      tblQueQuestionMain =  await widget.appRepository.getTblQueQuestionMain(widget.questionId);
+      tblQueQuestionOption = await widget.appRepository.getByQuestionIdTblQueQuestionOption(widget.questionId);
+      tblQueQuestionAchvMap = await widget.appRepository.getByQuestionIdTblQueQuestionAchvMap(widget.questionId);
+
+      setState(()  {
+
+
+      });
+    }
+  }
+
+
 }
 
 enum StepperList { enhance, classic, icon }

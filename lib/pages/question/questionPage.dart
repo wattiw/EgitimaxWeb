@@ -11,9 +11,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class QuestionPage extends StatefulWidget {
-  QuestionPage({super.key});
+   QuestionPage({super.key,required this.userId,required this.questionId});
 
   String? currentTitle;
+
+  BigInt userId;
+  BigInt questionId;
 
   @override
   State<QuestionPage> createState() => _QuestionPageState();
@@ -27,6 +30,8 @@ class _QuestionPageState extends State<QuestionPage> {
   late LocaleManager localeManager;
   late DeviceType deviceType;
   int selectedPageIndex = 1;
+
+
 
   @override
   void initState() {
@@ -187,6 +192,8 @@ class _QuestionPageState extends State<QuestionPage> {
         lang: lang,
         localeManager: localeManager,
         deviceType: deviceType,
+        userId: widget.userId,
+        questionId: widget.questionId,
       ),
       Container()
     ];

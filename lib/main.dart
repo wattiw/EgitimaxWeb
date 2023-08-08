@@ -1,5 +1,4 @@
 import 'package:egitimax/pages/question/questionPage.dart';
-import 'package:egitimax/utils/widget/deviceInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final RouteManager routeManager = RouteManager();
     routeManager.addRoute('/', (context) => HomePage());
-    routeManager.addRoute('/QuestionPage', (context) => QuestionPage());
+    routeManager.addRoute('/QuestionPage', (context) => QuestionPage(questionId: BigInt.parse('0'),userId: BigInt.parse('1'),));
 
     return ChangeNotifierProvider(
       create: (context) => LocaleManager(),

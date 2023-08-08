@@ -1,4 +1,6 @@
+import 'package:egitimax/models/common/userData.dart';
 import 'package:egitimax/models/egitimax/egitimaxEntities.dart';
+import 'package:egitimax/pages/login/loginPage.dart';
 import 'package:egitimax/repositories/appRepository.dart';
 import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:egitimax/utils/helper/localeManager.dart';
@@ -8,6 +10,7 @@ import 'package:egitimax/utils/widget/deviceInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeHome extends StatefulWidget {
@@ -169,7 +172,10 @@ class _HomeHomeState extends State<HomeHome> {
                         maxWidth: MediaQuery.of(context).size.width,
                         minHeight: MediaQuery.of(context).size.height,
                       ),
-                      child: Container(child: Text('Body'),),
+                      child: ChangeNotifierProvider(
+                        create: (context) => UserData(),
+                      child: LoginPage(),
+                      ),
                     ),
                   );
                 },

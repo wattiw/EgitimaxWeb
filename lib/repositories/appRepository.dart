@@ -399,6 +399,17 @@ class AppRepository {
     return result;
   }
 
+
+  Future<List<TblQueQuestionAchvMap>> getByQuestionIdTblQueQuestionAchvMap(BigInt questionId) async {
+    var jsonDecode = await Api.request('TblQueQuestionAchvMap/GetByQuestionId/$questionId',
+        method: HttpMethod.get);
+    List<TblQueQuestionAchvMap> result = [];
+    for (var jsonItem in jsonDecode) {
+      result.add(TblQueQuestionAchvMap.fromJson(jsonItem));
+    }
+    return result;
+  }
+
   ///TblQueQuestionLike
 
   Future<List<TblQueQuestionLike>> getAllTblQueQuestionLike() async {
@@ -522,6 +533,17 @@ class AppRepository {
     var jsonDecode = await Api.request('TblQueQuestionOption/Delete/$id',
         method: HttpMethod.delete);
     TblQueQuestionOption result = TblQueQuestionOption.fromJson(jsonDecode);
+    return result;
+  }
+
+
+  Future<List<TblQueQuestionOption>> getByQuestionIdTblQueQuestionOption(BigInt questionId) async {
+    var jsonDecode = await Api.request('TblQueQuestionOption/GetByQuestionId/$questionId',
+        method: HttpMethod.get);
+    List<TblQueQuestionOption> result = [];
+    for (var jsonItem in jsonDecode) {
+      result.add(TblQueQuestionOption.fromJson(jsonItem));
+    }
     return result;
   }
 
