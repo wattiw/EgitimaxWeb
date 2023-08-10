@@ -140,6 +140,38 @@ class Question {
   }
 }
 
+class LearnHierarchy {
+  int? id;
+  String? type;
+  int? parentId;
+  int? selectedId;
+
+  LearnHierarchy({
+    this.id,
+    this.type,
+    this.parentId,
+    this.selectedId,
+  });
+
+  LearnHierarchy.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    type =json['type'];
+    parentId = json['parentId'];
+    selectedId = json['selectedId'];
+  }
+
+  Map<String, dynamic> toMap() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Id'] = id;
+    data['Type'] = type;
+    data['ParentId'] = parentId;
+    data['SelectedId'] =selectedId;
+    return data;
+  }
+}
+
+
+
 ///Dummy Models Below
 class WeatherForecast {
   final DateTime date;

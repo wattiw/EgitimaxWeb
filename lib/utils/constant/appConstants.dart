@@ -2,6 +2,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 
 class AppConstants {
   //lib/utils/helper/api.dart
+  //static  String apiBaseUrl = 'http://localhost:5001/';
   static  String apiBaseUrl = 'http://138.68.82.103:9090/';
   static  String apiUsername = 'info@egitimax.com';
   static  String apiPassword = 'password';

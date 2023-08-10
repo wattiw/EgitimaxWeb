@@ -189,6 +189,16 @@ class AppRepository {
     return result;
   }
 
+  Future<List<LearnHierarchy>> getLearnHierarchyTblLearnMain(int learnId) async {
+    var jsonDecode =
+    await Api.request('TblLearnMain/GetLearnHierarchy/$learnId', method: HttpMethod.get);
+    List<LearnHierarchy> result = [];
+    for (var jsonItem in jsonDecode) {
+      result.add(LearnHierarchy.fromJson(jsonItem));
+    }
+    return result;
+  }
+
   ///TblPermPermissionMain
 
   Future<List<TblPermPermissionMain>> getAllTblPermPermissionMain() async {
