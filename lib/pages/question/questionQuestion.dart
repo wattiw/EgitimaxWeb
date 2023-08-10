@@ -93,10 +93,11 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
   int? selectedLearnId;
   List<int>? selectedAchievementIds;
 
+  bool isLoadedData=false;
   var uuid = const Uuid();
   String? questionEditorUrl;
   String? questionToken;
-  bool isLoadedData = false;
+
   late WebSocketClientManager webSocketClientManager;
 
   @override
@@ -117,10 +118,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
     startListenWebSocket();
   }
 
-  Future<Widget> loadQuestion() async {
-    if (isLoadedData) {
-      return Container();
-    }
+  Future<void> loadQuestion() async {
 
     tblUserMain = await widget.appRepository.getTblUserMain(widget.userId);
 
@@ -131,8 +129,12 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
           await widget.appRepository.getTblQueQuestionMain(widget.questionId);
       tblQueQuestionOptions = await widget.appRepository
           .getByQuestionIdTblQueQuestionOption(widget.questionId);
-      tblQueQuestionAchvMaps = await widget.appRepository
-          .getByQuestionIdTblQueQuestionAchvMap(widget.questionId);
+      tblQueQuestionAchvMaps = await widget.appRepository .getByQuestionIdTblQueQuestionAchvMap(widget.questionId);
+
+      selectedAchievementIds = tblQueQuestionAchvMaps != null
+          ? tblQueQuestionAchvMaps!.map((e) => e.achvId).toList().cast<int>()
+          : null;
+
 
       selectedLocation = tblQueQuestionMain?.locationId ?? 0;
       selectedAcademicYear = tblQueQuestionMain?.academicYear ?? 0;
@@ -142,32 +144,31 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
       var selectedLearn = await widget.appRepository
           .getTblLearnMain(tblQueQuestionMain?.learnId ?? 0);
 
-      selectedLearnId=selectedLearn.id;
+      selectedLearnId = selectedLearn.id;
       selectedBranch = selectedLearn!.branchId!;
-
     } else {
-      if (!isLoadedData) {
-        tblQueQuestionMain = TblQueQuestionMain(id: BigInt.parse('0'));
-        selectedLocation = tblUserMain?.locationId ?? 0;
+      tblQueQuestionMain = TblQueQuestionMain(id: BigInt.parse('0'));
+      selectedLocation = tblUserMain?.locationId ?? 0;
 
-        academicYearList =
-            await widget.appRepository.getAllTblUtilAcademicYear();
-        selectedAcademicYear = academicYearList!
-            .firstWhere((element) => element.isDefault == 1)
-            .id;
+      academicYearList =
+      await widget.appRepository.getAllTblUtilAcademicYear();
+      selectedAcademicYear = academicYearList!
+          .firstWhere((element) => element.isDefault == 1)
+          .id;
 
-        difficultyList = await widget.appRepository.getAllTblUtilDifficulty();
-        selectedDifficultyLevel = difficultyList!
-            .firstWhere((element) => element.difficultyLev == 'dif_medium')
-            .id;
+      difficultyList = await widget.appRepository.getAllTblUtilDifficulty();
+      selectedDifficultyLevel = difficultyList!
+          .firstWhere((element) => element.difficultyLev == 'dif_medium')
+          .id;
 
-        selectedGrade = 0;
-        selectedBranch = tblUserMain!.teacherBranchId ?? 0;
-      }
+      selectedGrade = 0;
+      selectedBranch = tblUserMain!.teacherBranchId ?? 0;
     }
 
-    isLoadedData = true;
-    return Container();
+    isLoadedData=true;
+    setState(() {
+
+    });
   }
 
   @override
@@ -269,7 +270,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                         maxWidth: MediaQuery.of(context).size.width,
                         minHeight: MediaQuery.of(context).size.height,
                       ),
-                      child: getStepper(),
+                      child: isLoadedData ? getStepper() : Container(),
                     ),
                   );
                 },
@@ -1116,26 +1117,19 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                         }
                       },
                     ),
-                    if (selectedGrade != null &&
-                        selectedGrade != 0 &&
-                        selectedBranch != null &&
-                        selectedBranch != 0 &&
-                        selectedLocation != null &&
-                        selectedLocation != 0)
-                      LearnHierarchyDrops(
-                        selectedGrade: selectedGrade,
-                        selectedBranch: selectedBranch,
-                        selectedLocation: selectedLocation,
-                        selectedLearnId: selectedLearnId,
-                        selectedAchievementIds:selectedAchievementIds,
-                        onChangedLearnId: (fSelectedLearnId) {
-                          selectedLearnId=fSelectedLearnId;
-                        },
-                        onChangedAchievements: (fSelectedAchievementIds) {
-                          selectedAchievementIds=fSelectedAchievementIds;
-
-                        },
-                      ),
+                    LearnHierarchyDrops(
+                      selectedGrade: selectedGrade,
+                      selectedBranch: selectedBranch,
+                      selectedLocation: selectedLocation,
+                      selectedLearnId: selectedLearnId,
+                      selectedAchievementIds: selectedAchievementIds,
+                      onChangedLearnId: (fSelectedLearnId) {
+                        selectedLearnId = fSelectedLearnId;
+                      },
+                      onChangedAchievements: (fSelectedAchievementIds) {
+                        selectedAchievementIds = fSelectedAchievementIds;
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -1496,7 +1490,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
       rootUserId = widget.userId;
     }
 
-    final learnId = selectedLearnId??0;
+    final learnId = selectedLearnId ?? 0;
 
     tblQueQuestionMain?.academicYear = selectedAcademicYear;
     tblQueQuestionMain?.difficultyLev = selectedDifficultyLevel;

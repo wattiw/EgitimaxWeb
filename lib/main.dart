@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final RouteManager routeManager = RouteManager();
     routeManager.addRoute('/', (context) => HomePage());
-    routeManager.addRoute('/QuestionPage', (context) => QuestionPage(questionId: BigInt.parse('0'),userId: BigInt.parse('1'),));
+    routeManager.addRoute('/QuestionPage', (context) => QuestionPage(questionId: BigInt.parse('28'),userId: BigInt.parse('1'),));
 
     return ChangeNotifierProvider(
       create: (context) => LocaleManager(),
