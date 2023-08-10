@@ -12,6 +12,7 @@ import 'package:egitimax/utils/helper/webSocketClientManager.dart';
 import 'package:egitimax/utils/provider/imager.dart';
 import 'package:egitimax/utils/widget/deviceInfo.dart';
 import 'package:egitimax/utils/widget/dropdownSearch.dart';
+import 'package:egitimax/utils/widget/htmlRenderer.dart';
 import 'package:egitimax/utils/widget/learnHierarchyDrops.dart';
 import 'package:enhance_stepper/enhance_stepper.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +94,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
   int? selectedLearnId;
   List<int>? selectedAchievementIds;
 
-  bool isLoadedData=false;
+  bool isLoadedData = false;
   var uuid = const Uuid();
   String? questionEditorUrl;
   String? questionToken;
@@ -119,7 +120,6 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
   }
 
   Future<void> loadQuestion() async {
-
     tblUserMain = await widget.appRepository.getTblUserMain(widget.userId);
 
     if (widget.questionId != null &&
@@ -129,12 +129,12 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
           await widget.appRepository.getTblQueQuestionMain(widget.questionId);
       tblQueQuestionOptions = await widget.appRepository
           .getByQuestionIdTblQueQuestionOption(widget.questionId);
-      tblQueQuestionAchvMaps = await widget.appRepository .getByQuestionIdTblQueQuestionAchvMap(widget.questionId);
+      tblQueQuestionAchvMaps = await widget.appRepository
+          .getByQuestionIdTblQueQuestionAchvMap(widget.questionId);
 
       selectedAchievementIds = tblQueQuestionAchvMaps != null
           ? tblQueQuestionAchvMaps!.map((e) => e.achvId).toList().cast<int>()
           : null;
-
 
       selectedLocation = tblQueQuestionMain?.locationId ?? 0;
       selectedAcademicYear = tblQueQuestionMain?.academicYear ?? 0;
@@ -150,11 +150,9 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
       tblQueQuestionMain = TblQueQuestionMain(id: BigInt.parse('0'));
       selectedLocation = tblUserMain?.locationId ?? 0;
 
-      academicYearList =
-      await widget.appRepository.getAllTblUtilAcademicYear();
-      selectedAcademicYear = academicYearList!
-          .firstWhere((element) => element.isDefault == 1)
-          .id;
+      academicYearList = await widget.appRepository.getAllTblUtilAcademicYear();
+      selectedAcademicYear =
+          academicYearList!.firstWhere((element) => element.isDefault == 1).id;
 
       difficultyList = await widget.appRepository.getAllTblUtilDifficulty();
       selectedDifficultyLevel = difficultyList!
@@ -165,10 +163,8 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
       selectedBranch = tblUserMain!.teacherBranchId ?? 0;
     }
 
-    isLoadedData=true;
-    setState(() {
-
-    });
+    isLoadedData = true;
+    setState(() {});
   }
 
   @override
@@ -455,442 +451,6 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
         isActive: true,
         title: 'Question Details',
         subtitle: 'Please define details of question !',
-/*        content: FutureBuilder<Widget>(
-          future: loadQuestion(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text("Error: ${snapshot.error}"));
-            } else if (snapshot.hasData) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Wrap(
-                        alignment: WrapAlignment.start,
-                        runAlignment: WrapAlignment.start,
-                        spacing: 3,
-                        runSpacing: 5,
-                        children: [
-                          FutureBuilder<List<TblUtilAcademicYear>>(
-                            future: academicYearList != null
-                                ? Future.delayed(const Duration(seconds: 0),
-                                    () {
-                                    return academicYearList!;
-                                  })
-                                : widget.appRepository
-                                    .getAllTblUtilAcademicYear(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              } else if (snapshot.hasError) {
-                                return Center(
-                                    child: Text("Error: ${snapshot.error}"));
-                              } else if (snapshot.hasData) {
-                                academicYearList = snapshot.data;
-                                if (snapshot.data!.isEmpty) {
-                                  return Container();
-                                }
-
-                                return DropdownSearchHelper
-                                    .singleSelectionDropdown<
-                                        TblUtilAcademicYear>(
-                                  context: context,
-                                  labelText: 'Academic Year',
-                                  hintText: 'Please select academic year !',
-                                  searchBoxLabelText: 'Search',
-                                  showSearchBox: true,
-                                  items: snapshot.data!,
-                                  maxWidth:
-                                      DropdownSearchHelper.getDropdownWidth(
-                                          context,
-                                          snapshot.data!
-                                              .map((item) =>
-                                                  item.academicYear ?? '')
-                                              .toList()),
-                                  itemAsString: (selectedItem) {
-                                    return selectedItem.academicYear.toString();
-                                  },
-                                  selectedItem: snapshot.data!.any((element) =>
-                                          element.id == selectedAcademicYear)
-                                      ? snapshot.data!.firstWhere((element) =>
-                                          element.id == selectedAcademicYear)
-                                      : null,
-                                  onChanged: (selectedItem) {
-                                    selectedAcademicYear = selectedItem != null
-                                        ? selectedItem!.id
-                                        : 0;
-                                  },
-                                );
-                              } else {
-                                return const Center(
-                                    child: Text("No data found."));
-                              }
-                            },
-                          ),
-                          FutureBuilder<List<TblUtilDifficulty>>(
-                            future: difficultyList != null
-                                ? Future.delayed(const Duration(seconds: 0),
-                                    () {
-                                    return difficultyList!;
-                                  })
-                                : widget.appRepository
-                                    .getAllTblUtilDifficulty(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              } else if (snapshot.hasError) {
-                                return Center(
-                                    child: Text("Error: ${snapshot.error}"));
-                              } else if (snapshot.hasData) {
-                                difficultyList = snapshot.data;
-                                if (snapshot.data!.isEmpty) {
-                                  return Container();
-                                }
-                                return DropdownSearchHelper
-                                    .singleSelectionDropdown<TblUtilDifficulty>(
-                                  context: context,
-                                  labelText: 'Difficulty Level',
-                                  hintText: 'Please select difficulty level !',
-                                  searchBoxLabelText: 'Search',
-                                  showSearchBox: true,
-                                  items: snapshot.data!,
-                                  maxWidth:
-                                      DropdownSearchHelper.getDropdownWidth(
-                                          context,
-                                          snapshot.data!
-                                              .map((item) =>
-                                                  item.difficultyLev ?? '')
-                                              .toList()),
-                                  itemAsString: (selectedItem) {
-                                    return selectedItem.difficultyLev
-                                        .toString();
-                                  },
-                                  selectedItem: snapshot.data!.any((element) =>
-                                          element.id == selectedDifficultyLevel)
-                                      ? snapshot.data!.firstWhere((element) =>
-                                          element.id == selectedDifficultyLevel)
-                                      : null,
-                                  onChanged: (selectedItem) {
-                                    selectedDifficultyLevel =
-                                        selectedItem != null
-                                            ? selectedItem!.id
-                                            : 0;
-                                  },
-                                );
-                              } else {
-                                return const Center(
-                                    child: Text("No data found."));
-                              }
-                            },
-                          ),
-                          FutureBuilder<List<TblUtilGrade>>(
-                            future: gradeList != null
-                                ? Future.delayed(const Duration(seconds: 0),
-                                    () {
-                                    return gradeList!;
-                                  })
-                                : widget.appRepository
-                                    .getByLocationIdTblUtilGrade(
-                                        selectedLocation),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              } else if (snapshot.hasError) {
-                                return Center(
-                                    child: Text("Error: ${snapshot.error}"));
-                              } else if (snapshot.hasData) {
-                                gradeList = snapshot.data;
-                                if (snapshot.data!.isEmpty) {
-                                  return Container();
-                                }
-
-                                return DropdownSearchHelper
-                                    .singleSelectionDropdown<TblUtilGrade>(
-                                  context: context,
-                                  labelText: 'Grade',
-                                  hintText: 'Please select grade !',
-                                  searchBoxLabelText: 'Search',
-                                  showSearchBox: true,
-                                  items: snapshot.data!,
-                                  maxWidth:
-                                      DropdownSearchHelper.getDropdownWidth(
-                                          context,
-                                          snapshot
-                                              .data!
-                                              .map((item) =>
-                                                  item.gradeName ?? '')
-                                              .toList()),
-                                  itemAsString: (selectedItem) {
-                                    return selectedItem.gradeName.toString();
-                                  },
-                                  selectedItem: snapshot.data!.any((element) =>
-                                          element.id == selectedGrade)
-                                      ? snapshot.data!.firstWhere((element) =>
-                                          element.id == selectedGrade)
-                                      : null,
-                                  onChanged: (selectedItem) {
-                                    setState(() {
-                                      selectedGrade = selectedItem != null
-                                          ? selectedItem!.id
-                                          : 0;
-                                      selectedLearnParent = null;
-                                      selectedLearns.clear();
-                                    });
-                                  },
-                                );
-                              } else {
-                                return const Center(
-                                    child: Text("No data found."));
-                              }
-                            },
-                          ),
-                          FutureBuilder<List<TblUtilBranch>>(
-                            future: branchList != null
-                                ? Future.delayed(const Duration(seconds: 0),
-                                    () {
-                                    return branchList!;
-                                  })
-                                : widget.appRepository
-                                    .getByLocationIdTblUtilBranch(
-                                        selectedLocation),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              } else if (snapshot.hasError) {
-                                return Center(
-                                    child: Text("Error: ${snapshot.error}"));
-                              } else if (snapshot.hasData) {
-                                branchList = snapshot.data;
-                                if (snapshot.data!.isEmpty) {
-                                  return Container();
-                                }
-
-                                return DropdownSearchHelper
-                                    .singleSelectionDropdown<TblUtilBranch>(
-                                  context: context,
-                                  labelText: 'Branch',
-                                  hintText: 'Please select branch !',
-                                  searchBoxLabelText: 'Search',
-                                  showSearchBox: true,
-                                  items: snapshot.data!,
-                                  maxWidth:
-                                      DropdownSearchHelper.getDropdownWidth(
-                                          context,
-                                          snapshot.data!
-                                              .map((item) =>
-                                                  item.branchName ?? '')
-                                              .toList()),
-                                  itemAsString: (selectedItem) {
-                                    return selectedItem.branchName.toString();
-                                  },
-                                  selectedItem: snapshot.data!.any((element) =>
-                                          element.id == selectedBranch)
-                                      ? snapshot.data!.firstWhere((element) =>
-                                          element.id == selectedBranch)
-                                      : null,
-                                  onChanged: (selectedItem) {
-                                    setState(() {
-                                      selectedBranch = selectedItem != null
-                                          ? selectedItem!.id
-                                          : 0;
-                                      selectedLearnParent = null;
-                                      selectedLearns.clear();
-                                    });
-                                  },
-                                );
-                              } else {
-                                return const Center(
-                                    child: Text("No data found."));
-                              }
-                            },
-                          ),
-                          FutureBuilder<List<TblLearnMain>>(
-                            future: widget.appRepository.getParentsTblLearnMain(
-                                selectedBranch,
-                                selectedGrade,
-                                selectedLocation),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              } else if (snapshot.hasError) {
-                                return Center(
-                                    child: Text("Error: ${snapshot.error}"));
-                              } else if (snapshot.hasData) {
-                                if (snapshot.data!.isEmpty) {
-                                  return Container();
-                                }
-
-                                return DropdownSearchHelper
-                                    .singleSelectionDropdown<TblLearnMain>(
-                                  context: context,
-                                  labelText: snapshot.data!.first.type,
-                                  hintText:
-                                      'Please select ${snapshot.data!.first.type} !',
-                                  searchBoxLabelText: 'Search',
-                                  showSearchBox: true,
-                                  items: snapshot.data!,
-                                  maxWidth:
-                                      DropdownSearchHelper.getDropdownWidth(
-                                          context,
-                                          snapshot.data!
-                                              .map((item) => item.name ?? '')
-                                              .toList()),
-                                  itemAsString: (selectedItem) {
-                                    return selectedItem.name.toString();
-                                  },
-                                  selectedItem: selectedLearnParent,
-                                  onChanged: (selectedItem) {
-                                    setState(() {
-                                      selectedAchievements.clear();
-                                      selectedLearns.clear();
-                                      selectedLearnParent = selectedItem;
-                                    });
-                                  },
-                                );
-                              } else {
-                                return const Center(
-                                    child: Text("No data found."));
-                              }
-                            },
-                          ),
-                          if (selectedLearnParent != null)
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height / 2,
-                              child: ListView.builder(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5),
-                                itemCount: selectedLearns.length + 1,
-                                itemBuilder: (context, index) {
-                                  var parentId =
-                                      selectedLearns.isNotEmpty && index != 0
-                                          ? selectedLearns[index - 1].id
-                                          : selectedLearnParent?.id;
-                                  if (parentId == null) {
-                                    return Container();
-                                  }
-                                  return Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 5),
-                                    child: FutureBuilder<List<TblLearnMain>>(
-                                      future: widget.appRepository
-                                          .getChildrenTblLearnMain(parentId),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const Center(
-                                              child:
-                                                  CircularProgressIndicator());
-                                        } else if (snapshot.hasError) {
-                                          return Center(
-                                              child: Text(
-                                                  "Error: ${snapshot.error}"));
-                                        } else if (snapshot.hasData) {
-                                          if (snapshot.data != null &&
-                                              snapshot.data!.first.type ==
-                                                  'ct_achv') {
-                                            return CheckboxList<TblLearnMain>(
-                                              items: snapshot.data!,
-                                              selectedItems:
-                                                  selectedAchievements,
-                                              onChanged: (selectedItems) {
-                                                selectedAchievements =
-                                                    selectedItems;
-                                              },
-                                              getTitle: (item) {
-                                                return item.itemCode ?? '';
-                                              },
-                                              getSubtitle: (item) {
-                                                return "${item.name}";
-                                              },
-                                              boxDecoration: BoxDecoration(
-                                                color: Colors.transparent,
-                                                border: Border.all(
-                                                    color: Colors.grey),
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                            );
-                                          } else {
-                                            return DropdownSearchHelper
-                                                .singleSelectionDropdown<
-                                                    TblLearnMain>(
-                                              context: context,
-                                              labelText:
-                                                  snapshot.data!.first.type ??
-                                                      '',
-                                              hintText:
-                                                  'Please select ${snapshot.data!.first.type} !',
-                                              searchBoxLabelText: 'Search',
-                                              showSearchBox: true,
-                                              items: snapshot.data!,
-                                              maxWidth: DropdownSearchHelper
-                                                  .getDropdownWidth(
-                                                      context,
-                                                      snapshot.data!
-                                                          .map((item) =>
-                                                              item.name ?? '')
-                                                          .toList()),
-                                              itemAsString: (selectedItem) {
-                                                return selectedItem.name
-                                                    .toString();
-                                              },
-                                              selectedItem: selectedLearns
-                                                          .isNotEmpty &&
-                                                      selectedLearns.length >=
-                                                          index + 1
-                                                  ? selectedLearns[index]
-                                                  : null,
-                                              onChanged: (selectedItem) {
-                                                if (selectedItem != null) {
-                                                  setState(() {
-                                                    selectedLearns.insert(
-                                                        index, selectedItem!);
-                                                    selectedLearns.removeRange(
-                                                        index + 1,
-                                                        selectedLearns.length);
-                                                  });
-                                                }
-                                              },
-                                            );
-                                          }
-                                        } else {
-                                          return const Center(
-                                              child: Text("No data found."));
-                                        }
-                                      },
-                                    ),
-                                  );
-                                },
-                              ),
-                            )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            } else {
-              return const Center(child: Text("No data found."));
-            }
-          },
-        ),*/
         content: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10),
           child: Column(

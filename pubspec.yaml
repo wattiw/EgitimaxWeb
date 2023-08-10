@@ -55,6 +55,10 @@ dependencies:
   web_socket_channel: ^2.4.0
   logging: ^1.2.0
   uuid: ^3.0.7
+  html: ^0.15.4
+  quill_html_editor: ^2.2.3
+
+
 
 
 

@@ -362,6 +362,7 @@ class _LayoutPageState extends State<LayoutPage> {
 
 
     return Scaffold(
+
       appBar: widget.appBarScaffold ??
           AppBar(
             leading: widget.leadingAppBar ?? logoContainer,
