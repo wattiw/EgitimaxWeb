@@ -56,7 +56,9 @@ dependencies:
   logging: ^1.2.0
   uuid: ^3.0.7
   html: ^0.15.4
-  quill_html_editor: ^2.2.3
+  flutter_widget_from_html_core: ^0.10.1
+  csslib: ^1.0.0
+  fwfh_text_style: ^2.22.8+3
 
 
 

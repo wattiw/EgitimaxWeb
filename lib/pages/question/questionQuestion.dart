@@ -723,9 +723,24 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                     if (tblQueQuestionMain != null)
                       Column(
                         children: [
-                          Text("Qid:${tblQueQuestionMain!.id}"),
-                          Text("Qid:${tblQueQuestionMain!.questionText}"),
-                          Text("Qid:${tblQueQuestionMain!.resolution}"),
+                          WebViewPage(
+                            prefixIcon: const Icon(Icons.question_mark_outlined),
+                            showText: 'Show Question',
+                              hideText: 'Hide Question',
+                              htmlContent: tblQueQuestionMain!.questionText??'',
+                          ),
+                          WebViewPage(
+                            prefixIcon: const Icon(Icons.list),
+                            showText: 'Show Question Options',
+                            hideText: 'Hide Question Options',
+                            htmlContent: tblQueQuestionMain!.questionText??'',
+                          ),
+                          WebViewPage(
+                            prefixIcon: const Icon(Icons.download_done_outlined),
+                            showText: 'Show Question Resolution',
+                            hideText: 'Hide Question Resolution',
+                            htmlContent: tblQueQuestionMain!.questionText??'',
+                          ),
                         ],
                       ),
                   ],
