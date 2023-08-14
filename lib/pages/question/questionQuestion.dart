@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:egitimax/models/common/stepItem.dart';
 import 'package:egitimax/models/egitimax/egitimaxEntities.dart';
 import 'package:egitimax/models/question/receivedQuestionStatus.dart';
@@ -12,8 +11,9 @@ import 'package:egitimax/utils/helper/webSocketClientManager.dart';
 import 'package:egitimax/utils/provider/imager.dart';
 import 'package:egitimax/utils/widget/deviceInfo.dart';
 import 'package:egitimax/utils/widget/dropdownSearch.dart';
-import 'package:egitimax/utils/widget/htmlRenderer.dart';
 import 'package:egitimax/utils/widget/learnHierarchyDrops.dart';
+import 'package:egitimax/utils/widget/message.dart';
+import 'package:egitimax/utils/widget/questionOptionsWithSolution.dart';
 import 'package:enhance_stepper/enhance_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -723,24 +723,11 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                     if (tblQueQuestionMain != null)
                       Column(
                         children: [
-                          WebViewPage(
-                            prefixIcon: const Icon(Icons.question_mark_outlined),
-                            showText: 'Show Question',
-                              hideText: 'Hide Question',
-                              htmlContent: tblQueQuestionMain!.questionText??'',
-                          ),
-                          WebViewPage(
-                            prefixIcon: const Icon(Icons.list),
-                            showText: 'Show Question Options',
-                            hideText: 'Hide Question Options',
-                            htmlContent: tblQueQuestionMain!.questionText??'',
-                          ),
-                          WebViewPage(
-                            prefixIcon: const Icon(Icons.download_done_outlined),
-                            showText: 'Show Question Resolution',
-                            hideText: 'Hide Question Resolution',
-                            htmlContent: tblQueQuestionMain!.questionText??'',
-                          ),
+                          QuestionOptionsWithSolution(
+                            question: tblQueQuestionMain!,
+                            options: tblQueQuestionOptions ?? [],
+                            achievementMap: tblQueQuestionAchvMaps ?? [],
+                          )
                         ],
                       ),
                   ],
@@ -803,6 +790,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
       if (stepIndex == 1) {
         saveQuestion();
       }
+
     });
   }
 
@@ -877,7 +865,9 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        submitQuestion();
+                      },
                       child: Text("Save",
                           style: widget.theme.textTheme.bodyMedium),
                     ),
@@ -1147,6 +1137,9 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
     if (questionEditorUrl != null) {
       await launchEditorURL(questionEditorUrl!);
     }
+  }
+  Future<void> submitQuestion() async {
+    Message.showInformationalMessage(context,title: Text('Question Submission',style: widget.theme.textTheme.titleMedium),content: Text('Question has been submitted successfully.',style: widget.theme.textTheme.bodyMedium));
   }
 
   launchEditorURL(String editorUrl) async {

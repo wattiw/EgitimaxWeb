@@ -6,9 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 
 class WebViewPage extends StatelessWidget {
+  bool? isDisableCollapseChild=false;
   final Icon? prefixIcon;
-  final String showText;
-  final String hideText;
+   String? showText='';
+   String? hideText='';
   final String htmlContent;
   final TextStyle? textStyle;
   final Uri? baseUrl;
@@ -24,10 +25,11 @@ class WebViewPage extends StatelessWidget {
   final RebuildTriggers? rebuildTriggers;
   final RenderMode renderMode;
 
-  const WebViewPage({super.key,
+   WebViewPage({super.key,
+    this.isDisableCollapseChild,
     this.prefixIcon,
-    required this.showText,
-    required this.hideText,
+     this.showText,
+     this.hideText,
     required this.htmlContent,
     this.textStyle,
     this.baseUrl,
@@ -67,18 +69,21 @@ class WebViewPage extends StatelessWidget {
       ),
     );
 
+    if(isDisableCollapseChild==true)
+      {
+        return data;
+      }
+
     return CollapseChild(
       buttonStyle: CollapseButtonStyle(
         textStyle: Theme.of(context).textTheme.titleMedium,
         iconColor: Theme.of(context).iconTheme.color,
-        showText: showText,
-        hideText: hideText,
+        showText: showText??'',
+        hideText: hideText??'',
       ),
       prefixIcon: prefixIcon,
       child: data,
     );
-
-    return data;
   }
 }
 

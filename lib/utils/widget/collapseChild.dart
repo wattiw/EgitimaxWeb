@@ -5,8 +5,8 @@ class CollapseChild extends StatefulWidget {
   final Icon? prefixIcon;
   final CollapseButtonStyle buttonStyle;
 
-  CollapseChild(
-      {this.prefixIcon, required this.child, required this.buttonStyle});
+  const CollapseChild(
+      {super.key, this.prefixIcon, required this.child, required this.buttonStyle});
 
   @override
   _CollapseChildState createState() => _CollapseChildState();
@@ -80,7 +80,7 @@ class _CollapseChildState extends State<CollapseChild> {
             firstChild: const SizedBox.shrink(),
             secondChild: Container(
               constraints: const BoxConstraints(minHeight: 120),
-              padding: const EdgeInsets.all(5),
+              padding: const EdgeInsets.fromLTRB(20,10,20,10),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.transparent),
                 borderRadius: BorderRadius.circular(8),

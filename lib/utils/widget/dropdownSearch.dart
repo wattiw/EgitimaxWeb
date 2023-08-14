@@ -257,7 +257,7 @@ class DropdownSearchHelper {
     );
     textPainter.layout();
 
-    return textPainter.width*2 <200 ? 200 : (textPainter.width*3 >250 ? 250 : textPainter.width*3);
+    return MediaQuery.of(context).size.width<500 ? MediaQuery.of(context).size.width*0.75 :250;
   }
 
   static String findLongestText(List<String> displayText) {
