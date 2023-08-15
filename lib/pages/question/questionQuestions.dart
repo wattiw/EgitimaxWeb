@@ -1,28 +1,26 @@
-import 'package:egitimax/models/common/userData.dart';
 import 'package:egitimax/models/egitimax/egitimaxEntities.dart';
-import 'package:egitimax/pages/login/loginPage.dart';
+import 'package:egitimax/pages/template.dart';
 import 'package:egitimax/repositories/appRepository.dart';
 import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:egitimax/utils/helper/localeManager.dart';
 import 'package:egitimax/utils/helper/routeManager.dart';
+
 import 'package:egitimax/utils/provider/imager.dart';
 import 'package:egitimax/utils/widget/deviceInfo.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:responsive_table/responsive_table.dart';
 
-class HomeHome extends StatefulWidget {
-  HomeHome(
-      {super.key,
-      required this.title,
-      required this.routeManager,
-      required this.appRepository,
-      required this.theme,
-      required this.lang,
-      required this.localeManager,
-      required this.deviceType});
+class QuestionQuestions extends StatefulWidget {
+  QuestionQuestions({super.key,
+    required this.title,
+    required this.routeManager,
+    required this.appRepository,
+    required this.theme,
+    required this.lang,
+    required this.localeManager,
+    required this.deviceType,
+    required this.userId});
 
   String? currentTitle;
   final String title;
@@ -32,75 +30,78 @@ class HomeHome extends StatefulWidget {
   final AppLocalizations lang;
   final LocaleManager localeManager;
   final DeviceTypes deviceType;
+  BigInt userId;
 
   @override
-  State<HomeHome> createState() => _HomeHomeState();
+  State<QuestionQuestions> createState() => _QuestionQuestionsState();
 }
 
-class _HomeHomeState extends State<HomeHome> {
-  late SharedPreferences preferences;
-  String currentPageName = 'HomeHome';
-
-  late ScrollController _scrollController;
+class _QuestionQuestionsState extends State<QuestionQuestions> {
   bool floating = false;
   bool pinned = false;
   bool snap = false;
-  bool isVisible = false;
+
+
+  late List<DatatableHeader> headers;
+  late List<Map<String, dynamic>> source;
+  late List<Map<String, dynamic>> selecteds;
+  late bool showSelect;
+  late List<Widget> footers;
+  late String sortColumn;
+  late bool sortAscending;
+  late bool isLoading;
+  late bool autoHeight;
+  late Widget title;
+  late List<Widget> actions;
+  bool isSearch = false;
 
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
-    _scrollController.addListener(_toggleVisibility);
-    if (AppConstants.homePageDebugPrintActive == 1) {
-      debugPrint("HomeHome_initState");
+
+    if (AppConstants.questionPageDebugPrintActive == 1) {
+      debugPrint("QuestionQuestions_initState");
     }
-    initializePreferences();
-    getx();
-  }
-
-
-  void overrideTitle(String newCurrentTitle) {
-    setState(() {
-      widget.currentTitle= newCurrentTitle;
-    });
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(_toggleVisibility);
-    _scrollController.dispose();
     super.dispose();
-  }
-
-  void _toggleVisibility() {
-    setState(() {
-      isVisible = _scrollController.position.userScrollDirection ==
-          ScrollDirection.forward;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (AppConstants.homePageDebugPrintActive == 1) {
-      debugPrint("HomeHome_build");
+    if (AppConstants.questionPageDebugPrintActive == 1) {
+      debugPrint("QuestionQuestions_build");
     }
-    GlobalKey<ScaffoldState> homeHomeKey = GlobalKey<ScaffoldState>();
+    GlobalKey<ScaffoldState> questionQuestionsKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
-      key: homeHomeKey,
+      key: questionQuestionsKey,
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            backgroundColor: Theme.of(context).colorScheme.background,
-            foregroundColor: Theme.of(context).colorScheme.secondary,
-            shadowColor: Theme.of(context).colorScheme.shadow,
-            surfaceTintColor: Theme.of(context).colorScheme.surface,
+            backgroundColor: Theme
+                .of(context)
+                .colorScheme
+                .background,
+            foregroundColor: Theme
+                .of(context)
+                .colorScheme
+                .secondary,
+            shadowColor: Theme
+                .of(context)
+                .colorScheme
+                .shadow,
+            surfaceTintColor: Theme
+                .of(context)
+                .colorScheme
+                .surface,
             actions: [
               IconButton(
                 icon: Icon(Icons.settings, size: widget.theme.iconTheme.size),
                 onPressed: () {
-                  homeHomeKey.currentState?.openEndDrawer();
+                  questionQuestionsKey.currentState?.openEndDrawer();
                 },
               ),
             ],
@@ -166,16 +167,25 @@ class _HomeHomeState extends State<HomeHome> {
                   return SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height,
                       constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width,
-                        minHeight: MediaQuery.of(context).size.height,
+                        maxWidth: MediaQuery
+                            .of(context)
+                            .size
+                            .width,
+                        minHeight: MediaQuery
+                            .of(context)
+                            .size
+                            .height,
                       ),
-                      child: ChangeNotifierProvider(
-                        create: (context) => UserData(),
-                      child: LoginPage(),
-                      ),
+                      child: getBody(),
                     ),
                   );
                 },
@@ -189,37 +199,63 @@ class _HomeHomeState extends State<HomeHome> {
     );
   }
 
-  Future<void> initializePreferences() async {
-    preferences = await SharedPreferences.getInstance();
-    if (preferences != null) {
-      if (preferences.containsKey('$currentPageName.floating')) {
-        floating = preferences.getBool('$currentPageName.floating') ?? false;
-      }
-      if (preferences.containsKey('$currentPageName.pinned')) {
-        floating = preferences.getBool('$currentPageName.pinned') ?? false;
-      }
-      if (preferences.containsKey('$currentPageName.snap')) {
-        floating = preferences.getBool('$currentPageName.snap') ?? false;
-      }
-      if (preferences.containsKey('$currentPageName.isVisible')) {
-        floating = preferences.getBool('$currentPageName.isVisible') ?? false;
-      }
-    }
-  }
+  Widget getBody() {
 
-  Future<void> savePageLayout() async {
-    await preferences.clear();
-    await preferences.setBool('$currentPageName.floating', floating);
-    await preferences.setBool('$currentPageName.pinned', pinned);
-    await preferences.setBool('$currentPageName.snap', snap);
-    await preferences.setBool('$currentPageName.isVisible', isVisible);
+
+    return FutureBuilder<List<ViewQueQuestionMain>>(
+      future: widget.appRepository.getAllViewQueQuestionMain(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('No data available.'));
+        } else {
+          List<Map<String, dynamic>> source = snapshot.data!.map((map) {
+            return map.toMap();
+          }).toList();
+
+          return DataPage(
+            searchKey: 'QuestionToken',
+            tableKey: 'Id',
+            headers: [
+              DatatableHeader(text: "Academic Year", value: "AcademicYearName", show: true, sortable: true, textAlign: TextAlign.center),
+              DatatableHeader(text: "Created By", value: "CreatedByNameSurname", show: true, sortable: true, textAlign: TextAlign.center),
+              DatatableHeader(text: "Created On", value: "CreatedOn", show: true, sortable: true, textAlign: TextAlign.center),
+              DatatableHeader(text: "Difficulty Level", value: "DifficultyLevName", show: true, sortable: true, textAlign: TextAlign.center),
+              DatatableHeader(text: "Grade Id", value: "GradeName", show: true, sortable: true, textAlign: TextAlign.center),
+              DatatableHeader(text: "Id", value: "Id", show: true, sortable: true, textAlign: TextAlign.center),
+              DatatableHeader(text: "Is Public", value: "IsPublicName", show: true, sortable: true, textAlign: TextAlign.center),
+              DatatableHeader(text: "Learn Id", value: "LearnNameChain", show: true, sortable: true, textAlign: TextAlign.center),
+              DatatableHeader(text: "Location Id", value: "LocationNameChain", show: true, sortable: true, textAlign: TextAlign.center),
+              //DatatableHeader(text: "Question Text", value: "QuestionText", show: true, sortable: true, textAlign: TextAlign.center),
+              DatatableHeader(text: "Question Token", value: "QuestionToken", show: true, sortable: true, textAlign: TextAlign.center),
+              DatatableHeader(text: "Relation Id", value: "RelationId", show: true, sortable: true, textAlign: TextAlign.center),
+              //DatatableHeader(text: "Resolution", value: "Resolution", show: true, sortable: true, textAlign: TextAlign.center),
+              DatatableHeader(text: "Status", value: "StatusName", show: true, sortable: true, textAlign: TextAlign.center),
+              DatatableHeader(text: "Updated By", value: "UpdatedByNameSurname", show: true, sortable: true, textAlign: TextAlign.center),
+              DatatableHeader(text: "Updated On", value: "UpdatedOn", show: true, sortable: true, textAlign: TextAlign.center),
+              DatatableHeader(text: "User Id", value: "UserNameSurname", show: true, sortable: true, textAlign: TextAlign.center),
+
+            ],
+            source: source,
+            selectedItems:[source.first],
+            onChangedSelectedItems: (selectedItems) {
+              var xxxx=selectedItems;
+              int x=0;
+            },
+          );
+        }
+      },
+    );
   }
 
   Drawer getDrawer() {
     double transformScale = double.parse(widget.theme.iconTheme.size != null &&
-            widget.theme.iconTheme.size != 0
+        widget.theme.iconTheme.size != 0
         ? (widget.theme.iconTheme.size! / (widget.theme.iconTheme.size! * 1.5))
-            .toString()
+        .toString()
         : 1.toString());
     var endDrawerScaffold = Drawer(
       width: double.infinity,
@@ -250,11 +286,11 @@ class _HomeHomeState extends State<HomeHome> {
                       snap = value;
                       floating = value;
                     });
-                    savePageLayout();
                   },
                 ),
               ),
-              title: Text(floating ? 'Floating' : 'Disabled Floating'),
+              title:
+              Text('Floating', style: widget.theme.textTheme.titleMedium),
             ),
             ListTile(
               titleTextStyle: widget.theme.textTheme.titleMedium,
@@ -267,11 +303,10 @@ class _HomeHomeState extends State<HomeHome> {
                     setState(() {
                       pinned = value;
                     });
-                    savePageLayout();
                   },
                 ),
               ),
-              title: Text(pinned ? 'Pinned' : 'Disabled Pinned'),
+              title: Text('Pinned', style: widget.theme.textTheme.titleMedium),
             ),
             ListTile(
               titleTextStyle: widget.theme.textTheme.titleMedium,
@@ -285,38 +320,16 @@ class _HomeHomeState extends State<HomeHome> {
                       floating = value;
                       snap = value;
                     });
-                    savePageLayout();
                   },
                 ),
               ),
-              title: Text(snap ? 'Snap' : 'Disabled Snap'),
+              title: Text('Snap', style: widget.theme.textTheme.titleMedium),
             ),
+            const Divider(),
           ],
         ),
       ),
     );
     return endDrawerScaffold;
-  }
-
-  Future<void> getx()
-  async {
-   // var r1=await widget.appRepository.getUser('info@egitimax.com',BigInt.parse('2'));
-    //var r2=await widget.appRepository.getAllTblUserMain();
-    //var r3=await widget.appRepository.getTblUserMain(2);
-
-    //TblUserMain tblUserMain=TblUserMain(id: BigInt.parse('0'));
-    //tblUserMain.id=BigInt.parse('0');
-    //tblUserMain.name='test';
-    //tblUserMain.email='ii@i.com';
-
-    //var r4=await widget.appRepository.insertTblUserMain(tblUserMain);
-    //r4.name='asdasd';
-    //var r7=await widget.appRepository.updateTblUserMain(r4);
-    //var r3=await widget.appRepository.deleteTblUserMain(BigInt.parse(r4.id.toString()));
-
-    //var r5=await widget.appRepository.getQuestion(BigInt.parse('31'),'0',BigInt.parse('2'));
-
-    int bekler=0;
-
   }
 }

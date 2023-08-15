@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
   late ThemeData theme;
   late AppLocalizations lang;
   late LocaleManager localeManager;
-  late DeviceType deviceType;
+  late DeviceTypes deviceType;
   int selectedPageIndex = 0;
 
   @override

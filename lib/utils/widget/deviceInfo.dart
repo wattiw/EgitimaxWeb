@@ -192,7 +192,7 @@ class DeviceInfo {
     };
   }
 
-  Future<Tuple2<Map<String, dynamic>, DeviceType>> getDeviceData() async {
+  Future<Tuple2<Map<String, dynamic>, DeviceTypes>> getDeviceData() async {
     await initPlatformState();
     return Tuple2(_deviceData, _getTargetPlatform());
   }
@@ -200,7 +200,7 @@ class DeviceInfo {
 
 
 
-  DeviceType getDeviceType()  {
+  DeviceTypes getDeviceType()  {
     return _getTargetPlatform();
   }
 
@@ -217,16 +217,16 @@ class DeviceInfo {
     TargetPlatform.fuchsia => 'Fuchsia Device Info',
   };
 
-  DeviceType _getTargetPlatform() => kIsWeb
-      ? DeviceType.web
+  DeviceTypes _getTargetPlatform() => kIsWeb
+      ? DeviceTypes.web
       : switch (defaultTargetPlatform) {
-    TargetPlatform.android => DeviceType.android,
-    TargetPlatform.iOS => DeviceType.ios,
-    TargetPlatform.linux => DeviceType.linux,
-    TargetPlatform.windows => DeviceType.windows,
-    TargetPlatform.macOS => DeviceType.macos,
-    TargetPlatform.fuchsia => DeviceType.fuchsia,
+    TargetPlatform.android => DeviceTypes.android,
+    TargetPlatform.iOS => DeviceTypes.ios,
+    TargetPlatform.linux => DeviceTypes.linux,
+    TargetPlatform.windows => DeviceTypes.windows,
+    TargetPlatform.macOS => DeviceTypes.macos,
+    TargetPlatform.fuchsia => DeviceTypes.fuchsia,
   };
 }
 
-enum DeviceType { web, android, ios, linux, windows, macos, fuchsia }
+enum DeviceTypes { web, android, ios, linux, windows, macos, fuchsia }

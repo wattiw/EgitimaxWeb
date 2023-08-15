@@ -17,7 +17,7 @@ class UserImageDrawerItemProvider {
   late ThemeData theme;
   late AppLocalizations lang;
   late LocaleManager localeManager;
-  late DeviceType deviceType;
+  late DeviceTypes deviceType;
 
   List<ListTile> getUserImageDrawerItems() {
     // Simulate fetching data from a repository

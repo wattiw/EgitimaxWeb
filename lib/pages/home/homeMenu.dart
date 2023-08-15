@@ -27,7 +27,7 @@ class HomeMenu extends StatefulWidget {
   final ThemeData theme;
   final AppLocalizations lang;
   final LocaleManager localeManager;
-  final DeviceType deviceType;
+  final DeviceTypes deviceType;
 
   @override
   State<HomeMenu> createState() => _HomeMenuState();
@@ -297,7 +297,7 @@ class HomeMenuBody extends StatefulWidget {
   final ThemeData theme;
   final AppLocalizations lang;
   final LocaleManager localeManager;
-  final DeviceType deviceType;
+  final DeviceTypes deviceType;
   final void Function(String newCurrentTitle)? overrideTitle;
 
   @override

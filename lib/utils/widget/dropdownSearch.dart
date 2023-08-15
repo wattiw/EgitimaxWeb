@@ -13,7 +13,7 @@ class DropdownSearchHelper {
   static ThemeData? theme;
   static AppLocalizations? lang;
   static LocaleManager? localeManager;
-  static DeviceType? deviceType;
+  static DeviceTypes? deviceType;
 
   static Widget singleSelectionDropdown<T>({
     required BuildContext context,
@@ -257,7 +257,7 @@ class DropdownSearchHelper {
     );
     textPainter.layout();
 
-    return MediaQuery.of(context).size.width<500 ? MediaQuery.of(context).size.width*0.75 :250;
+    return MediaQuery.of(context).size.width<500 ? MediaQuery.of(context).size.width*0.50 :200;
   }
 
   static String findLongestText(List<String> displayText) {

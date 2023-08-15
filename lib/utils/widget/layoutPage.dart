@@ -94,7 +94,7 @@ class LayoutPage extends StatefulWidget {
   late ThemeData theme;
   late AppLocalizations lang;
   late LocaleManager localeManager;
-  late DeviceType deviceType;
+  late DeviceTypes deviceType;
 
   final Widget? leadingAppBar;
   final bool automaticallyImplyLeadingAppBar;
@@ -206,7 +206,7 @@ class _LayoutPageState extends State<LayoutPage> {
     widget.localeManager = Provider.of<LocaleManager>(context, listen: false);
     widget.deviceType = DeviceInfo().getDeviceType();
 
-    var logoWidthFactor = (widget.deviceType == DeviceType.web &&
+    var logoWidthFactor = (widget.deviceType == DeviceTypes.web &&
             MediaQuery.of(context).size.width >
                 AppConstants.appBarMobilScreenWidthLimitSize
         ? AppConstants.appBarLogoRatio

@@ -102,6 +102,11 @@
     "description": "Question Page"
   },
 
+  "libPagesQuestionQuestionPage_questionList": "Question List",
+  "@libPagesQuestionQuestionPage_questionList": {
+    "description": "Question List Page"
+  },
+
   "libPagesQuestionQuestionPage_question": "Question",
   "@libPagesQuestionQuestionPage_question": {
     "description": "Question"

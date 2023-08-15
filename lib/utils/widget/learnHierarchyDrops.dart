@@ -87,7 +87,7 @@ class _LearnHierarchyDropsState extends State<LearnHierarchyDrops> {
                             return Container();
                           }
                           return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.symmetric(vertical: 5),
                             child: DropdownSearchHelper.singleSelectionDropdown<
                                 TblLearnMain>(
                               context: context,
@@ -225,7 +225,7 @@ class _LearnHierarchyDropsState extends State<LearnHierarchyDrops> {
 
                                 return Padding(
                                   padding:
-                                      const EdgeInsets.symmetric(vertical: 10),
+                                      const EdgeInsets.symmetric(vertical: 5),
                                   child: DropdownSearchHelper
                                       .singleSelectionDropdown<TblLearnMain>(
                                     context: context,

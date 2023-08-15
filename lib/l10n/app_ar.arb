@@ -103,6 +103,11 @@
     "description": "صفحة الأسئلة"
   },
 
+  "libPagesQuestionQuestionPage_questionList": "قائمة الأسئلة",
+  "@libPagesQuestionQuestionPage_questionList": {
+    "description": "صفحة قائمة الأسئلة"
+  },
+
   "libPagesQuestionQuestionPage_question": "سؤال",
   "@libPagesQuestionQuestionPage_question": {
     "description": "سؤال"

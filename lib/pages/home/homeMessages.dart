@@ -27,7 +27,7 @@ class HomeMessages extends StatefulWidget {
   final ThemeData theme;
   final AppLocalizations lang;
   final LocaleManager localeManager;
-  final DeviceType deviceType;
+  final DeviceTypes deviceType;
 
   @override
   State<HomeMessages> createState() => _HomeMessagesState();
@@ -297,7 +297,7 @@ class HomeMessagesBody extends StatefulWidget {
   final ThemeData theme;
   final AppLocalizations lang;
   final LocaleManager localeManager;
-  final DeviceType deviceType;
+  final DeviceTypes deviceType;
   final void Function(String newCurrentTitle)? overrideTitle;
 
   @override

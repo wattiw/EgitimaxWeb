@@ -42,7 +42,7 @@ class QuestionQuestion extends StatefulWidget {
   final ThemeData theme;
   final AppLocalizations lang;
   final LocaleManager localeManager;
-  final DeviceType deviceType;
+  final DeviceTypes deviceType;
 
   BigInt userId;
   BigInt questionId;

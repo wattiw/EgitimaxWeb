@@ -101,6 +101,12 @@
     "description": "Page des questions"
   },
 
+  "libPagesQuestionQuestionPage_questionList": "Liste des questions",
+  "@libPagesQuestionQuestionPage_questionList": {
+    "description": "Page de la liste des questions"
+  },
+
+
   "libPagesQuestionQuestionPage_question": "Question",
   "@libPagesQuestionQuestionPage_question": {
     "description": "Question"

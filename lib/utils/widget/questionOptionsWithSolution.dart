@@ -255,10 +255,9 @@ class QuestionOptionsWithSolution extends StatelessWidget {
       if(achievementMap!=null && achievementMap!.isNotEmpty)
       ListTile(
         titleAlignment: ListTileTitleAlignment.top,
-        leading: const Icon(Icons.list),
         title: Text(
           'Achievements :',
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         subtitle: Column(
           mainAxisAlignment: MainAxisAlignment.start,

@@ -504,6 +504,33 @@ class AppRepository {
     return result;
   }
 
+  Future<ViewQueQuestionMain> getViewQueQuestionMain(BigInt id) async {
+    var jsonDecode =
+    await Api.request('TblQueQuestionMain/GetView/$id', method: HttpMethod.get);
+    ViewQueQuestionMain result = ViewQueQuestionMain.fromJson(jsonDecode);
+    return result;
+  }
+
+  Future<List<ViewQueQuestionMain>> getAllViewQueQuestionMain() async {
+    var jsonDecode =
+    await Api.request('TblQueQuestionMain/GetAllView', method: HttpMethod.get);
+    List<ViewQueQuestionMain> result = [];
+    for (var jsonItem in jsonDecode) {
+      result.add(ViewQueQuestionMain.fromJson(jsonItem));
+    }
+    return result;
+  }
+
+  Future<List<ViewQueQuestionMain>> getAllWithRangeViewQueQuestionMain(BigInt startId,BigInt endId) async {
+    var jsonDecode =
+    await Api.request('TblQueQuestionMain/GetAllWithRangeView/$startId/$endId', method: HttpMethod.get);
+    List<ViewQueQuestionMain> result = [];
+    for (var jsonItem in jsonDecode) {
+      result.add(ViewQueQuestionMain.fromJson(jsonItem));
+    }
+    return result;
+  }
+
   ///TblQueQuestionOption
 
   Future<List<TblQueQuestionOption>> getAllTblQueQuestionOption() async {

@@ -3124,3 +3124,131 @@ class TblVidVideoMain {
   }
 }
 
+class ViewQueQuestionMain {
+  BigInt id =BigInt.parse('0');
+  int? academicYear ;
+  int? difficultyLev ;
+  int? locationId ;
+  BigInt? userId ;
+  int? gradeId ;
+  int? learnId ;
+  String? relationId ;
+  String? questionToken ;
+  String? questionText ;
+  String? resolution ;
+  int? isPublic ;
+  String? isPublicName ;
+  int? status ;
+  BigInt? createdBy ;
+  DateTime? createdOn ;
+  BigInt? updatedBy ;
+  DateTime? updatedOn ;
+  String? academicYearName ;
+  String? difficultyLevName ;
+  String? locationNameChain ;
+  String? userNameSurname ;
+  String? gradeName ;
+  String? learnNameChain ;
+  String? statusName ;
+  String? createdByNameSurname ;
+  String? updatedByNameSurname ;
+
+  ViewQueQuestionMain({
+    required  this.id,
+    this.academicYear,
+    this.difficultyLev,
+    this.locationId,
+    this.userId,
+    this.gradeId,
+    this.learnId,
+    this.relationId,
+    this.questionToken,
+    this.questionText,
+    this.resolution,
+    this.isPublic,
+    this.isPublicName,
+    this.status,
+    this.createdBy,
+    this.createdOn,
+    this.updatedBy,
+    this.updatedOn,
+    this.academicYearName,
+    this.difficultyLevName,
+    this.locationNameChain,
+    this.userNameSurname,
+    this.gradeName,
+    this.learnNameChain,
+    this.statusName,
+    this.createdByNameSurname,
+    this.updatedByNameSurname,
+  });
+
+  ViewQueQuestionMain.fromJson(Map<String, dynamic> json) {
+    id = BigInt.parse((json['id']??'0').toString());
+    academicYear = json['academicYear'] as int?;
+    difficultyLev = json['difficultyLev'] as int?;
+    locationId = json['locationId'] as int?;
+    userId = BigInt.parse((json['userId']??'0').toString());
+    gradeId = json['gradeId'] as int?;
+    learnId = json['learnId'] as int?;
+    relationId = json['relationId'] as String?;
+    questionToken = json['questionToken'] as String?;
+    questionText = json['questionText'] as String?;
+    resolution = json['resolution'] as String?;
+    isPublic = json['isPublic'] as int?;
+    isPublicName = json['isPublicName'] as String?;
+    status = json['status'] as int?;
+    createdBy = BigInt.parse((json['createdBy']??'0').toString());
+    createdOn = json['createdOn'] != null ? DateTime.tryParse(json['createdOn']) : null;
+    updatedBy = BigInt.parse((json['updatedBy']??'0').toString());
+    updatedOn = json['updatedOn'] != null ? DateTime.tryParse(json['updatedOn']) : null;
+    academicYearName = json['academicYearName'] as String?;
+    difficultyLevName = json['difficultyLevName'] as String?;
+    locationNameChain = json['locationNameChain'] as String?;
+    userNameSurname = json['userNameSurname'] as String?;
+    gradeName = json['gradeName'] as String?;
+    learnNameChain = json['learnNameChain'] as String?;
+    statusName = json['statusName'] as String?;
+    createdByNameSurname = json['createdByNameSurname'] as String?;
+    updatedByNameSurname = json['updatedByNameSurname'] as String?;
+  }
+
+  Map<String, dynamic> toMap() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Id'] = BigInt.parse((id??'0').toString());
+    data['AcademicYear'] = academicYear;
+    data['DifficultyLev'] = difficultyLev;
+    data['LocationId'] = locationId;
+    data['UserId'] = BigInt.parse((userId??'0').toString());
+    data['GradeId'] = gradeId;
+    data['LearnId'] = learnId;
+    data['RelationId'] = relationId;
+    data['QuestionToken'] = questionToken;
+    data['QuestionText'] = questionText;
+    data['Resolution'] = resolution;
+    data['IsPublic'] = isPublic;
+    data['IsPublicName'] = isPublicName;
+    data['Status'] = status;
+    data['CreatedBy'] = BigInt.parse((createdBy??'0').toString());
+    data['CreatedOn'] = createdOn != null ? createdOn!.toIso8601String() : null;
+    data['UpdatedBy'] = BigInt.parse((updatedBy??'0').toString());
+    data['UpdatedOn'] = updatedOn != null ? updatedOn!.toIso8601String() : null;
+    data['AcademicYearName'] = academicYearName;
+    data['DifficultyLevName'] = difficultyLevName;
+    data['LocationNameChain'] = locationNameChain;
+    data['UserNameSurname'] = userNameSurname;
+    data['GradeName'] = gradeName;
+    data['LearnNameChain'] = learnNameChain;
+    data['StatusName'] = statusName;
+    data['CreatedByNameSurname'] = createdByNameSurname;
+    data['UpdatedByNameSurname'] = updatedByNameSurname;
+    return data;
+  }
+}
+
+
+
+
+
+
+

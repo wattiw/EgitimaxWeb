@@ -105,6 +105,11 @@
     "description": "Soru Sayfası"
   },
 
+  "libPagesQuestionQuestionPage_questionList": "Soru Listesi",
+  "@libPagesQuestionQuestionPage_questionList": {
+    "description": "Soru Listesi Sayfası"
+  },
+
   "libPagesQuestionQuestionPage_question": "Soru",
   "@libPagesQuestionQuestionPage_question": {
     "description": "Soru Sayfası"

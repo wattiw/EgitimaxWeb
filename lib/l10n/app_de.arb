@@ -105,6 +105,12 @@
     "description": "Fragen Seite"
   },
 
+  "libPagesQuestionQuestionPage_questionList": "Fragenliste",
+  "@libPagesQuestionQuestionPage_questionList": {
+    "description": "Seite mit der Fragenliste"
+  },
+
+
   "libPagesQuestionQuestionPage_question": "Frage",
   "@libPagesQuestionQuestionPage_question": {
     "description": "Frage"

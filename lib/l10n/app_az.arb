@@ -109,6 +109,12 @@
     "description": "Sual Səhifəsi"
   },
 
+  "libPagesQuestionQuestionPage_questionList": "Sual Siyahısı",
+  "@libPagesQuestionQuestionPage_questionList": {
+    "description": "Sual Siyahısı Səhifəsi"
+  },
+
+
   "libPagesQuestionQuestionPage_question": "Sual",
   "@libPagesQuestionQuestionPage_question": {
     "description": "Sual"
