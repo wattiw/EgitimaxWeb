@@ -511,9 +511,10 @@ class AppRepository {
     return result;
   }
 
-  Future<List<ViewQueQuestionMain>> getAllViewQueQuestionMain() async {
+  Future<List<ViewQueQuestionMain>> getAllViewQueQuestionMain(BigInt? userId) async {
+    userId ??= BigInt.parse('0');
     var jsonDecode =
-    await Api.request('TblQueQuestionMain/GetAllView', method: HttpMethod.get);
+    await Api.request('TblQueQuestionMain/GetAllView/$userId', method: HttpMethod.get);
     List<ViewQueQuestionMain> result = [];
     for (var jsonItem in jsonDecode) {
       result.add(ViewQueQuestionMain.fromJson(jsonItem));
@@ -521,13 +522,32 @@ class AppRepository {
     return result;
   }
 
-  Future<List<ViewQueQuestionMain>> getAllWithRangeViewQueQuestionMain(BigInt startId,BigInt endId) async {
+  Future<List<ViewQueQuestionMain>> getAllWithRangeViewQueQuestionMain(BigInt? userId,BigInt startId,BigInt endId) async {
+    userId ??= BigInt.parse('0');
     var jsonDecode =
-    await Api.request('TblQueQuestionMain/GetAllWithRangeView/$startId/$endId', method: HttpMethod.get);
+    await Api.request('TblQueQuestionMain/GetAllWithRangeView/$userId/$startId/$endId', method: HttpMethod.get);
     List<ViewQueQuestionMain> result = [];
     for (var jsonItem in jsonDecode) {
       result.add(ViewQueQuestionMain.fromJson(jsonItem));
     }
+    return result;
+  }
+
+  Future<List<ViewQueQuestionMain>> getAllWithPageViewQueQuestionMain(BigInt? userId,int perCountOfPage,int page) async {
+    userId ??= BigInt.parse('0');
+    var jsonDecode =
+    await Api.request('TblQueQuestionMain/GetAllWithPageView/$userId/$perCountOfPage/$page', method: HttpMethod.get);
+    List<ViewQueQuestionMain> result = [];
+    for (var jsonItem in jsonDecode) {
+      result.add(ViewQueQuestionMain.fromJson(jsonItem));
+    }
+    return result;
+  }
+
+  Future<int> getAllWithPageCountViewQueQuestionMain(BigInt? userId,int perCountOfPage) async {
+    userId ??= BigInt.parse('0');
+    var jsonDecode = await Api.request('TblQueQuestionMain/GetAllWithPageCountView/$userId/$perCountOfPage', method: HttpMethod.get);
+    int result = jsonDecode??0;
     return result;
   }
 

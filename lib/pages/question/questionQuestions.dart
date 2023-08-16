@@ -1,5 +1,4 @@
-import 'package:egitimax/models/egitimax/egitimaxEntities.dart';
-import 'package:egitimax/pages/template.dart';
+import 'package:egitimax/pages/question/questionList.dart';
 import 'package:egitimax/repositories/appRepository.dart';
 import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:egitimax/utils/helper/localeManager.dart';
@@ -12,15 +11,16 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:responsive_table/responsive_table.dart';
 
 class QuestionQuestions extends StatefulWidget {
-  QuestionQuestions({super.key,
-    required this.title,
-    required this.routeManager,
-    required this.appRepository,
-    required this.theme,
-    required this.lang,
-    required this.localeManager,
-    required this.deviceType,
-    required this.userId});
+  QuestionQuestions(
+      {super.key,
+      required this.title,
+      required this.routeManager,
+      required this.appRepository,
+      required this.theme,
+      required this.lang,
+      required this.localeManager,
+      required this.deviceType,
+      required this.userId});
 
   String? currentTitle;
   final String title;
@@ -40,7 +40,6 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
   bool floating = false;
   bool pinned = false;
   bool snap = false;
-
 
   late List<DatatableHeader> headers;
   late List<Map<String, dynamic>> source;
@@ -81,22 +80,10 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            backgroundColor: Theme
-                .of(context)
-                .colorScheme
-                .background,
-            foregroundColor: Theme
-                .of(context)
-                .colorScheme
-                .secondary,
-            shadowColor: Theme
-                .of(context)
-                .colorScheme
-                .shadow,
-            surfaceTintColor: Theme
-                .of(context)
-                .colorScheme
-                .surface,
+            backgroundColor: Theme.of(context).colorScheme.background,
+            foregroundColor: Theme.of(context).colorScheme.secondary,
+            shadowColor: Theme.of(context).colorScheme.shadow,
+            surfaceTintColor: Theme.of(context).colorScheme.surface,
             actions: [
               IconButton(
                 icon: Icon(Icons.settings, size: widget.theme.iconTheme.size),
@@ -163,27 +150,15 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
             padding: const EdgeInsets.all(5.0),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
-                    (context, index) {
+                (context, index) {
                   return SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: Container(
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width,
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height,
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
                       constraints: BoxConstraints(
-                        maxWidth: MediaQuery
-                            .of(context)
-                            .size
-                            .width,
-                        minHeight: MediaQuery
-                            .of(context)
-                            .size
-                            .height,
+                        maxWidth: MediaQuery.of(context).size.width,
+                        minHeight: MediaQuery.of(context).size.height,
                       ),
                       child: getBody(),
                     ),
@@ -200,62 +175,19 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
   }
 
   Widget getBody() {
-
-
-    return FutureBuilder<List<ViewQueQuestionMain>>(
-      future: widget.appRepository.getAllViewQueQuestionMain(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('No data available.'));
-        } else {
-          List<Map<String, dynamic>> source = snapshot.data!.map((map) {
-            return map.toMap();
-          }).toList();
-
-          return DataPage(
-            searchKey: 'QuestionToken',
-            tableKey: 'Id',
-            headers: [
-              DatatableHeader(text: "Academic Year", value: "AcademicYearName", show: true, sortable: true, textAlign: TextAlign.center),
-              DatatableHeader(text: "Created By", value: "CreatedByNameSurname", show: true, sortable: true, textAlign: TextAlign.center),
-              DatatableHeader(text: "Created On", value: "CreatedOn", show: true, sortable: true, textAlign: TextAlign.center),
-              DatatableHeader(text: "Difficulty Level", value: "DifficultyLevName", show: true, sortable: true, textAlign: TextAlign.center),
-              DatatableHeader(text: "Grade Id", value: "GradeName", show: true, sortable: true, textAlign: TextAlign.center),
-              DatatableHeader(text: "Id", value: "Id", show: true, sortable: true, textAlign: TextAlign.center),
-              DatatableHeader(text: "Is Public", value: "IsPublicName", show: true, sortable: true, textAlign: TextAlign.center),
-              DatatableHeader(text: "Learn Id", value: "LearnNameChain", show: true, sortable: true, textAlign: TextAlign.center),
-              DatatableHeader(text: "Location Id", value: "LocationNameChain", show: true, sortable: true, textAlign: TextAlign.center),
-              //DatatableHeader(text: "Question Text", value: "QuestionText", show: true, sortable: true, textAlign: TextAlign.center),
-              DatatableHeader(text: "Question Token", value: "QuestionToken", show: true, sortable: true, textAlign: TextAlign.center),
-              DatatableHeader(text: "Relation Id", value: "RelationId", show: true, sortable: true, textAlign: TextAlign.center),
-              //DatatableHeader(text: "Resolution", value: "Resolution", show: true, sortable: true, textAlign: TextAlign.center),
-              DatatableHeader(text: "Status", value: "StatusName", show: true, sortable: true, textAlign: TextAlign.center),
-              DatatableHeader(text: "Updated By", value: "UpdatedByNameSurname", show: true, sortable: true, textAlign: TextAlign.center),
-              DatatableHeader(text: "Updated On", value: "UpdatedOn", show: true, sortable: true, textAlign: TextAlign.center),
-              DatatableHeader(text: "User Id", value: "UserNameSurname", show: true, sortable: true, textAlign: TextAlign.center),
-
-            ],
-            source: source,
-            selectedItems:[source.first],
-            onChangedSelectedItems: (selectedItems) {
-              var xxxx=selectedItems;
-              int x=0;
-            },
-          );
-        }
-      },
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: QuestionList(
+        userId: BigInt.parse(widget.userId.toString()),
+      ),
     );
   }
 
   Drawer getDrawer() {
     double transformScale = double.parse(widget.theme.iconTheme.size != null &&
-        widget.theme.iconTheme.size != 0
+            widget.theme.iconTheme.size != 0
         ? (widget.theme.iconTheme.size! / (widget.theme.iconTheme.size! * 1.5))
-        .toString()
+            .toString()
         : 1.toString());
     var endDrawerScaffold = Drawer(
       width: double.infinity,
@@ -290,7 +222,7 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
                 ),
               ),
               title:
-              Text('Floating', style: widget.theme.textTheme.titleMedium),
+                  Text('Floating', style: widget.theme.textTheme.titleMedium),
             ),
             ListTile(
               titleTextStyle: widget.theme.textTheme.titleMedium,
