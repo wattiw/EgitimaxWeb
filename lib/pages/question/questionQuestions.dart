@@ -1,36 +1,16 @@
+import 'package:egitimax/models/question/questionPageModel.dart';
 import 'package:egitimax/pages/question/questionList.dart';
-import 'package:egitimax/repositories/appRepository.dart';
 import 'package:egitimax/utils/constant/appConstants.dart';
-import 'package:egitimax/utils/helper/localeManager.dart';
-import 'package:egitimax/utils/helper/routeManager.dart';
 
 import 'package:egitimax/utils/provider/imager.dart';
-import 'package:egitimax/utils/widget/deviceInfo.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:responsive_table/responsive_table.dart';
 
 class QuestionQuestions extends StatefulWidget {
   QuestionQuestions(
       {super.key,
-      required this.title,
-      required this.routeManager,
-      required this.appRepository,
-      required this.theme,
-      required this.lang,
-      required this.localeManager,
-      required this.deviceType,
-      required this.userId});
+      required this.mo});
 
-  String? currentTitle;
-  final String title;
-  final RouteManager routeManager;
-  final AppRepository appRepository;
-  final ThemeData theme;
-  final AppLocalizations lang;
-  final LocaleManager localeManager;
-  final DeviceTypes deviceType;
-  BigInt userId;
+  QuestionPageModel mo;
 
   @override
   State<QuestionQuestions> createState() => _QuestionQuestionsState();
@@ -41,18 +21,7 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
   bool pinned = false;
   bool snap = false;
 
-  late List<DatatableHeader> headers;
-  late List<Map<String, dynamic>> source;
-  late List<Map<String, dynamic>> selecteds;
-  late bool showSelect;
-  late List<Widget> footers;
-  late String sortColumn;
-  late bool sortAscending;
-  late bool isLoading;
-  late bool autoHeight;
-  late Widget title;
-  late List<Widget> actions;
-  bool isSearch = false;
+
 
   @override
   void initState() {
@@ -80,13 +49,13 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            backgroundColor: Theme.of(context).colorScheme.background,
-            foregroundColor: Theme.of(context).colorScheme.secondary,
-            shadowColor: Theme.of(context).colorScheme.shadow,
-            surfaceTintColor: Theme.of(context).colorScheme.surface,
+            backgroundColor: widget.mo.theme.colorScheme.background,
+            foregroundColor: widget.mo.theme.colorScheme.secondary,
+            shadowColor: widget.mo.theme.colorScheme.shadow,
+            surfaceTintColor: widget.mo.theme.colorScheme.surface,
             actions: [
               IconButton(
-                icon: Icon(Icons.settings, size: widget.theme.iconTheme.size),
+                icon: Icon(Icons.settings, size: widget.mo.theme.iconTheme.size),
                 onPressed: () {
                   questionQuestionsKey.currentState?.openEndDrawer();
                 },
@@ -118,7 +87,7 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
                         image: snapshot.data!,
                         fit: BoxFit.cover,
                       ),
-                      color: widget.theme.colorScheme.primaryContainer,
+                      color: widget.mo.theme.colorScheme.primaryContainer,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Row(
@@ -133,8 +102,8 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                widget.currentTitle ?? widget.title,
-                                style: widget.theme.textTheme.titleMedium,
+                                widget.mo.currentTitle ?? '',
+                                style: widget.mo.theme.textTheme.titleMedium,
                               )
                             ],
                           ),
@@ -178,15 +147,27 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: QuestionList(
-        userId: BigInt.parse(widget.userId.toString()),
+        currentPage: widget.mo.currentPage,
+        currentPerPage: widget.mo.currentPerPage,
+        selectedItems: widget.mo.selectedItems ?? [],
+        onChangedSelectedItems: (newSelectedItems) {
+          widget.mo.selectedItems = newSelectedItems;
+          dynamic questionId = newSelectedItems.isNotEmpty ? newSelectedItems[0]["Id"] : BigInt.zero;
+          widget.mo.questionId=questionId;
+        },
+        settings: (int newCurrentPerPage, int newCurrentPage) {
+          widget.mo.currentPerPage = newCurrentPerPage;
+          widget.mo.currentPage = newCurrentPage;
+        },
+        userId: BigInt.parse(widget.mo.userId.toString()),
       ),
     );
   }
 
   Drawer getDrawer() {
-    double transformScale = double.parse(widget.theme.iconTheme.size != null &&
-            widget.theme.iconTheme.size != 0
-        ? (widget.theme.iconTheme.size! / (widget.theme.iconTheme.size! * 1.5))
+    double transformScale = double.parse(widget.mo.theme.iconTheme.size != null &&
+            widget.mo.theme.iconTheme.size != 0
+        ? (widget.mo.theme.iconTheme.size! / (widget.mo.theme.iconTheme.size! * 1.5))
             .toString()
         : 1.toString());
     var endDrawerScaffold = Drawer(
@@ -199,7 +180,7 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                  icon: Icon(Icons.close, size: widget.theme.iconTheme.size),
+                  icon: Icon(Icons.close, size: widget.mo.theme.iconTheme.size),
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -207,8 +188,8 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
               ],
             ),
             ListTile(
-              titleTextStyle: widget.theme.textTheme.titleMedium,
-              subtitleTextStyle: widget.theme.textTheme.titleSmall,
+              titleTextStyle: widget.mo.theme.textTheme.titleMedium,
+              subtitleTextStyle: widget.mo.theme.textTheme.titleSmall,
               leading: Transform.scale(
                 scale: transformScale,
                 child: Switch(
@@ -222,11 +203,11 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
                 ),
               ),
               title:
-                  Text('Floating', style: widget.theme.textTheme.titleMedium),
+                  Text('Floating', style: widget.mo.theme.textTheme.titleMedium),
             ),
             ListTile(
-              titleTextStyle: widget.theme.textTheme.titleMedium,
-              subtitleTextStyle: widget.theme.textTheme.titleSmall,
+              titleTextStyle: widget.mo.theme.textTheme.titleMedium,
+              subtitleTextStyle: widget.mo.theme.textTheme.titleSmall,
               leading: Transform.scale(
                 scale: transformScale,
                 child: Switch(
@@ -238,11 +219,11 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
                   },
                 ),
               ),
-              title: Text('Pinned', style: widget.theme.textTheme.titleMedium),
+              title: Text('Pinned', style: widget.mo.theme.textTheme.titleMedium),
             ),
             ListTile(
-              titleTextStyle: widget.theme.textTheme.titleMedium,
-              subtitleTextStyle: widget.theme.textTheme.titleSmall,
+              titleTextStyle: widget.mo.theme.textTheme.titleMedium,
+              subtitleTextStyle: widget.mo.theme.textTheme.titleSmall,
               leading: Transform.scale(
                 scale: transformScale,
                 child: Switch(
@@ -255,7 +236,7 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
                   },
                 ),
               ),
-              title: Text('Snap', style: widget.theme.textTheme.titleMedium),
+              title: Text('Snap', style: widget.mo.theme.textTheme.titleMedium),
             ),
             const Divider(),
           ],

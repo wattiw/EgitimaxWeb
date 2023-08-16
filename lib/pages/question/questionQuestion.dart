@@ -1,22 +1,18 @@
 import 'dart:convert';
 import 'package:egitimax/models/common/stepItem.dart';
 import 'package:egitimax/models/egitimax/egitimaxEntities.dart';
+import 'package:egitimax/models/question/questionPageModel.dart';
 import 'package:egitimax/models/question/receivedQuestionStatus.dart';
-import 'package:egitimax/repositories/appRepository.dart';
 import 'package:egitimax/utils/constant/appConstants.dart';
-import 'package:egitimax/utils/helper/localeManager.dart';
-import 'package:egitimax/utils/helper/routeManager.dart';
 import 'package:egitimax/utils/helper/webSocketClientManager.dart';
 
 import 'package:egitimax/utils/provider/imager.dart';
-import 'package:egitimax/utils/widget/deviceInfo.dart';
 import 'package:egitimax/utils/widget/dropdownSearch.dart';
 import 'package:egitimax/utils/widget/learnHierarchyDrops.dart';
 import 'package:egitimax/utils/widget/message.dart';
 import 'package:egitimax/utils/widget/questionOptionsWithSolution.dart';
 import 'package:enhance_stepper/enhance_stepper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:im_stepper/stepper.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
@@ -25,27 +21,10 @@ import 'package:uuid/uuid_util.dart';
 class QuestionQuestion extends StatefulWidget {
   QuestionQuestion(
       {super.key,
-      required this.title,
-      required this.routeManager,
-      required this.appRepository,
-      required this.theme,
-      required this.lang,
-      required this.localeManager,
-      required this.deviceType,
-      required this.userId,
-      required this.questionId});
+      required this.mo});
 
-  String? currentTitle;
-  final String title;
-  final RouteManager routeManager;
-  final AppRepository appRepository;
-  final ThemeData theme;
-  final AppLocalizations lang;
-  final LocaleManager localeManager;
-  final DeviceTypes deviceType;
-
-  BigInt userId;
-  BigInt questionId;
+  QuestionPageModel mo;
+  
 
   @override
   State<QuestionQuestion> createState() => _QuestionQuestionState();
@@ -120,17 +99,17 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
   }
 
   Future<void> loadQuestion() async {
-    tblUserMain = await widget.appRepository.getTblUserMain(widget.userId);
+    tblUserMain = await widget.mo.appRepository.getTblUserMain(widget.mo.userId);
 
-    if (widget.questionId != null &&
-        widget.questionId != BigInt.parse('0') &&
-        widget.userId != BigInt.parse('0')) {
+    if (widget.mo.questionId != null &&
+        widget.mo.questionId != BigInt.parse('0') &&
+        widget.mo.userId != BigInt.parse('0')) {
       tblQueQuestionMain =
-          await widget.appRepository.getTblQueQuestionMain(widget.questionId);
-      tblQueQuestionOptions = await widget.appRepository
-          .getByQuestionIdTblQueQuestionOption(widget.questionId);
-      tblQueQuestionAchvMaps = await widget.appRepository
-          .getByQuestionIdTblQueQuestionAchvMap(widget.questionId);
+          await widget.mo.appRepository.getTblQueQuestionMain(widget.mo.questionId);
+      tblQueQuestionOptions = await widget.mo.appRepository
+          .getByQuestionIdTblQueQuestionOption(widget.mo.questionId);
+      tblQueQuestionAchvMaps = await widget.mo.appRepository
+          .getByQuestionIdTblQueQuestionAchvMap(widget.mo.questionId);
 
       selectedAchievementIds = tblQueQuestionAchvMaps != null
           ? tblQueQuestionAchvMaps!.map((e) => e.achvId).toList().cast<int>()
@@ -141,7 +120,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
       selectedDifficultyLevel = tblQueQuestionMain?.difficultyLev ?? 0;
       selectedGrade = tblQueQuestionMain?.gradeId ?? 0;
 
-      var selectedLearn = await widget.appRepository
+      var selectedLearn = await widget.mo.appRepository
           .getTblLearnMain(tblQueQuestionMain?.learnId ?? 0);
 
       selectedLearnId = selectedLearn.id;
@@ -150,11 +129,11 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
       tblQueQuestionMain = TblQueQuestionMain(id: BigInt.parse('0'));
       selectedLocation = tblUserMain?.locationId ?? 0;
 
-      academicYearList = await widget.appRepository.getAllTblUtilAcademicYear();
+      academicYearList = await widget.mo.appRepository.getAllTblUtilAcademicYear();
       selectedAcademicYear =
           academicYearList!.firstWhere((element) => element.isDefault == 1).id;
 
-      difficultyList = await widget.appRepository.getAllTblUtilDifficulty();
+      difficultyList = await widget.mo.appRepository.getAllTblUtilDifficulty();
       selectedDifficultyLevel = difficultyList!
           .firstWhere((element) => element.difficultyLev == 'dif_medium')
           .id;
@@ -186,13 +165,13 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            backgroundColor: Theme.of(context).colorScheme.background,
-            foregroundColor: Theme.of(context).colorScheme.secondary,
-            shadowColor: Theme.of(context).colorScheme.shadow,
-            surfaceTintColor: Theme.of(context).colorScheme.surface,
+            backgroundColor: widget.mo.theme.colorScheme.background,
+            foregroundColor: widget.mo.theme.colorScheme.secondary,
+            shadowColor: widget.mo.theme.colorScheme.shadow,
+            surfaceTintColor: widget.mo.theme.colorScheme.surface,
             actions: [
               IconButton(
-                icon: Icon(Icons.settings, size: widget.theme.iconTheme.size),
+                icon: Icon(Icons.settings, size: widget.mo.theme.iconTheme.size),
                 onPressed: () {
                   questionQuestionKey.currentState?.openEndDrawer();
                 },
@@ -224,7 +203,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                         image: snapshot.data!,
                         fit: BoxFit.cover,
                       ),
-                      color: widget.theme.colorScheme.primaryContainer,
+                      color: widget.mo.theme.colorScheme.primaryContainer,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Row(
@@ -239,8 +218,8 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                widget.currentTitle ?? widget.title,
-                                style: widget.theme.textTheme.titleMedium,
+                                widget.mo.currentTitle ?? '',
+                                style: widget.mo.theme.textTheme.titleMedium,
                               )
                             ],
                           ),
@@ -281,9 +260,9 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
   }
 
   Drawer getDrawer() {
-    double transformScale = double.parse(widget.theme.iconTheme.size != null &&
-            widget.theme.iconTheme.size != 0
-        ? (widget.theme.iconTheme.size! / (widget.theme.iconTheme.size! * 1.5))
+    double transformScale = double.parse(widget.mo.theme.iconTheme.size != null &&
+            widget.mo.theme.iconTheme.size != 0
+        ? (widget.mo.theme.iconTheme.size! / (widget.mo.theme.iconTheme.size! * 1.5))
             .toString()
         : 1.toString());
     var endDrawerScaffold = Drawer(
@@ -296,7 +275,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                  icon: Icon(Icons.close, size: widget.theme.iconTheme.size),
+                  icon: Icon(Icons.close, size: widget.mo.theme.iconTheme.size),
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -304,8 +283,8 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
               ],
             ),
             ListTile(
-              titleTextStyle: widget.theme.textTheme.titleMedium,
-              subtitleTextStyle: widget.theme.textTheme.titleSmall,
+              titleTextStyle: widget.mo.theme.textTheme.titleMedium,
+              subtitleTextStyle: widget.mo.theme.textTheme.titleSmall,
               leading: Transform.scale(
                 scale: transformScale,
                 child: Switch(
@@ -319,11 +298,11 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                 ),
               ),
               title:
-                  Text('Floating', style: widget.theme.textTheme.titleMedium),
+                  Text('Floating', style: widget.mo.theme.textTheme.titleMedium),
             ),
             ListTile(
-              titleTextStyle: widget.theme.textTheme.titleMedium,
-              subtitleTextStyle: widget.theme.textTheme.titleSmall,
+              titleTextStyle: widget.mo.theme.textTheme.titleMedium,
+              subtitleTextStyle: widget.mo.theme.textTheme.titleSmall,
               leading: Transform.scale(
                 scale: transformScale,
                 child: Switch(
@@ -335,11 +314,11 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                   },
                 ),
               ),
-              title: Text('Pinned', style: widget.theme.textTheme.titleMedium),
+              title: Text('Pinned', style: widget.mo.theme.textTheme.titleMedium),
             ),
             ListTile(
-              titleTextStyle: widget.theme.textTheme.titleMedium,
-              subtitleTextStyle: widget.theme.textTheme.titleSmall,
+              titleTextStyle: widget.mo.theme.textTheme.titleMedium,
+              subtitleTextStyle: widget.mo.theme.textTheme.titleSmall,
               leading: Transform.scale(
                 scale: transformScale,
                 child: Switch(
@@ -352,13 +331,13 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                   },
                 ),
               ),
-              title: Text('Snap', style: widget.theme.textTheme.titleMedium),
+              title: Text('Snap', style: widget.mo.theme.textTheme.titleMedium),
             ),
             const Divider(),
             if (stepper != StepperList.icon)
               ListTile(
-                titleTextStyle: widget.theme.textTheme.titleMedium,
-                subtitleTextStyle: widget.theme.textTheme.titleSmall,
+                titleTextStyle: widget.mo.theme.textTheme.titleMedium,
+                subtitleTextStyle: widget.mo.theme.textTheme.titleSmall,
                 leading: Transform.scale(
                   scale: transformScale,
                   child: Switch(
@@ -376,11 +355,11 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                     stepperType == StepperType.vertical
                         ? 'Vertical Layout'
                         : 'Horizontal Layout',
-                    style: widget.theme.textTheme.titleMedium),
+                    style: widget.mo.theme.textTheme.titleMedium),
               ),
             ListTile(
-              titleTextStyle: widget.theme.textTheme.titleMedium,
-              subtitleTextStyle: widget.theme.textTheme.titleSmall,
+              titleTextStyle: widget.mo.theme.textTheme.titleMedium,
+              subtitleTextStyle: widget.mo.theme.textTheme.titleSmall,
               leading: Transform.scale(
                 scale: transformScale,
                 child: Switch(
@@ -395,11 +374,11 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                 ),
               ),
               title: Text('Icon Stepper',
-                  style: widget.theme.textTheme.titleMedium),
+                  style: widget.mo.theme.textTheme.titleMedium),
             ),
             ListTile(
-              titleTextStyle: widget.theme.textTheme.titleMedium,
-              subtitleTextStyle: widget.theme.textTheme.titleSmall,
+              titleTextStyle: widget.mo.theme.textTheme.titleMedium,
+              subtitleTextStyle: widget.mo.theme.textTheme.titleSmall,
               leading: Transform.scale(
                 scale: transformScale,
                 child: Switch(
@@ -414,11 +393,11 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                 ),
               ),
               title: Text('Classic Stepper',
-                  style: widget.theme.textTheme.titleMedium),
+                  style: widget.mo.theme.textTheme.titleMedium),
             ),
             ListTile(
-              titleTextStyle: widget.theme.textTheme.titleMedium,
-              subtitleTextStyle: widget.theme.textTheme.titleSmall,
+              titleTextStyle: widget.mo.theme.textTheme.titleMedium,
+              subtitleTextStyle: widget.mo.theme.textTheme.titleSmall,
               leading: Transform.scale(
                 scale: transformScale,
                 child: Switch(
@@ -433,7 +412,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                 ),
               ),
               title: Text('Enhance Stepper',
-                  style: widget.theme.textTheme.titleMedium),
+                  style: widget.mo.theme.textTheme.titleMedium),
             ),
           ],
         ),
@@ -471,7 +450,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                           ? Future.delayed(const Duration(seconds: 0), () {
                               return academicYearList!;
                             })
-                          : widget.appRepository.getAllTblUtilAcademicYear(),
+                          : widget.mo.appRepository.getAllTblUtilAcademicYear(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -522,7 +501,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                           ? Future.delayed(const Duration(seconds: 0), () {
                               return difficultyList!;
                             })
-                          : widget.appRepository.getAllTblUtilDifficulty(),
+                          : widget.mo.appRepository.getAllTblUtilDifficulty(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -572,7 +551,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                           ? Future.delayed(const Duration(seconds: 0), () {
                               return gradeList!;
                             })
-                          : widget.appRepository
+                          : widget.mo.appRepository
                               .getByLocationIdTblUtilGrade(selectedLocation),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
@@ -627,7 +606,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                           ? Future.delayed(const Duration(seconds: 0), () {
                               return branchList!;
                             })
-                          : widget.appRepository
+                          : widget.mo.appRepository
                               .getByLocationIdTblUtilBranch(selectedLocation),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
@@ -811,17 +790,17 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                         color: stepIndex == stepItems.indexOf(e)
                             ? Colors.red
                             : null,
-                        size: widget.theme.iconTheme.size),
+                        size: widget.mo.theme.iconTheme.size),
                     Text(
                       e.title,
-                      style: widget.theme.textTheme.titleMedium,
+                      style: widget.mo.theme.textTheme.titleMedium,
                     )
                   ],
                 ),
                 //Text("step ${tuples.indexOf(e)}"),
                 subtitle: Text(
                   e.subtitle,
-                  style: widget.theme.textTheme.titleSmall,
+                  style: widget.mo.theme.textTheme.titleSmall,
                 ),
                 content: e.content))
             .toList(),
@@ -848,7 +827,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                     child: ElevatedButton(
                       onPressed: details.onStepCancel,
                       child: Text("Back",
-                          style: widget.theme.textTheme.bodyMedium),
+                          style: widget.mo.theme.textTheme.bodyMedium),
                     ),
                   ),
                 const Spacer(),
@@ -858,7 +837,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                     child: ElevatedButton(
                       onPressed: details.onStepContinue,
                       child: Text("Next",
-                          style: widget.theme.textTheme.bodyMedium),
+                          style: widget.mo.theme.textTheme.bodyMedium),
                     ),
                   ),
                 if ((stepIndex >= stepItems.length - 1))
@@ -869,7 +848,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                         submitQuestion();
                       },
                       child: Text("Save",
-                          style: widget.theme.textTheme.bodyMedium),
+                          style: widget.mo.theme.textTheme.bodyMedium),
                     ),
                   ),
               ],
@@ -880,7 +859,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
 
   Widget buildEnhanceStepper() {
     return EnhanceStepper(
-        stepIconSize: widget.theme.iconTheme.size,
+        stepIconSize: widget.mo.theme.iconTheme.size,
         type: stepperType,
         horizontalTitlePosition: HorizontalTitlePosition.bottom,
         horizontalLinePosition: HorizontalLinePosition.top,
@@ -890,16 +869,16 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                   icon: Icon(e.icon,
                       color:
                           stepIndex == stepItems.indexOf(e) ? Colors.red : null,
-                      size: widget.theme.iconTheme.size),
+                      size: widget.mo.theme.iconTheme.size),
                   state: e.stepState,
                   isActive: stepIndex == stepItems.indexOf(e),
                   title: Text(
                     e.title,
-                    style: widget.theme.textTheme.titleMedium,
+                    style: widget.mo.theme.textTheme.titleMedium,
                   ),
                   subtitle: Text(
                     e.subtitle,
-                    style: widget.theme.textTheme.titleSmall,
+                    style: widget.mo.theme.textTheme.titleSmall,
                   ),
                   content: e.content,
                 ))
@@ -927,7 +906,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                     child: ElevatedButton(
                       onPressed: details.onStepCancel,
                       child: Text("Back",
-                          style: widget.theme.textTheme.bodyMedium),
+                          style: widget.mo.theme.textTheme.bodyMedium),
                     ),
                   ),
                 Padding(
@@ -935,7 +914,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                   child: ElevatedButton(
                     onPressed: details.onStepContinue,
                     child:
-                        Text("Next", style: widget.theme.textTheme.bodyMedium),
+                        Text("Next", style: widget.mo.theme.textTheme.bodyMedium),
                   ),
                 ),
               ],
@@ -951,14 +930,14 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
       child: Column(
         children: [
           IconStepper(
-            stepColor: widget.theme.colorScheme.primaryContainer,
-            lineColor: widget.theme.colorScheme.primary,
-            activeStepColor: widget.theme.colorScheme.onPrimaryContainer,
+            stepColor: widget.mo.theme.colorScheme.primaryContainer,
+            lineColor: widget.mo.theme.colorScheme.primary,
+            activeStepColor: widget.mo.theme.colorScheme.onPrimaryContainer,
             icons: stepItems.map((e) {
               IconData iconData;
               return Icon(e.icon,
                   color: stepIndex == stepItems.indexOf(e) ? Colors.red : null,
-                  size: widget.theme.iconTheme.size);
+                  size: widget.mo.theme.iconTheme.size);
             }).toList(),
             activeStep: stepIndex,
             enableStepTapping: true,
@@ -975,7 +954,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                 fit: BoxFit
                     .cover, // Adjust the image to cover the whole container
               ),
-              color: widget.theme.colorScheme.inversePrimary,
+              color: widget.mo.theme.colorScheme.inversePrimary,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(
@@ -990,11 +969,11 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                     children: [
                       Text(
                         stepItems[stepIndex].title,
-                        style: widget.theme.textTheme.titleMedium,
+                        style: widget.mo.theme.textTheme.titleMedium,
                       ),
                       Text(
                         stepItems[stepIndex].subtitle,
-                        style: widget.theme.textTheme.titleSmall,
+                        style: widget.mo.theme.textTheme.titleSmall,
                       ),
                     ],
                   ),
@@ -1026,7 +1005,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                       go(-1);
                     },
                     child:
-                        Text("Back", style: widget.theme.textTheme.bodyMedium),
+                        Text("Back", style: widget.mo.theme.textTheme.bodyMedium),
                   ),
                 ),
                 Padding(
@@ -1036,7 +1015,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                       go(1);
                     },
                     child:
-                        Text("Next", style: widget.theme.textTheme.bodyMedium),
+                        Text("Next", style: widget.mo.theme.textTheme.bodyMedium),
                   ),
                 ),
               ],
@@ -1052,7 +1031,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
 
     BigInt rootUserId = tblUserMain?.refUser ?? BigInt.parse('0');
     if (rootUserId <= BigInt.parse('0')) {
-      rootUserId = widget.userId;
+      rootUserId = widget.mo.userId;
     }
 
     final learnId = selectedLearnId ?? 0;
@@ -1071,23 +1050,23 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
     tblQueQuestionMain?.status =
         tblQueQuestionMain!.id > BigInt.parse('0') ? 1 : 3; // Create/Edit
     tblQueQuestionMain?.createdBy = tblQueQuestionMain?.createdBy ??
-        widget.userId; // if exist parent put it
+        widget.mo.userId; // if exist parent put it
     tblQueQuestionMain?.createdOn =
         tblQueQuestionMain?.createdOn ?? DateTime.now();
-    tblQueQuestionMain?.updatedBy = widget.userId; // if exist parent put it
+    tblQueQuestionMain?.updatedBy = widget.mo.userId; // if exist parent put it
     tblQueQuestionMain?.updatedOn = DateTime.now();
 
     if (tblQueQuestionMain!.id > BigInt.parse('0')) {
-      tblQueQuestionMain = await widget.appRepository
+      tblQueQuestionMain = await widget.mo.appRepository
           .updateTblQueQuestionMain(tblQueQuestionMain!);
     } else {
-      tblQueQuestionMain = await widget.appRepository
+      tblQueQuestionMain = await widget.mo.appRepository
           .insertTblQueQuestionMain(tblQueQuestionMain!);
     }
-    widget.questionId = tblQueQuestionMain!.id;
+    widget.mo.questionId = tblQueQuestionMain!.id;
 
-    tblQueQuestionAchvMaps = await widget.appRepository
-        .getByQuestionIdTblQueQuestionAchvMap(widget.questionId);
+    tblQueQuestionAchvMaps = await widget.mo.appRepository
+        .getByQuestionIdTblQueQuestionAchvMap(widget.mo.questionId);
 
     List<BigInt> usedAchvIds = List.empty(growable: true);
     for (int selectedAchievementId in selectedAchievementIds!) {
@@ -1098,7 +1077,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
         toBeUpdatedItem.achvId = selectedAchievementId;
         toBeUpdatedItem.status = 3;
         toBeUpdatedItem.questionId = tblQueQuestionMain!.id;
-        var updatedItem = await widget.appRepository
+        var updatedItem = await widget.mo.appRepository
             .updateTblQueQuestionAchvMap(toBeUpdatedItem);
         tblQueQuestionAchvMaps!.remove(toBeUpdatedItem);
         usedAchvIds.add(toBeUpdatedItem.id);
@@ -1109,14 +1088,14 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
             achvId: selectedAchievementId,
             questionId: tblQueQuestionMain!.id,
             status: 1);
-        var insertedItem = await widget.appRepository
+        var insertedItem = await widget.mo.appRepository
             .insertTblQueQuestionAchvMap(toBeInsertItem);
         usedAchvIds.add(insertedItem.id);
       }
     }
 
-    tblQueQuestionAchvMaps = await widget.appRepository
-        .getByQuestionIdTblQueQuestionAchvMap(widget.questionId);
+    tblQueQuestionAchvMaps = await widget.mo.appRepository
+        .getByQuestionIdTblQueQuestionAchvMap(widget.mo.questionId);
     if (usedAchvIds != null &&
         usedAchvIds.isNotEmpty &&
         tblQueQuestionAchvMaps != null &&
@@ -1126,20 +1105,20 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
           allIds.where((id) => !usedAchvIds.contains(id)).toList();
 
       for (BigInt deleteAchievementId in idsNotInList) {
-        var deletedItem = await widget.appRepository
+        var deletedItem = await widget.mo.appRepository
             .deleteTblQueQuestionAchvMap(deleteAchievementId);
       }
     }
 
     questionEditorUrl =
-        "http://138.68.82.103:100/${tblQueQuestionMain?.id}/${tblQueQuestionMain?.userId}/${tblQueQuestionMain?.questionToken}/${widget.localeManager.locale.languageCode}-${widget.localeManager.locale.countryCode}";
+        "http://138.68.82.103:100/${tblQueQuestionMain?.id}/${tblQueQuestionMain?.userId}/${tblQueQuestionMain?.questionToken}/${widget.mo.localeManager.locale.languageCode}-${widget.mo.localeManager.locale.countryCode}";
 
     if (questionEditorUrl != null) {
       await launchEditorURL(questionEditorUrl!);
     }
   }
   Future<void> submitQuestion() async {
-    Message.showInformationalMessage(context,title: Text('Question Submission',style: widget.theme.textTheme.titleMedium),content: Text('Question has been submitted successfully.',style: widget.theme.textTheme.bodyMedium));
+    Message.showInformationalMessage(context,title: Text('Question Submission',style: widget.mo.theme.textTheme.titleMedium),content: Text('Question has been submitted successfully.',style: widget.mo.theme.textTheme.bodyMedium));
   }
 
   launchEditorURL(String editorUrl) async {
@@ -1178,11 +1157,11 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
   Future<void> reloadStep(ReceivedQuestionStatus receivedStatus) async {
     if (receivedStatus.message.isCompleted == true) {
       tblQueQuestionMain =
-          await widget.appRepository.getTblQueQuestionMain(widget.questionId);
-      tblQueQuestionOptions = await widget.appRepository
-          .getByQuestionIdTblQueQuestionOption(widget.questionId);
-      tblQueQuestionAchvMaps = await widget.appRepository
-          .getByQuestionIdTblQueQuestionAchvMap(widget.questionId);
+          await widget.mo.appRepository.getTblQueQuestionMain(widget.mo.questionId);
+      tblQueQuestionOptions = await widget.mo.appRepository
+          .getByQuestionIdTblQueQuestionOption(widget.mo.questionId);
+      tblQueQuestionAchvMaps = await widget.mo.appRepository
+          .getByQuestionIdTblQueQuestionAchvMap(widget.mo.questionId);
 
       setState(() {});
     }

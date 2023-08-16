@@ -1,3 +1,5 @@
+import 'package:egitimax/models/question/questionPageModel.dart';
+import 'package:egitimax/pages/question/questionPage.dart';
 import 'package:egitimax/repositories/appRepository.dart';
 import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:egitimax/utils/helper/localeManager.dart';
@@ -319,8 +321,17 @@ class _HomeMenuBody extends State<HomeMenuBody> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+  }
+
+  @override
   Widget build(BuildContext context) {
     GlobalKey<ScaffoldState> homeMenuBodyKey = GlobalKey<ScaffoldState>();
+
+    RouteManager().addRoute('/QuestionPage', (context) => QuestionPage());
+
     return Center(
       child:Wrap(
         spacing: 16.0,

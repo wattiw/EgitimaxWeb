@@ -1,3 +1,4 @@
+import 'package:egitimax/models/question/questionPageModel.dart';
 import 'package:egitimax/pages/question/questionPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -17,9 +18,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     final RouteManager routeManager = RouteManager();
     routeManager.addRoute('/', (context) => HomePage());
-    routeManager.addRoute('/QuestionPage', (context) => QuestionPage(questionId: BigInt.parse('28'),userId: BigInt.parse('1'),));
 
     return ChangeNotifierProvider(
       create: (context) => LocaleManager(),

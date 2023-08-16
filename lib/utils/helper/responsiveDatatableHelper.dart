@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:egitimax/utils/widget/collapseChild.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_table/responsive_table.dart';
 
@@ -22,7 +23,8 @@ class ResponsiveDatatableHelper extends StatefulWidget {
       required this.currentPage,
       this.onChangedCurrentPage,
       this.onChangedCurrentPerPage,
-      required this.onChangedPerPageAndPage})
+      required this.onChangedPerPageAndPage,
+      this.singleSelectionIsActive = true})
       : super(key: key);
 
   final String tableKey;
@@ -43,6 +45,7 @@ class ResponsiveDatatableHelper extends StatefulWidget {
   final void Function(int currentPage)? onChangedCurrentPage;
   final void Function(int currentPerPage, int currentPage)?
       onChangedPerPageAndPage;
+  bool? singleSelectionIsActive;
 
   @override
   _ResponsiveDatatableHelperState createState() =>
@@ -50,6 +53,8 @@ class ResponsiveDatatableHelper extends StatefulWidget {
 }
 
 class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
+  TextEditingController? searchTextController = TextEditingController();
+
   late List<DatatableHeader> _headers;
 
   late int _currentExPage;
@@ -162,8 +167,10 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
   void initState() {
     super.initState();
     _headers = widget.headers;
-    _selecteds = widget.selectedItems;
-
+    _selecteds = widget.singleSelectionIsActive == true &&
+            widget.selectedItems.isNotEmpty
+        ? [widget.selectedItems.first]
+        : widget.selectedItems;
     _initializeData();
   }
 
@@ -203,11 +210,15 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
                   if (_isSearch)
                     Expanded(
                         child: TextField(
+                      controller: searchTextController,
                       decoration: InputDecoration(
                           hintText:
-                              'Enter search term based on ${_searchKey!.replaceAll(RegExp('[\\W_]+'), ' ').toUpperCase()}',
+                              'Enter search term based on ${_headers.firstWhere((element) => element.value == _searchKey!).text.replaceAll(RegExp('[\\W_]+'), ' ')}',
                           prefixIcon: IconButton(
-                              icon: const Icon(Icons.cancel),
+                              icon: Icon(
+                                Icons.cancel,
+                                size: Theme.of(context).iconTheme.size,
+                              ),
                               onPressed: () {
                                 setState(() {
                                   _isSearch = false;
@@ -215,20 +226,31 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
                                 _initializeData();
                               }),
                           suffixIcon: IconButton(
-                              icon: const Icon(Icons.search),
-                              onPressed: () {})),
+                              icon: Icon(
+                                Icons.search,
+                                size: Theme.of(context).iconTheme.size,
+                              ),
+                              onPressed: () {
+                                if (searchTextController!.text != null &&
+                                    searchTextController!.text != '') {
+                                  _filterData(searchTextController!.text);
+                                }
+                              })),
                       onSubmitted: (value) {
                         _filterData(value);
                       },
                     )),
                   if (!_isSearch)
                     IconButton(
-                        icon: const Icon(Icons.search),
+                        icon: Icon(
+                          Icons.search,
+                          size: Theme.of(context).iconTheme.size,
+                        ),
                         onPressed: () {
                           setState(() {
                             _isSearch = true;
                           });
-                        })
+                        }),
                 ],
                 headers: _headers,
                 source: _source,
@@ -236,19 +258,14 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
                 showSelect: _showSelect,
                 autoHeight: false,
                 dropContainer: (data) {
-                  return _DropDownContainer(data: data);
+                  return _DropDownContainer(
+                    data: data,
+                    headers: _headers,
+                  );
                 },
-                onChangedRow: (value, header) {
-                  /// debugPrint(value);
-                  /// debugPrint(header);
-                },
-                onSubmittedRow: (value, header) {
-                  /// debugPrint(value);
-                  /// debugPrint(header);
-                },
+                onChangedRow: (value, header) {},
+                onSubmittedRow: (value, header) {},
                 onTabRow: (data) {
-                  debugPrint('$data');
-
                   if (widget.onTabRow != null) {
                     widget.onTabRow!(data);
                   }
@@ -259,13 +276,24 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
                   setState(() {
                     _sortColumn = value;
                     _sortAscending = !_sortAscending;
-                    if (_sortAscending) {
-                      _sourceFiltered.sort((a, b) =>
-                          b["$_sortColumn"].compareTo(a["$_sortColumn"]));
-                    } else {
-                      _sourceFiltered.sort((a, b) =>
-                          a["$_sortColumn"].compareTo(b["$_sortColumn"]));
-                    }
+
+                    _sourceFiltered.sort((a, b) {
+                      final aValue = a["$_sortColumn"];
+                      final bValue = b["$_sortColumn"];
+
+                      if (aValue == null && bValue == null) {
+                        return 0;
+                      } else if (aValue == null) {
+                        return _sortAscending ? 1 : -1;
+                      } else if (bValue == null) {
+                        return _sortAscending ? -1 : 1;
+                      }
+
+                      return _sortAscending
+                          ? bValue.compareTo(aValue)
+                          : aValue.compareTo(bValue);
+                    });
+
                     var _rangeTop = _currentPerPage! < _sourceFiltered.length
                         ? _currentPerPage!
                         : _sourceFiltered.length;
@@ -284,12 +312,19 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
                 sortColumn: _sortColumn,
                 isLoading: _isLoading,
                 onSelect: (value, item) {
-                  debugPrint("$value  $item ");
-                  if (value!) {
-                    setState(() => _selecteds.add(item));
+                  if (widget.singleSelectionIsActive == true) {
+                    if (value!) {
+                      _selecteds.clear();
+                      _selecteds.add(item);
+                    } else {
+                      _selecteds.removeAt(_selecteds.indexOf(item));
+                    }
                   } else {
-                    setState(
-                        () => _selecteds.removeAt(_selecteds.indexOf(item)));
+                    if (value!) {
+                      _selecteds.add(item);
+                    } else {
+                      _selecteds.removeAt(_selecteds.indexOf(item));
+                    }
                   }
 
                   if (widget.onSelect != null) {
@@ -299,13 +334,21 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
                   if (widget.onChangedSelectedItems != null) {
                     widget.onChangedSelectedItems!(_selecteds);
                   }
+
+                  setState(() {});
                 },
                 onSelectAll: (value) {
-                  if (value!) {
-                    setState(() => _selecteds =
-                        _source.map((entry) => entry).toList().cast());
+                  if (widget.singleSelectionIsActive == true) {
+                    if (_selecteds.isNotEmpty) {
+                      _selecteds = [_selecteds.last].cast();
+                    }
                   } else {
-                    setState(() => _selecteds.clear());
+                    if (value!) {
+                      _selecteds =
+                          _source.map((entry) => entry).toList().cast();
+                    } else {
+                      _selecteds.clear();
+                    }
                   }
 
                   if (widget.onSelectAll != null) {
@@ -315,6 +358,8 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
                   if (widget.onChangedSelectedItems != null) {
                     widget.onChangedSelectedItems!(_selecteds);
                   }
+
+                  setState(() {});
                 },
                 footers: [
                   Container(
@@ -389,9 +434,9 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
                         "${_sourceFiltered.length} : $_currentExPage/ ${_pages.length}"),
                   ),
                   IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.arrow_back_ios,
-                      size: 16,
+                      size: Theme.of(context).iconTheme.size,
                     ),
                     onPressed: () {
                       int newPageId = _currentExPage - 1;
@@ -406,7 +451,10 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.arrow_forward_ios, size: 16),
+                    icon: Icon(
+                      Icons.arrow_forward_ios,
+                      size: Theme.of(context).iconTheme.size,
+                    ),
                     onPressed: () {
                       int newPageId = _currentExPage + 1;
                       if (_pages.contains(newPageId)) {
@@ -441,47 +489,68 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
 
 class _DropDownContainer extends StatelessWidget {
   final Map<String, dynamic> data;
+  final List<DatatableHeader> headers;
+  Map<String, dynamic>? keys;
 
-  const _DropDownContainer({Key? key, required this.data}) : super(key: key);
+  _DropDownContainer({Key? key, required this.data, required this.headers})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Column(
-        children: data.entries.map<Widget>((entry) {
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 120,
-                  child: Text(
-                    entry.key.toString(),
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+    keys ??= {};
+    for (var item in headers) {
+      keys![item.value] = item.text;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300),
+        ),
+        child: CollapseChild(
+          prefixIcon: const Icon(Icons.details_rounded),
+          buttonStyle: CollapseButtonStyle(
+              showText: 'Show Details',
+              hideText: 'Hide Details',
+              textStyle: Theme.of(context).textTheme.titleMedium,
+              iconColor: Theme.of(context).iconTheme.color),
+          child: Column(
+            children: data.entries
+                .where((element) => keys!.containsKey(element.key))
+                .map<Widget>((entry) {
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
                 ),
-                const SizedBox(width: 16),
-                Text(
-                  ':',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 120,
+                      child: Text(
+                        '${keys![entry.key.toString()]}',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Text(
+                      ':',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    Expanded(
+                      child: Text(
+                        entry.value.toString(),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: Text(
-                    entry.value.toString(),
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
-              ],
-            ),
-          );
-        }).toList(),
+              );
+            }).toList(),
+          ),
+        ),
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:egitimax/models/question/questionPageModel.dart';
 import 'package:egitimax/pages/question/questionQuestion.dart';
 import 'package:egitimax/pages/question/questionQuestions.dart';
-import 'package:egitimax/pages/template.dart';
 import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:egitimax/utils/helper/localeManager.dart';
 import 'package:egitimax/repositories/appRepository.dart';
@@ -13,37 +13,28 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class QuestionPage extends StatefulWidget {
-  QuestionPage({super.key, required this.userId, required this.questionId});
-
-  String? currentTitle;
-
-  BigInt userId;
-  BigInt questionId;
-
+  QuestionPage({super.key});
   @override
   State<QuestionPage> createState() => _QuestionPageState();
 }
 
 class _QuestionPageState extends State<QuestionPage> {
-  late RouteManager routeManager;
-  late AppRepository appRepository;
-  late ThemeData theme;
-  late AppLocalizations lang;
-  late LocaleManager localeManager;
-  late DeviceTypes deviceType;
-  int selectedPageIndex = 1;
-
+  late QuestionPageModel mo;
   @override
   void initState() {
     super.initState();
     if (AppConstants.questionPageDebugPrintActive == 1) {
       debugPrint("QuestionPage_initState");
     }
+    mo=QuestionPageModel(context: context);
+    mo.userId=BigInt.parse('1');
+    mo.questionId=BigInt.parse('28');
+    mo.selectedPageIndex=1;
   }
 
   void overrideTitle(String newCurrentTitle) {
     setState(() {
-      widget.currentTitle = newCurrentTitle;
+      mo.currentTitle = newCurrentTitle;
     });
   }
 
@@ -52,9 +43,7 @@ class _QuestionPageState extends State<QuestionPage> {
     if (AppConstants.questionPageDebugPrintActive == 1) {
       debugPrint("QuestionPage_build");
     }
-
-    loadComponent();
-
+    mo.initializeContextItems();
     List<Widget> tapPageItemsConvexAppBar = getTapPageItemsConvexAppBar();
     List<TabItem<IconData>> itemsConvexAppBar = getItemsConvexAppBar();
     Drawer drawerScaffold = getDrawerScaffold();
@@ -62,52 +51,44 @@ class _QuestionPageState extends State<QuestionPage> {
     List<Widget>? actionsAppBar = getActionsAppBar();
 
     return LayoutPage(
-      initialActiveIndexConvexAppBar: selectedPageIndex,
+      initialActiveIndexConvexAppBar: mo.selectedPageIndex,
       actionsAppBar: actionsAppBar,
       drawerScaffold: drawerScaffold,
       endDrawerScaffold: endDrawerScaffold,
       tapPageItemsConvexAppBar: tapPageItemsConvexAppBar,
       itemsConvexAppBar: itemsConvexAppBar,
       titleAppBar: Text(
-        widget.currentTitle ?? lang.libPagesQuestionQuestionPage_questionPage,
-        style: theme.textTheme.titleMedium,
+        mo.currentTitle ?? mo.lang.libPagesQuestionQuestionPage_questionPage,
+        style:  mo.theme.textTheme.titleMedium,
       ),
       centerTitleAppBar: true,
       onTapConvexAppBar: (index) {
         debugPrint('Selected Index : $index');
         if (index == 0) {
-          if (selectedPageIndex != index) {
-            routeManager
+          if (mo.selectedPageIndex != index) {
+            mo.routeManager
                 .navigateAndRemoveUntil('/', arguments: {'route': false});
           }
-          overrideTitle(lang.libPagesHomeHomePage_home);
+          overrideTitle(mo.lang.libPagesHomeHomePage_home);
         } else if (index == 1) {
-          overrideTitle(lang.libPagesQuestionQuestionPage_questionList);
+          overrideTitle(mo.lang.libPagesQuestionQuestionPage_questionList);
         } else if (index == 2) {
-          overrideTitle(lang.libPagesQuestionQuestionPage_question);
+          overrideTitle(mo.lang.libPagesQuestionQuestionPage_question);
         } else if (index == 3) {
-          overrideTitle('Data Table');
-        } else if (index == 4) {
           if (Navigator.canPop(context)) {
-            routeManager.goBack(context);
+            mo.routeManager.goBack(context);
           }
-          overrideTitle(lang.libPagesQuestionQuestionPage_back);
+          overrideTitle(mo.lang.libPagesQuestionQuestionPage_back);
+        } else if (index == 4) {
+
         } else {}
 
-        selectedPageIndex = index;
+        mo.selectedPageIndex = index;
       },
     );
   }
 
-  void loadComponent() {
-    routeManager = RouteManager();
-    appRepository = AppRepository();
-    theme = Theme.of(context);
-    lang = AppLocalizations.of(context)!;
-    localeManager = Provider.of<LocaleManager>(context, listen: false);
-    deviceType = DeviceInfo().getDeviceType();
-  }
-
+  
   List<Widget>? getActionsAppBar() {
     List<Widget>? actionsAppBar = [
       Builder(
@@ -115,7 +96,7 @@ class _QuestionPageState extends State<QuestionPage> {
           return Align(
             alignment: Alignment.centerRight,
             child: IconButton(
-              icon: Icon(Icons.menu, size: theme.iconTheme.size),
+              icon: Icon(Icons.menu, size: mo.theme.iconTheme.size),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
@@ -140,42 +121,36 @@ class _QuestionPageState extends State<QuestionPage> {
         child: Column(
           children: [
             ListTile(
-              leading: Icon(Icons.add, size: theme.iconTheme.size),
+              leading: Icon(Icons.add, size: mo.theme.iconTheme.size),
               title: Text(
                 "Add Question",
-                style: theme.textTheme.titleMedium,
+                style: mo.theme.textTheme.titleMedium,
               ),
               subtitle: Text(
                 "New question will be added.",
-                style: theme.textTheme.titleSmall,
+                style: mo.theme.textTheme.titleSmall,
               ),
               onTap: () {
-                routeManager.addRoute(
+                mo.routeManager.addRoute(
                     '/AddQuestionPage',
-                    (context) => QuestionPage(
-                          questionId: BigInt.parse('0'),
-                          userId: BigInt.parse('1'),
-                        ));
+                    (context) => QuestionPage());
                 RouteManager().navigateTo('/AddQuestionPage');
               },
             ),
             ListTile(
-              leading: Icon(Icons.edit, size: theme.iconTheme.size),
+              leading: Icon(Icons.edit, size: mo.theme.iconTheme.size),
               title: Text(
                 "Edit Question",
-                style: theme.textTheme.titleMedium,
+                style: mo.theme.textTheme.titleMedium,
               ),
               subtitle: Text(
                 "Existing question will be edited.",
-                style: theme.textTheme.titleSmall,
+                style: mo.theme.textTheme.titleSmall,
               ),
               onTap: () {
-                routeManager.addRoute(
+                mo.routeManager.addRoute(
                     '/EditQuestionPage',
-                    (context) => QuestionPage(
-                          questionId: BigInt.parse('28'),
-                          userId: BigInt.parse('1'),
-                        ));
+                    (context) => QuestionPage());
                 RouteManager().navigateTo('/EditQuestionPage');
               },
             ),
@@ -190,17 +165,15 @@ class _QuestionPageState extends State<QuestionPage> {
 
   List<TabItem<IconData>> getItemsConvexAppBar() {
     var itemsConvexAppBar = [
-      TabItem(icon: Icons.home, title: lang.libPagesHomeHomePage_home),
+      TabItem(icon: Icons.home, title: mo.lang.libPagesHomeHomePage_home),
       TabItem(
           icon: Icons.question_mark_outlined,
-          title: lang.libPagesQuestionQuestionPage_questionList),
+          title: mo.lang.libPagesQuestionQuestionPage_questionList),
       TabItem(
-          icon: Icons.edit, title: lang.libPagesQuestionQuestionPage_question),
-      TabItem(
-          icon: Icons.table_chart, title: 'Table'),
+          icon: Icons.edit_note, title: mo.lang.libPagesQuestionQuestionPage_question,),
       TabItem(
           icon: Icons.arrow_back,
-          title: lang.libPagesQuestionQuestionPage_back),
+          title: mo.lang.libPagesQuestionQuestionPage_back),
     ];
     return itemsConvexAppBar;
   }
@@ -208,30 +181,11 @@ class _QuestionPageState extends State<QuestionPage> {
   List<Widget> getTapPageItemsConvexAppBar() {
     var tapPageItemsConvexAppBar = <Widget>[
       Container(),
-      QuestionQuestions(
-        title: lang.libPagesQuestionQuestionPage_question,
-        routeManager: routeManager,
-        appRepository: appRepository,
-        theme: theme,
-        lang: lang,
-        localeManager: localeManager,
-        deviceType: deviceType,
-        userId: widget.userId,
-      ),
-      QuestionQuestion(
-        title: lang.libPagesQuestionQuestionPage_question,
-        routeManager: routeManager,
-        appRepository: appRepository,
-        theme: theme,
-        lang: lang,
-        localeManager: localeManager,
-        deviceType: deviceType,
-        userId: widget.userId,
-        questionId: widget.questionId,
-      ),
-      Container(),
+      QuestionQuestions(mo:mo),
+      QuestionQuestion(mo:mo),
       Container()
     ];
     return tapPageItemsConvexAppBar;
   }
 }
+
