@@ -551,6 +551,25 @@ class AppRepository {
     return result;
   }
 
+
+  Future<List<ViewQueQuestionMain>> getAllWithPageByFilterViewQueQuestionMain(BigInt? userId,int perCountOfPage,int page,ViewQueQuestionMain? filter) async {
+    userId ??= BigInt.parse('0');
+    var jsonDecode =
+    await Api.request('TblQueQuestionMain/GetAllWithPageViewByFilter/$userId/$perCountOfPage/$page', method: HttpMethod.post,data:filter?.toMap());
+    List<ViewQueQuestionMain> result = [];
+    for (var jsonItem in jsonDecode) {
+      result.add(ViewQueQuestionMain.fromJson(jsonItem));
+    }
+    return result;
+  }
+
+  Future<int> getAllWithPageCountByFilterViewQueQuestionMain(BigInt? userId,int perCountOfPage,ViewQueQuestionMain? filter) async {
+    userId ??= BigInt.parse('0');
+    var jsonDecode = await Api.request('TblQueQuestionMain/GetAllWithPageCountViewByFilter/$userId/$perCountOfPage', method: HttpMethod.post,data:filter?.toMap());
+    int result = jsonDecode??0;
+    return result;
+  }
+
   ///TblQueQuestionOption
 
   Future<List<TblQueQuestionOption>> getAllTblQueQuestionOption() async {

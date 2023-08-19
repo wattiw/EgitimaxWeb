@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:egitimax/utils/widget/collapseChild.dart';
+import 'package:egitimax/utils/widget/dropdownSearch.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_table/responsive_table.dart';
 
@@ -24,11 +26,15 @@ class ResponsiveDatatableHelper extends StatefulWidget {
       this.onChangedCurrentPage,
       this.onChangedCurrentPerPage,
       required this.onChangedPerPageAndPage,
-      this.singleSelectionIsActive = true})
+      this.singleSelectionIsActive = true,
+      this.title,
+      this.actions,
+      this.filterFields,
+      this.filterLookups})
       : super(key: key);
 
   final String tableKey;
-  final String searchKey;
+  String searchKey;
   final List<DatatableHeader> headers;
   final List<Map<String, dynamic>> source;
   final List<Map<String, dynamic>> selectedItems;
@@ -46,6 +52,10 @@ class ResponsiveDatatableHelper extends StatefulWidget {
   final void Function(int currentPerPage, int currentPage)?
       onChangedPerPageAndPage;
   bool? singleSelectionIsActive;
+  Widget? title;
+  List<Widget>? actions;
+  final List<String>? filterFields;
+  List<Widget>? filterLookups;
 
   @override
   _ResponsiveDatatableHelperState createState() =>
@@ -66,15 +76,17 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
   late int? _currentPerPage;
   List<bool>? _expanded;
   String? _searchKey;
-
+  Map<String, String>? _searchKeyList;
   int _currentPage = 1;
   bool _isSearch = false;
+
+  Map<String, String> _distinctFilterKeyValue = {};
+  Map<String, List<String>> _distinctFilterValues = {};
   List<Map<String, dynamic>> _sourceOriginal = [];
   List<Map<String, dynamic>> _sourceFiltered = [];
   List<Map<String, dynamic>> _source = [];
   List<Map<String, dynamic>> _selecteds = [];
 
-  // ignore: unused_field
   late String _selectableKey;
 
   String? _sortColumn;
@@ -93,7 +105,42 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
     return widget.source;
   }
 
+  void _onMultiFilterDropdownChanged(String key, dynamic value) {
+    setState(() {
+      if (_distinctFilterKeyValue.containsKey(key)) {
+        _distinctFilterKeyValue[key] = value;
+      } else {
+        _distinctFilterKeyValue[key] = value;
+      }
+    });
+  }
+
+  void _populateFilterDistinctValues() {
+    for (var entry in widget.source) {
+      for (var key in entry.keys) {
+        if (widget.filterFields != null && widget.filterFields!.contains(key)) {
+          var value = entry[key].toString();
+          if (_distinctFilterValues.containsKey(key)) {
+            if (!_distinctFilterValues[key]!.contains(value)) {
+              _distinctFilterValues[key]!.add(value);
+            }
+          } else {
+            _distinctFilterValues[key] = [value];
+          }
+        }
+      }
+    }
+
+    for (var entry in _distinctFilterValues.entries) {
+      _distinctFilterValues[entry.key] = [
+        ...{''},
+        ...entry.value.toSet().toList()
+      ];
+    }
+  }
+
   _initializeData() async {
+    _populateFilterDistinctValues();
     _mockPullData();
   }
 
@@ -138,19 +185,34 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
     });
   }
 
-  _filterData(value) {
+  _filterData(value, {bool isMoreFilter = false}) {
     setState(() => _isLoading = true);
 
     try {
       if (value == "" || value == null) {
         _sourceFiltered = _sourceOriginal;
       } else {
-        _sourceFiltered = _sourceOriginal
-            .where((data) => data[_searchKey!]
-                .toString()
-                .toLowerCase()
-                .contains(value.toString().toLowerCase()))
-            .toList();
+        if (isMoreFilter == true) {
+          _sourceFiltered = _sourceOriginal.where((data) {
+            return _distinctFilterKeyValue.entries.every((entry) {
+              if (entry.value.toString() == '' ||
+                  entry.value.toString() == null) {
+                return true;
+              }
+
+              final dataValue = data[entry.key].toString().toLowerCase();
+              final filterValue = entry.value.toString().toLowerCase();
+              return dataValue.contains(filterValue);
+            });
+          }).toList();
+        } else {
+          _sourceFiltered = _sourceOriginal
+              .where((data) => data[_searchKey!]
+                  .toString()
+                  .toLowerCase()
+                  .contains(value.toString().toLowerCase()))
+              .toList();
+        }
       }
 
       _total = _sourceFiltered.length;
@@ -181,11 +243,156 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
 
   @override
   Widget build(BuildContext context) {
+    var filters = Wrap(
+      children: _distinctFilterValues.keys.map((key) {
+        return Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+              DropdownSearchHelper.singleSelectionDropdown<String>(
+                clearButtonProps:const ClearButtonProps(),
+                context: context,
+                labelText:
+                    _headers.firstWhere((element) => element.value == key).text,
+                hintText:
+                    'Please select ${_headers.firstWhere((element) => element.value == key).text} !',
+                searchBoxLabelText: 'Search',
+                showSearchBox: true,
+                items:
+                    _distinctFilterValues[key]!.map((value) => value).toList(),
+                maxWidth: DropdownSearchHelper.getDropdownWidth(
+                    context,
+                    _distinctFilterValues[key]!
+                        .map((item) => item ?? '')
+                        .toList()),
+                itemAsString: (selectedItem) {
+                  return selectedItem.toString();
+                },
+                selectedItem: _distinctFilterKeyValue[key],
+                onChanged: (selectedItem) {
+                  _onMultiFilterDropdownChanged(key, selectedItem);
+                },
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+
     return SingleChildScrollView(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
+          Wrap(
+            children: [
+              Wrap(
+                spacing: 5,
+                runSpacing: 5,
+                children:  widget.filterLookups ?? [],
+              ),
+              if (_distinctFilterValues.isNotEmpty)
+                TextButton.icon(
+                  onPressed: () => {_filterData(0, isMoreFilter: true)},
+                  icon: const Icon(Icons.filter_alt_sharp),
+                  label: MediaQuery.of(context).size.width > 500
+                      ? Text(
+                          "Filter",
+                          style: Theme.of(context).textTheme.titleMedium,
+                        )
+                      : const Text(''),
+                ),
+              if (_distinctFilterValues.isNotEmpty)
+                TextButton.icon(
+                  onPressed: () => {_filterData('', isMoreFilter: false)},
+                  icon: const Icon(Icons.clear),
+                  label: MediaQuery.of(context).size.width > 500
+                      ? Text(
+                          "Clear",
+                          style: Theme.of(context).textTheme.titleMedium,
+                        )
+                      : const Text(''),
+                )
+            ],
+          ),
+          Row(
+            children: [
+              if (_isSearch)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: DropdownButton<String>(
+                    value: widget.searchKey,
+                    items: _headers
+                        .map((e) => DropdownMenuItem<String>(
+                              value: e.value,
+                              child: Text(e.text),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _searchKey = value;
+                        if (widget.searchKey != null) {
+                          widget.searchKey != value;
+                        }
+                        _resetData();
+                      });
+                    },
+                    isExpanded: false,
+                    underline:
+                        Container(), // Çizgiyi kaldırmak için bu satırı ekleyin
+                  ),
+                ),
+              if (_isSearch)
+                Expanded(
+                    child: TextField(
+                  controller: searchTextController,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText:
+                          'Enter search term based on ${_headers.firstWhere((element) => element.value == _searchKey!).text.replaceAll(RegExp('[\\W_]+'), ' ')}',
+                      prefixIcon: IconButton(
+                          icon: Icon(
+                            Icons.cancel,
+                            color: Theme.of(context).iconTheme.color,
+                            size: Theme.of(context).iconTheme.size,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isSearch = false;
+                            });
+                            _initializeData();
+                          }),
+                      suffixIcon: IconButton(
+                          icon: Icon(
+                            Icons.search,
+                            size: Theme.of(context).iconTheme.size,
+                          ),
+                          onPressed: () {
+                            if (searchTextController!.text != null &&
+                                searchTextController!.text != '') {
+                              _filterData(searchTextController!.text);
+                            }
+                          })),
+                  onSubmitted: (value) {
+                    _filterData(value);
+                  },
+                )),
+              if (!_isSearch)
+                Expanded(
+                  child: IconButton(
+                      icon: Icon(
+                        Icons.search,
+                        size: Theme.of(context).iconTheme.size,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isSearch = true;
+                        });
+                      }),
+                ),
+            ],
+          ),
           Container(
             margin: const EdgeInsets.all(10),
             padding: const EdgeInsets.all(0),
@@ -195,63 +402,9 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
             child: Padding(
               padding: const EdgeInsets.all(5.0),
               child: ResponsiveDatatable(
-                title: TextButton.icon(
-                  onPressed: () => {},
-                  icon: const Icon(Icons.refresh),
-                  label: MediaQuery.of(context).size.width > 500
-                      ? Text(
-                          "Refresh",
-                          style: Theme.of(context).textTheme.titleMedium,
-                        )
-                      : const Text(''),
-                ),
+                title: widget.title,
                 reponseScreenSizes: const [ScreenSize.xs],
-                actions: [
-                  if (_isSearch)
-                    Expanded(
-                        child: TextField(
-                      controller: searchTextController,
-                      decoration: InputDecoration(
-                          hintText:
-                              'Enter search term based on ${_headers.firstWhere((element) => element.value == _searchKey!).text.replaceAll(RegExp('[\\W_]+'), ' ')}',
-                          prefixIcon: IconButton(
-                              icon: Icon(
-                                Icons.cancel,
-                                size: Theme.of(context).iconTheme.size,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _isSearch = false;
-                                });
-                                _initializeData();
-                              }),
-                          suffixIcon: IconButton(
-                              icon: Icon(
-                                Icons.search,
-                                size: Theme.of(context).iconTheme.size,
-                              ),
-                              onPressed: () {
-                                if (searchTextController!.text != null &&
-                                    searchTextController!.text != '') {
-                                  _filterData(searchTextController!.text);
-                                }
-                              })),
-                      onSubmitted: (value) {
-                        _filterData(value);
-                      },
-                    )),
-                  if (!_isSearch)
-                    IconButton(
-                        icon: Icon(
-                          Icons.search,
-                          size: Theme.of(context).iconTheme.size,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _isSearch = true;
-                          });
-                        }),
-                ],
+                actions: widget.actions ?? [],
                 headers: _headers,
                 source: _source,
                 selecteds: _selecteds,
@@ -520,9 +673,11 @@ class _DropDownContainer extends StatelessWidget {
                 .where((element) => keys!.containsKey(element.key))
                 .map<Widget>((entry) {
               return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
+                  border:
+                      Border(bottom: BorderSide(color: Colors.grey.shade300)),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,

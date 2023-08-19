@@ -1,4 +1,5 @@
 import 'package:egitimax/repositories/appRepository.dart';
+import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:egitimax/utils/helper/localeManager.dart';
 import 'package:egitimax/utils/helper/routeManager.dart';
 import 'package:egitimax/utils/widget/deviceInfo.dart';
@@ -239,6 +240,7 @@ class DropdownSearchHelper {
   }
 
   static double getDropdownWidth(BuildContext context, List<String> displayText) {
+    return MediaQuery.of(context).size.width<500 ? MediaQuery.of(context).size.width :AppConstants.lookupObjectWidth;
     var stringWidth = getTextWidth(
         context,
         findLongestText(displayText),
@@ -257,7 +259,7 @@ class DropdownSearchHelper {
     );
     textPainter.layout();
 
-    return MediaQuery.of(context).size.width<500 ? MediaQuery.of(context).size.width*0.50 :200;
+    return MediaQuery.of(context).size.width<500 ? MediaQuery.of(context).size.width :AppConstants.lookupObjectWidth;
   }
 
   static String findLongestText(List<String> displayText) {
