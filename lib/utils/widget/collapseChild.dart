@@ -4,9 +4,9 @@ class CollapseChild extends StatefulWidget {
   final Widget child;
   final Icon? prefixIcon;
   final CollapseButtonStyle buttonStyle;
-
-  const CollapseChild(
-      {super.key, this.prefixIcon, required this.child, required this.buttonStyle});
+  bool? isCollapsed = true;
+  CollapseChild(
+      {super.key, this.prefixIcon, required this.child, required this.buttonStyle,this.isCollapsed});
 
   @override
   _CollapseChildState createState() => _CollapseChildState();
@@ -27,7 +27,13 @@ class CollapseButtonStyle {
 }
 
 class _CollapseChildState extends State<CollapseChild> {
-  bool isCollapsed = true;
+ late bool isCollapsed;
+
+ @override
+  void initState() {
+    super.initState();
+    isCollapsed=widget.isCollapsed??true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +71,7 @@ class _CollapseChildState extends State<CollapseChild> {
                   isCollapsed
                       ? Icons.arrow_drop_down
                       : Icons.arrow_drop_up_outlined,
-                  size: 24,
+                  size: Theme.of(context).iconTheme.size,
                   color: widget.buttonStyle.iconColor,
                 ),
               ],
@@ -79,8 +85,8 @@ class _CollapseChildState extends State<CollapseChild> {
                 : CrossFadeState.showSecond,
             firstChild: const SizedBox.shrink(),
             secondChild: Container(
-              constraints: const BoxConstraints(minHeight: 120),
-              padding: const EdgeInsets.fromLTRB(20,10,20,10),
+              //constraints: const BoxConstraints(minHeight: 100),
+              padding: const EdgeInsets.fromLTRB(10,5,10,5),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.transparent),
                 borderRadius: BorderRadius.circular(8),

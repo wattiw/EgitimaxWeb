@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:egitimax/utils/widget/collapseChild.dart';
 import 'package:egitimax/utils/widget/dropdownSearch.dart';
@@ -30,13 +28,16 @@ class ResponsiveDatatableHelper extends StatefulWidget {
       this.title,
       this.actions,
       this.filterFields,
-      this.filterLookups})
+      this.filterLookups,
+        this.searchButtonStatusInit,
+      this.searchButtonStatus,
+      this.rowActions})
       : super(key: key);
 
   final String tableKey;
   String searchKey;
   final List<DatatableHeader> headers;
-  final List<Map<String, dynamic>> source;
+  final List<Map<String, dynamic>>? source;
   final List<Map<String, dynamic>> selectedItems;
   final void Function(List<Map<String, dynamic>>)? onChangedSelectedItems;
   final void Function(bool?, Map<String, dynamic>)? onSelect;
@@ -56,6 +57,9 @@ class ResponsiveDatatableHelper extends StatefulWidget {
   List<Widget>? actions;
   final List<String>? filterFields;
   List<Widget>? filterLookups;
+  SearchButtonStatus?  searchButtonStatusInit;
+  final void Function(SearchButtonStatus)? searchButtonStatus;
+  Widget? rowActions;
 
   @override
   _ResponsiveDatatableHelperState createState() =>
@@ -78,8 +82,9 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
   String? _searchKey;
   Map<String, String>? _searchKeyList;
   int _currentPage = 1;
-  bool _isSearch = false;
-
+  bool _isSearch = true;
+  bool _isSearchFromSourceFilter = false;
+  SearchButtonStatus? searchButtonStatus;
   Map<String, String> _distinctFilterKeyValue = {};
   Map<String, List<String>> _distinctFilterValues = {};
   List<Map<String, dynamic>> _sourceOriginal = [];
@@ -101,7 +106,7 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
     if (enteredNumber != null) {}
   }
 
-  List<Map<String, dynamic>> _generateData() {
+  List<Map<String, dynamic>>? _generateData() {
     return widget.source;
   }
 
@@ -116,26 +121,29 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
   }
 
   void _populateFilterDistinctValues() {
-    for (var entry in widget.source) {
-      for (var key in entry.keys) {
-        if (widget.filterFields != null && widget.filterFields!.contains(key)) {
-          var value = entry[key].toString();
-          if (_distinctFilterValues.containsKey(key)) {
-            if (!_distinctFilterValues[key]!.contains(value)) {
-              _distinctFilterValues[key]!.add(value);
+    if (widget.source != null && widget.source!.isNotEmpty) {
+      for (var entry in widget.source!) {
+        for (var key in entry.keys) {
+          if (widget.filterFields != null &&
+              widget.filterFields!.contains(key)) {
+            var value = entry[key].toString();
+            if (_distinctFilterValues.containsKey(key)) {
+              if (!_distinctFilterValues[key]!.contains(value)) {
+                _distinctFilterValues[key]!.add(value);
+              }
+            } else {
+              _distinctFilterValues[key] = [value];
             }
-          } else {
-            _distinctFilterValues[key] = [value];
           }
         }
       }
-    }
 
-    for (var entry in _distinctFilterValues.entries) {
-      _distinctFilterValues[entry.key] = [
-        ...{''},
-        ...entry.value.toSet().toList()
-      ];
+      for (var entry in _distinctFilterValues.entries) {
+        _distinctFilterValues[entry.key] = [
+          ...{''},
+          ...entry.value.toSet().toList()
+        ];
+      }
     }
   }
 
@@ -155,11 +163,16 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
 
     _expanded = List.generate(_currentPerPage!, (index) => false);
 
+    searchButtonStatus=widget.searchButtonStatusInit;
+
     setState(() => _isLoading = true);
 
     Future.delayed(const Duration(seconds: 1)).then((value) {
       _sourceOriginal.clear();
-      _sourceOriginal.addAll(_generateData());
+      var generatedData = _generateData();
+      if (generatedData != null && generatedData.isNotEmpty) {
+        _sourceOriginal.addAll(generatedData);
+      }
       _sourceFiltered = _sourceOriginal;
       _total = _sourceFiltered.length;
       _source = _sourceFiltered
@@ -228,6 +241,7 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
   @override
   void initState() {
     super.initState();
+
     _headers = widget.headers;
     _selecteds = widget.singleSelectionIsActive == true &&
             widget.selectedItems.isNotEmpty
@@ -249,9 +263,9 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
           padding: const EdgeInsets.all(10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+            children: [
               DropdownSearchHelper.singleSelectionDropdown<String>(
-                clearButtonProps:const ClearButtonProps(),
+                clearButtonProps: const ClearButtonProps(),
                 context: context,
                 labelText:
                     _headers.firstWhere((element) => element.value == key).text,
@@ -280,362 +294,361 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
       }).toList(),
     );
 
+    List<Widget>? _actions = List.empty(growable: true);
+    if (widget.actions != null && widget.actions!.isNotEmpty) {
+      _actions.addAll(widget.actions!);
+    }
+
+    _actions.add(SearchButton(
+      searchButtonStatusInit:widget.searchButtonStatusInit,
+      searchButtonStatus: (v) {
+        setState(() {
+          if (v == SearchButtonStatus.Filter) {
+            searchButtonStatus=v;
+          } else if (v == SearchButtonStatus.Search) {
+            searchButtonStatus=v;
+          } else if (v == SearchButtonStatus.None) {
+            searchButtonStatus=v;
+          } else {
+
+          }
+        });
+
+        if(widget.searchButtonStatus!=null)
+          {
+            widget.searchButtonStatus!(v);
+          }
+
+      },
+    ));
+
     return SingleChildScrollView(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
-          Wrap(
-            children: [
-              Wrap(
-                spacing: 5,
-                runSpacing: 5,
-                children:  widget.filterLookups ?? [],
-              ),
-              if (_distinctFilterValues.isNotEmpty)
-                TextButton.icon(
-                  onPressed: () => {_filterData(0, isMoreFilter: true)},
-                  icon: const Icon(Icons.filter_alt_sharp),
-                  label: MediaQuery.of(context).size.width > 500
-                      ? Text(
-                          "Filter",
-                          style: Theme.of(context).textTheme.titleMedium,
-                        )
-                      : const Text(''),
+          Padding(
+            padding: EdgeInsets.fromLTRB(20, 20, 20, 1),
+            child: Column(
+              children: [
+                if((searchButtonStatus==SearchButtonStatus.Filter || _source.isEmpty) && searchButtonStatus!=SearchButtonStatus.Search)
+                Wrap(
+                  spacing: 5,
+                  runSpacing: 5,
+                  children: widget.filterLookups ?? [],
                 ),
-              if (_distinctFilterValues.isNotEmpty)
-                TextButton.icon(
-                  onPressed: () => {_filterData('', isMoreFilter: false)},
-                  icon: const Icon(Icons.clear),
-                  label: MediaQuery.of(context).size.width > 500
-                      ? Text(
-                          "Clear",
-                          style: Theme.of(context).textTheme.titleMedium,
-                        )
-                      : const Text(''),
-                )
-            ],
-          ),
-          Row(
-            children: [
-              if (_isSearch)
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: DropdownButton<String>(
-                    value: widget.searchKey,
-                    items: _headers
-                        .map((e) => DropdownMenuItem<String>(
-                              value: e.value,
-                              child: Text(e.text),
-                            ))
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _searchKey = value;
-                        if (widget.searchKey != null) {
-                          widget.searchKey != value;
-                        }
-                        _resetData();
-                      });
-                    },
-                    isExpanded: false,
-                    underline:
-                        Container(), // Çizgiyi kaldırmak için bu satırı ekleyin
-                  ),
-                ),
-              if (_isSearch)
-                Expanded(
-                    child: TextField(
-                  controller: searchTextController,
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText:
-                          'Enter search term based on ${_headers.firstWhere((element) => element.value == _searchKey!).text.replaceAll(RegExp('[\\W_]+'), ' ')}',
-                      prefixIcon: IconButton(
-                          icon: Icon(
-                            Icons.cancel,
-                            color: Theme.of(context).iconTheme.color,
-                            size: Theme.of(context).iconTheme.size,
-                          ),
-                          onPressed: () {
+                if(searchButtonStatus==SearchButtonStatus.Search)
+                Row(
+                  children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: DropdownButton<String>(
+                          value: widget.searchKey,
+                          items: _headers
+                              .map((e) => DropdownMenuItem<String>(
+                                    value: e.value,
+                                    child: Text(e.text),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
                             setState(() {
-                              _isSearch = false;
+                              _searchKey = value;
+                              if (widget.searchKey != null) {
+                                widget.searchKey != value;
+                              }
+                              _resetData();
                             });
-                            _initializeData();
-                          }),
-                      suffixIcon: IconButton(
-                          icon: Icon(
-                            Icons.search,
-                            size: Theme.of(context).iconTheme.size,
-                          ),
-                          onPressed: () {
-                            if (searchTextController!.text != null &&
-                                searchTextController!.text != '') {
-                              _filterData(searchTextController!.text);
-                            }
-                          })),
-                  onSubmitted: (value) {
-                    _filterData(value);
+                          },
+                          isExpanded: false,
+                          underline:
+                              Container(), // Çizgiyi kaldırmak için bu satırı ekleyin
+                        ),
+                      ),
+                      Expanded(
+                          child: TextField(
+                        controller: searchTextController,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText:
+                                'Enter search term based on ${_headers.firstWhere((element) => element.value == _searchKey!).text.replaceAll(RegExp('[\\W_]+'), ' ')}',
+                            prefixIcon: IconButton(
+                                icon: Icon(
+                                  Icons.cancel,
+                                  color: Theme.of(context).iconTheme.color,
+                                  size: Theme.of(context).iconTheme.size,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isSearch = false;
+                                  });
+                                  _initializeData();
+                                }),
+                            suffixIcon: IconButton(
+                                icon: Icon(
+                                  Icons.search,
+                                  size: Theme.of(context).iconTheme.size,
+                                  color: Theme.of(context).iconTheme.color,
+                                ),
+                                onPressed: () {
+                                  if (searchTextController!.text != null &&
+                                      searchTextController!.text != '') {
+                                    _filterData(searchTextController!.text);
+                                  }
+                                })),
+                        onSubmitted: (value) {
+                          _filterData(value);
+                        },
+                      )),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+            Container(
+              margin: const EdgeInsets.all(0),
+              padding: const EdgeInsets.all(0),
+              constraints: const BoxConstraints(
+                maxHeight: 700,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: ResponsiveDatatable(
+                  title: widget.title,
+                  reponseScreenSizes: const [ScreenSize.xs],
+                  actions: _actions ?? [],
+                  headers: _headers,
+                  source: _source,
+                  selecteds: _selecteds,
+                  showSelect: _showSelect,
+                  autoHeight: false,
+                  dropContainer: (data) {
+                    return _DropDownContainer(
+                      data: data,
+                      headers: _headers,
+                    );
                   },
-                )),
-              if (!_isSearch)
-                Expanded(
-                  child: IconButton(
+                  onChangedRow: (value, header) {},
+                  onSubmittedRow: (value, header) {},
+                  onTabRow: (data) {
+                    if (widget.onTabRow != null) {
+                      widget.onTabRow!(data);
+                    }
+                  },
+                  onSort: (value) {
+                    setState(() => _isLoading = true);
+
+                    setState(() {
+                      _sortColumn = value;
+                      _sortAscending = !_sortAscending;
+
+                      _sourceFiltered.sort((a, b) {
+                        final aValue = a["$_sortColumn"];
+                        final bValue = b["$_sortColumn"];
+
+                        if (aValue == null && bValue == null) {
+                          return 0;
+                        } else if (aValue == null) {
+                          return _sortAscending ? 1 : -1;
+                        } else if (bValue == null) {
+                          return _sortAscending ? -1 : 1;
+                        }
+
+                        return _sortAscending
+                            ? bValue.compareTo(aValue)
+                            : aValue.compareTo(bValue);
+                      });
+
+                      var _rangeTop = _currentPerPage! < _sourceFiltered.length
+                          ? _currentPerPage!
+                          : _sourceFiltered.length;
+                      _source = _sourceFiltered.getRange(0, _rangeTop).toList();
+                      _searchKey = value;
+
+                      _isLoading = false;
+                    });
+
+                    if (widget.onSort != null) {
+                      widget.onSort!(value);
+                    }
+                  },
+                  expanded: _expanded,
+                  sortAscending: _sortAscending,
+                  sortColumn: _sortColumn,
+                  isLoading: _isLoading,
+                  onSelect: (value, item) {
+                    if (widget.singleSelectionIsActive == true) {
+                      if (value!) {
+                        _selecteds.clear();
+                        _selecteds.add(item);
+                      } else {
+                        _selecteds.removeAt(_selecteds.indexOf(item));
+                      }
+                    } else {
+                      if (value!) {
+                        _selecteds.add(item);
+                      } else {
+                        _selecteds.removeAt(_selecteds.indexOf(item));
+                      }
+                    }
+
+                    if (widget.onSelect != null) {
+                      widget.onSelect!(value, item);
+                    }
+
+                    if (widget.onChangedSelectedItems != null) {
+                      widget.onChangedSelectedItems!(_selecteds);
+                    }
+
+                    setState(() {});
+                  },
+                  onSelectAll: (value) {
+                    if (widget.singleSelectionIsActive == true) {
+                      if (_selecteds.isNotEmpty) {
+                        _selecteds = [_selecteds.last].cast();
+                      }
+                    } else {
+                      if (value!) {
+                        _selecteds =
+                            _source.map((entry) => entry).toList().cast();
+                      } else {
+                        _selecteds.clear();
+                      }
+                    }
+
+                    if (widget.onSelectAll != null) {
+                      widget.onSelectAll!(value);
+                    }
+
+                    if (widget.onChangedSelectedItems != null) {
+                      widget.onChangedSelectedItems!(_selecteds);
+                    }
+
+                    setState(() {});
+                  },
+                  footers: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: const Text(""),
+                    ),
+                    if (_perPages.isNotEmpty)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: DropdownButton<int>(
+                          value: _currentPerPage,
+                          items: _perPages
+                              .map((e) => DropdownMenuItem<int>(
+                                    value: e,
+                                    child: Text("$e"),
+                                  ))
+                              .toList(),
+                          onChanged: (dynamic value) {
+                            setState(() {
+                              _currentPerPage = value;
+                              _currentPage = 1;
+                              _resetData();
+                              if (widget.onChangedCurrentPerPage != null) {
+                                widget.onChangedCurrentPerPage!(
+                                    _currentPerPage ?? 10);
+                              }
+                              if (widget.onChangedPerPageAndPage != null) {
+                                widget.onChangedPerPageAndPage!(
+                                    _currentPerPage ?? 10, _currentExPage);
+                              }
+                            });
+                          },
+                          isExpanded: false,
+                        ),
+                      ),
+                    if (false)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: const Text("Page"),
+                      ),
+                    if (_pages.isNotEmpty)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: DropdownButton<int>(
+                          value: _currentExPage,
+                          items: _pages
+                              .map((e) => DropdownMenuItem<int>(
+                                    value: e,
+                                    child: Text("$e"),
+                                  ))
+                              .toList(),
+                          onChanged: (dynamic value) {
+                            setState(() {
+                              _currentExPage = value;
+                              if (widget.onChangedCurrentPage != null) {
+                                widget.onChangedCurrentPage!(_currentExPage);
+                              }
+                              if (widget.onChangedPerPageAndPage != null) {
+                                widget.onChangedPerPageAndPage!(
+                                    _currentPerPage ?? 10, _currentExPage);
+                              }
+
+                              _resetData();
+                            });
+                          },
+                          isExpanded: false,
+                        ),
+                      ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Text(
+                          "${_sourceFiltered.length} : $_currentExPage/ ${_pages.length}"),
+                    ),
+                    IconButton(
                       icon: Icon(
-                        Icons.search,
+                        Icons.arrow_back_ios,
                         size: Theme.of(context).iconTheme.size,
                       ),
                       onPressed: () {
-                        setState(() {
-                          _isSearch = true;
-                        });
-                      }),
-                ),
-            ],
-          ),
-          Container(
-            margin: const EdgeInsets.all(10),
-            padding: const EdgeInsets.all(0),
-            constraints: const BoxConstraints(
-              maxHeight: 700,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: ResponsiveDatatable(
-                title: widget.title,
-                reponseScreenSizes: const [ScreenSize.xs],
-                actions: widget.actions ?? [],
-                headers: _headers,
-                source: _source,
-                selecteds: _selecteds,
-                showSelect: _showSelect,
-                autoHeight: false,
-                dropContainer: (data) {
-                  return _DropDownContainer(
-                    data: data,
-                    headers: _headers,
-                  );
-                },
-                onChangedRow: (value, header) {},
-                onSubmittedRow: (value, header) {},
-                onTabRow: (data) {
-                  if (widget.onTabRow != null) {
-                    widget.onTabRow!(data);
-                  }
-                },
-                onSort: (value) {
-                  setState(() => _isLoading = true);
-
-                  setState(() {
-                    _sortColumn = value;
-                    _sortAscending = !_sortAscending;
-
-                    _sourceFiltered.sort((a, b) {
-                      final aValue = a["$_sortColumn"];
-                      final bValue = b["$_sortColumn"];
-
-                      if (aValue == null && bValue == null) {
-                        return 0;
-                      } else if (aValue == null) {
-                        return _sortAscending ? 1 : -1;
-                      } else if (bValue == null) {
-                        return _sortAscending ? -1 : 1;
-                      }
-
-                      return _sortAscending
-                          ? bValue.compareTo(aValue)
-                          : aValue.compareTo(bValue);
-                    });
-
-                    var _rangeTop = _currentPerPage! < _sourceFiltered.length
-                        ? _currentPerPage!
-                        : _sourceFiltered.length;
-                    _source = _sourceFiltered.getRange(0, _rangeTop).toList();
-                    _searchKey = value;
-
-                    _isLoading = false;
-                  });
-
-                  if (widget.onSort != null) {
-                    widget.onSort!(value);
-                  }
-                },
-                expanded: _expanded,
-                sortAscending: _sortAscending,
-                sortColumn: _sortColumn,
-                isLoading: _isLoading,
-                onSelect: (value, item) {
-                  if (widget.singleSelectionIsActive == true) {
-                    if (value!) {
-                      _selecteds.clear();
-                      _selecteds.add(item);
-                    } else {
-                      _selecteds.removeAt(_selecteds.indexOf(item));
-                    }
-                  } else {
-                    if (value!) {
-                      _selecteds.add(item);
-                    } else {
-                      _selecteds.removeAt(_selecteds.indexOf(item));
-                    }
-                  }
-
-                  if (widget.onSelect != null) {
-                    widget.onSelect!(value, item);
-                  }
-
-                  if (widget.onChangedSelectedItems != null) {
-                    widget.onChangedSelectedItems!(_selecteds);
-                  }
-
-                  setState(() {});
-                },
-                onSelectAll: (value) {
-                  if (widget.singleSelectionIsActive == true) {
-                    if (_selecteds.isNotEmpty) {
-                      _selecteds = [_selecteds.last].cast();
-                    }
-                  } else {
-                    if (value!) {
-                      _selecteds =
-                          _source.map((entry) => entry).toList().cast();
-                    } else {
-                      _selecteds.clear();
-                    }
-                  }
-
-                  if (widget.onSelectAll != null) {
-                    widget.onSelectAll!(value);
-                  }
-
-                  if (widget.onChangedSelectedItems != null) {
-                    widget.onChangedSelectedItems!(_selecteds);
-                  }
-
-                  setState(() {});
-                },
-                footers: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: const Text(""),
-                  ),
-                  if (_perPages.isNotEmpty)
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: DropdownButton<int>(
-                        value: _currentPerPage,
-                        items: _perPages
-                            .map((e) => DropdownMenuItem<int>(
-                                  value: e,
-                                  child: Text("$e"),
-                                ))
-                            .toList(),
-                        onChanged: (dynamic value) {
-                          setState(() {
-                            _currentPerPage = value;
-                            _currentPage = 1;
-                            _resetData();
-                            if (widget.onChangedCurrentPerPage != null) {
-                              widget.onChangedCurrentPerPage!(
-                                  _currentPerPage ?? 10);
-                            }
-                            if (widget.onChangedPerPageAndPage != null) {
-                              widget.onChangedPerPageAndPage!(
-                                  _currentPerPage ?? 10, _currentExPage);
-                            }
-                          });
-                        },
-                        isExpanded: false,
-                      ),
-                    ),
-                  if (false)
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: const Text("Page"),
-                    ),
-                  if (_pages.isNotEmpty)
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: DropdownButton<int>(
-                        value: _currentExPage,
-                        items: _pages
-                            .map((e) => DropdownMenuItem<int>(
-                                  value: e,
-                                  child: Text("$e"),
-                                ))
-                            .toList(),
-                        onChanged: (dynamic value) {
-                          setState(() {
-                            _currentExPage = value;
-                            if (widget.onChangedCurrentPage != null) {
-                              widget.onChangedCurrentPage!(_currentExPage);
-                            }
-                            if (widget.onChangedPerPageAndPage != null) {
-                              widget.onChangedPerPageAndPage!(
-                                  _currentPerPage ?? 10, _currentExPage);
-                            }
-
-                            _resetData();
-                          });
-                        },
-                        isExpanded: false,
-                      ),
-                    ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Text(
-                        "${_sourceFiltered.length} : $_currentExPage/ ${_pages.length}"),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.arrow_back_ios,
-                      size: Theme.of(context).iconTheme.size,
-                    ),
-                    onPressed: () {
-                      int newPageId = _currentExPage - 1;
-                      if (_pages.contains(newPageId)) {
-                        _currentExPage = newPageId;
-                        if (widget.onChangedPerPageAndPage != null) {
-                          widget.onChangedPerPageAndPage!(
-                              _currentPerPage ?? 10, _currentExPage);
+                        int newPageId = _currentExPage - 1;
+                        if (_pages.contains(newPageId)) {
+                          _currentExPage = newPageId;
+                          if (widget.onChangedPerPageAndPage != null) {
+                            widget.onChangedPerPageAndPage!(
+                                _currentPerPage ?? 10, _currentExPage);
+                          }
                         }
-                      }
-                    },
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.arrow_forward_ios,
-                      size: Theme.of(context).iconTheme.size,
+                      },
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
                     ),
-                    onPressed: () {
-                      int newPageId = _currentExPage + 1;
-                      if (_pages.contains(newPageId)) {
-                        _currentExPage = newPageId;
-                        if (widget.onChangedPerPageAndPage != null) {
-                          widget.onChangedPerPageAndPage!(
-                              _currentPerPage ?? 10, _currentExPage);
+                    IconButton(
+                      icon: Icon(
+                        Icons.arrow_forward_ios,
+                        size: Theme.of(context).iconTheme.size,
+                      ),
+                      onPressed: () {
+                        int newPageId = _currentExPage + 1;
+                        if (_pages.contains(newPageId)) {
+                          _currentExPage = newPageId;
+                          if (widget.onChangedPerPageAndPage != null) {
+                            widget.onChangedPerPageAndPage!(
+                                _currentPerPage ?? 10, _currentExPage);
+                          }
                         }
-                      }
-                    },
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                  )
-                ],
-                headerDecoration: const BoxDecoration(
-                    color: Colors.transparent,
+                      },
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                    )
+                  ],
+                  rowDecoration:const BoxDecoration(),
+                  headerDecoration: const BoxDecoration(
+                      color: Colors.transparent,
+                      border: Border(
+                          bottom: BorderSide(color: Colors.blue, width: 1))),
+                  selectedDecoration: BoxDecoration(
                     border: Border(
-                        bottom: BorderSide(color: Colors.blue, width: 1))),
-                selectedDecoration: BoxDecoration(
-                  border: Border(
-                      bottom: BorderSide(color: Colors.grey[100]!, width: 1)),
-                  color: Colors.blue[100],
+                        bottom: BorderSide(color: Colors.grey[100]!, width: 1)),
+                    color: Colors.blue[100],
+                  ),
+                  headerTextStyle: Theme.of(context).textTheme.titleMedium,
+                  rowTextStyle: Theme.of(context).textTheme.bodyMedium,
+                  selectedTextStyle: Theme.of(context).textTheme.bodyMedium,
                 ),
-                headerTextStyle: Theme.of(context).textTheme.titleMedium,
-                rowTextStyle: Theme.of(context).textTheme.bodyMedium,
-                selectedTextStyle: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
-          ),
         ]));
   }
 }
@@ -708,5 +721,82 @@ class _DropDownContainer extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+enum SearchButtonStatus {
+  Search,
+  Filter,
+  None,
+}
+
+class SearchButton extends StatefulWidget {
+  final void Function(SearchButtonStatus)? searchButtonStatus;
+   SearchButtonStatus?  searchButtonStatusInit;
+   SearchButton({super.key,required this.searchButtonStatus,this.searchButtonStatusInit});
+
+  @override
+  _SearchButtonState createState() => _SearchButtonState();
+}
+
+class _SearchButtonState extends State<SearchButton> {
+  late SearchButtonStatus _buttonStatus;
+  int _statusCounter = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _buttonStatus = widget.searchButtonStatusInit ?? SearchButtonStatus.None;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        IconButton(
+          icon: Icon(
+            _getButtonIcon(),
+            size: Theme.of(context).iconTheme.size,
+            color: Theme.of(context).iconTheme.color,
+          ),
+          onPressed: () {
+            setState(() {
+              _changeButtonStatus();
+
+              if (widget.searchButtonStatus != null) {
+                widget.searchButtonStatus!(_buttonStatus);
+              }
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  IconData _getButtonIcon() {
+    switch (_buttonStatus) {
+      case SearchButtonStatus.None:
+        return Icons.filter_alt_off_outlined;
+      case SearchButtonStatus.Filter:
+        return Icons.filter_list;
+      case SearchButtonStatus.Search:
+        return Icons.search;
+    }
+  }
+
+  void _changeButtonStatus() {
+    _statusCounter = (_statusCounter + 1) % 3; // 3 durum var
+    switch (_statusCounter) {
+      case 0:
+        _buttonStatus = SearchButtonStatus.None;
+        break;
+      case 1:
+        _buttonStatus = SearchButtonStatus.Filter;
+        break;
+      case 2:
+        _buttonStatus = SearchButtonStatus.Search;
+        break;
+    }
   }
 }

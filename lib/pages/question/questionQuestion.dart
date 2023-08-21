@@ -123,7 +123,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
       var selectedLearn = await widget.mo.appRepository
           .getTblLearnMain(tblQueQuestionMain?.learnId ?? 0);
 
-      selectedLearnId = selectedLearn.id;
+      selectedLearnId = selectedLearn?.id;
       selectedBranch = selectedLearn!.branchId!;
     } else {
       tblQueQuestionMain = TblQueQuestionMain(id: BigInt.parse('0'));
@@ -455,7 +455,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                           spacing: 5,
                           runSpacing: 5,
                           children: [
-                            FutureBuilder<List<TblUtilAcademicYear>>(
+                            FutureBuilder<List<TblUtilAcademicYear>?>(
                               future: academicYearList != null
                                   ? Future.delayed(const Duration(seconds: 0), () {
                                 return academicYearList!;
@@ -506,7 +506,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                                 }
                               },
                             ),
-                            FutureBuilder<List<TblUtilDifficulty>>(
+                            FutureBuilder<List<TblUtilDifficulty>?>(
                               future: difficultyList != null
                                   ? Future.delayed(const Duration(seconds: 0), () {
                                 return difficultyList!;
@@ -556,7 +556,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                                 }
                               },
                             ),
-                            FutureBuilder<List<TblUtilGrade>>(
+                            FutureBuilder<List<TblUtilGrade>?>(
                               future: gradeList != null
                                   ? Future.delayed(const Duration(seconds: 0), () {
                                 return gradeList!;
@@ -611,7 +611,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                                 }
                               },
                             ),
-                            FutureBuilder<List<TblUtilBranch>>(
+                            FutureBuilder<List<TblUtilBranch>?>(
                               future: branchList != null
                                   ? Future.delayed(const Duration(seconds: 0), () {
                                 return branchList!;
@@ -1133,7 +1133,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
             status: 1);
         var insertedItem = await widget.mo.appRepository
             .insertTblQueQuestionAchvMap(toBeInsertItem);
-        usedAchvIds.add(insertedItem.id);
+        usedAchvIds.add(insertedItem!.id);
       }
     }
 
@@ -1161,7 +1161,16 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
     }
   }
   Future<void> submitQuestion() async {
-    Message.showInformationalMessage(context,title: Text('Question Submission',style: widget.mo.theme.textTheme.titleMedium),content: Text('Question has been submitted successfully.',style: widget.mo.theme.textTheme.bodyMedium));
+    Message.showInformationalMessage(context,title: Text('Question Submission',style: widget.mo.theme.textTheme.titleMedium),content: Text('Question has been submitted successfully.',style: widget.mo.theme.textTheme.bodyMedium),actions:[
+      TextButton(
+        onPressed: (){
+          widget.mo.questionId=BigInt.zero;
+          Navigator.pop(context, 'OK');
+          Navigator.pop(context, 'OK');
+        },
+        child:  Icon(Icons.check_circle_outline,size:widget.mo.theme.iconTheme.size),
+      )
+    ]);
   }
 
   launchEditorURL(String editorUrl) async {

@@ -3,17 +3,13 @@ import 'package:egitimax/models/question/questionPageModel.dart';
 import 'package:egitimax/pages/question/questionQuestion.dart';
 import 'package:egitimax/pages/question/questionQuestions.dart';
 import 'package:egitimax/utils/constant/appConstants.dart';
-import 'package:egitimax/utils/helper/localeManager.dart';
-import 'package:egitimax/repositories/appRepository.dart';
 import 'package:egitimax/utils/helper/routeManager.dart';
-import 'package:egitimax/utils/widget/deviceInfo.dart';
 import 'package:egitimax/utils/widget/layoutPage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
 
 class QuestionPage extends StatefulWidget {
-  QuestionPage({super.key});
+  QuestionPage({super.key,this.mo});
+  QuestionPageModel? mo;
   @override
   State<QuestionPage> createState() => _QuestionPageState();
 }
@@ -26,10 +22,18 @@ class _QuestionPageState extends State<QuestionPage> {
     if (AppConstants.questionPageDebugPrintActive == 1) {
       debugPrint("QuestionPage_initState");
     }
-    mo=QuestionPageModel(context: context);
-    mo.userId=BigInt.parse('1');
-    mo.questionId=BigInt.parse('28');
-    mo.selectedPageIndex=1;
+
+    if(widget.mo!=null)
+      {
+        mo=widget.mo!;
+      }else{
+      mo=QuestionPageModel(context: context);
+      mo.userId=BigInt.parse('1');
+      mo.questionId=BigInt.parse('0');
+      mo.selectedPageIndex=1;
+    }
+
+
   }
 
   void overrideTitle(String newCurrentTitle) {
@@ -170,7 +174,7 @@ class _QuestionPageState extends State<QuestionPage> {
           icon: Icons.question_mark_outlined,
           title: mo.lang.libPagesQuestionQuestionPage_questionList),
       TabItem(
-          icon: Icons.edit_note, title: mo.lang.libPagesQuestionQuestionPage_question,),
+          icon:mo.questionId>BigInt.zero ? Icons.edit_note : Icons.add, title: mo.lang.libPagesQuestionQuestionPage_question,),
       TabItem(
           icon: Icons.arrow_back,
           title: mo.lang.libPagesQuestionQuestionPage_back),

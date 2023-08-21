@@ -73,7 +73,7 @@ class QuestionOptionsWithSolution extends StatelessWidget {
     } else {}
 
     var questionDetails = [
-      FutureBuilder<TblUtilAcademicYear>(
+      FutureBuilder<TblUtilAcademicYear?>(
         future:
             appRepository.getTblUtilAcademicYear(question!.academicYear ?? 0),
         builder: (context, snapshot) {
@@ -105,7 +105,7 @@ class QuestionOptionsWithSolution extends StatelessWidget {
           }
         },
       ),
-      FutureBuilder<TblUtilDifficulty>(
+      FutureBuilder<TblUtilDifficulty?>(
         future:
             appRepository.getTblUtilDifficulty(question!.difficultyLev ?? 0),
         builder: (context, snapshot) {
@@ -137,7 +137,7 @@ class QuestionOptionsWithSolution extends StatelessWidget {
           }
         },
       ),
-      FutureBuilder<TblUtilGrade>(
+      FutureBuilder<TblUtilGrade?>(
         future: appRepository.getTblUtilGrade(question!.gradeId ?? 0),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -168,7 +168,7 @@ class QuestionOptionsWithSolution extends StatelessWidget {
           }
         },
       ),
-      FutureBuilder<TblLearnMain>(
+      FutureBuilder<TblLearnMain?>(
         future: appRepository.getTblLearnMain(question!.learnId ?? 0),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -180,7 +180,7 @@ class QuestionOptionsWithSolution extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium,
             ));
           } else if (snapshot.hasData) {
-            return FutureBuilder<TblUtilBranch>(
+            return FutureBuilder<TblUtilBranch?>(
               future:
                   appRepository.getTblUtilBranch(snapshot.data?.branchId ?? 0),
               builder: (context, snapshot) {
@@ -221,7 +221,7 @@ class QuestionOptionsWithSolution extends StatelessWidget {
           }
         },
       ),
-      FutureBuilder<TblLearnMain>(
+      FutureBuilder<TblLearnMain?>(
         future: appRepository.getTblLearnMain(question!.learnId ?? 0),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -270,7 +270,7 @@ class QuestionOptionsWithSolution extends StatelessWidget {
                 itemCount: achievementMap!.length,
                 itemBuilder: (BuildContext context, int index) {
                   int? learnId = achievementMap?[index].achvId;
-                  return FutureBuilder<TblLearnMain>(
+                  return FutureBuilder<TblLearnMain?>(
                     future: appRepository.getTblLearnMain(learnId ?? 0),
                     builder: (context, snapshot)
                     {

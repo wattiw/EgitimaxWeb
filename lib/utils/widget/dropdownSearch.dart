@@ -78,7 +78,13 @@ class DropdownSearchHelper {
             ),
             baseStyle: theme?.textTheme.bodyMedium,
           ),
-      clearButtonProps: clearButtonProps ?? const ClearButtonProps(isVisible: true),
+      clearButtonProps: clearButtonProps ??  ClearButtonProps(isVisible: true,onPressed:(){
+        if(onChanged!=null)
+          {
+            selectedItem=null;
+            onChanged(selectedItem);
+          }
+      }),
       dropdownButtonProps: dropdownButtonProps ??
           const DropdownButtonProps(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -184,7 +190,13 @@ class DropdownSearchHelper {
             ),
             baseStyle: theme?.textTheme.bodyMedium,
           ),
-      clearButtonProps: clearButtonProps ?? const ClearButtonProps(isVisible: true),
+      clearButtonProps: clearButtonProps ??  ClearButtonProps(isVisible: true,onPressed:(){
+        if(onChanged!=null)
+        {
+          selectedItems=[];
+          onChanged(selectedItems);
+        }
+      }),
       dropdownButtonProps: dropdownButtonProps ??
           const DropdownButtonProps(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
