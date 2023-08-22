@@ -134,6 +134,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
         }
 
     } else {
+      openQuestionEditor=true;
       tblQueQuestionMain = TblQueQuestionMain(id: BigInt.parse('0'));
       selectedLocation = tblUserMain?.locationId ?? 0;
 

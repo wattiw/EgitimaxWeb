@@ -32,7 +32,8 @@ class ResponsiveDatatableHelper extends StatefulWidget {
       this.searchButtonStatusInit,
       this.searchButtonStatus,
       this.rowActions,
-      this.dropContainer})
+      this.dropContainer,
+      this.dropContainerIsActive})
       : super(key: key);
 
   final String tableKey;
@@ -62,6 +63,7 @@ class ResponsiveDatatableHelper extends StatefulWidget {
   final void Function(SearchButtonStatus)? searchButtonStatus;
   Widget? rowActions;
   Widget Function(Map<String, dynamic>)? dropContainer;
+  bool? dropContainerIsActive;
 
   @override
   _ResponsiveDatatableHelperState createState() =>
@@ -421,6 +423,7 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
                 selecteds: _selecteds,
                 showSelect: _showSelect,
                 autoHeight: false,
+                isExpandRows:widget.dropContainerIsActive==true ? true :false,
                 dropContainer: (data) {
 
                   if(widget.dropContainer!=null)
@@ -758,6 +761,7 @@ class _SearchButtonState extends State<SearchButton> {
     return Row(
       children: [
         IconButton(
+    tooltip:'Filter',
           icon: Icon(
             _getButtonIcon(),
             size: Theme.of(context).iconTheme.size,

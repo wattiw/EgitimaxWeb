@@ -54,11 +54,15 @@ class _QuestionListState extends State<QuestionList> {
   SearchButtonStatus? searchButtonStatusInit;
 
   bool isLoadFirst = false;
+  bool isEnableDomainSubdomainSubjectSearch = true;
+  bool isMyFavoriteQuestion = false;
+  bool searchInEgitimax = false;
   TextEditingController? controllerSearchInQuestion;
 
   @override
   void initState() {
     super.initState();
+    searchButtonStatusInit = SearchButtonStatus.Filter;
     controllerSearchInQuestion = TextEditingController(text: '');
     filter = ViewQueQuestionMain(id: BigInt.zero);
     currentPerPage = widget.currentPerPage;
@@ -68,13 +72,15 @@ class _QuestionListState extends State<QuestionList> {
 
   Timer? _textEditingTimer;
 
-  void _onSearchEditingComplete(String value,int seconds) {
+  void _onSearchEditingComplete(String value, int seconds) {
     _textEditingTimer?.cancel();
-    _textEditingTimer = Timer( Duration(seconds: seconds), () {
-      setState(() {
-        filter!.questionPlainText = value;
-      });
+    _textEditingTimer = Timer(Duration(seconds: seconds), () {
+      filter!.questionPlainText = value;
     });
+
+    if (value == null) {
+      setState(() {});
+    }
   }
 
   void _clearSearchText() {
@@ -83,7 +89,6 @@ class _QuestionListState extends State<QuestionList> {
       _textEditingTimer?.cancel();
     });
   }
-
 
   @override
   void dispose() {
@@ -154,8 +159,8 @@ class _QuestionListState extends State<QuestionList> {
                     if (entry.containsKey('QuestionPlainText')) {
                       var value = entry['QuestionPlainText'];
                       if (value is String) {
-                        if (value.length > 25) {
-                          entry['QuestionPlainText'] = value.substring(0, 25);
+                        if (value.length > 100) {
+                          entry['QuestionPlainText'] = value.substring(0, 100);
                         }
                       }
                     }
@@ -169,7 +174,11 @@ class _QuestionListState extends State<QuestionList> {
                   pages: pages,
                   title: TextButton.icon(
                     onPressed: () => {setState(() {})},
-                    icon: const Icon(Icons.refresh),
+                    icon: Icon(
+                      Icons.refresh,
+                      color: Theme.of(context).iconTheme.color,
+                      size: Theme.of(context).iconTheme.size,
+                    ),
                     label: MediaQuery.of(context).size.width > 500
                         ? Text(
                             "Refresh",
@@ -191,7 +200,11 @@ class _QuestionListState extends State<QuestionList> {
                               (context) => QuestionPage(mo: mo));
                           RouteManager().navigateTo('/QuestionPage');
                         },
-                        icon: const Icon(Icons.add),
+                        icon: Icon(
+                          Icons.add,
+                          color: Theme.of(context).iconTheme.color,
+                          size: Theme.of(context).iconTheme.size,
+                        ),
                         label: Text(
                           "Add Question",
                           style: Theme.of(context).textTheme.titleMedium,
@@ -226,7 +239,11 @@ class _QuestionListState extends State<QuestionList> {
                                 : wrapWidth ~/ AppConstants.lookupObjectWidth;
                         return CollapseChild(
                           isCollapsed: false,
-                          prefixIcon: const Icon(Icons.filter_alt_outlined),
+                          prefixIcon: Icon(
+                            Icons.filter_list,
+                            color: Theme.of(context).iconTheme.color,
+                            size: Theme.of(context).iconTheme.size,
+                          ),
                           buttonStyle: CollapseButtonStyle(
                               showText: 'Show Filters',
                               hideText: 'Hide Filters',
@@ -302,12 +319,14 @@ class _QuestionListState extends State<QuestionList> {
                                                         filter?.academicYear)
                                                 : null,
                                             onChanged: (selectedItem) {
-                                              setState(() {
-                                                filter?.academicYear =
-                                                    selectedItem != null
-                                                        ? selectedItem!.id
-                                                        : null;
-                                              });
+                                              filter?.academicYear =
+                                                  selectedItem != null
+                                                      ? selectedItem!.id
+                                                      : null;
+
+                                              if (selectedItem == null) {
+                                                setState(() {});
+                                              }
                                             },
                                           );
                                         } else {
@@ -372,12 +391,14 @@ class _QuestionListState extends State<QuestionList> {
                                                         filter?.difficultyLev)
                                                 : null,
                                             onChanged: (selectedItem) {
-                                              setState(() {
-                                                filter?.difficultyLev =
-                                                    selectedItem != null
-                                                        ? selectedItem!.id
-                                                        : null;
-                                              });
+                                              filter?.difficultyLev =
+                                                  selectedItem != null
+                                                      ? selectedItem!.id
+                                                      : null;
+
+                                              if (selectedItem == null) {
+                                                setState(() {});
+                                              }
                                             },
                                           );
                                         } else {
@@ -442,13 +463,22 @@ class _QuestionListState extends State<QuestionList> {
                                                         filter?.gradeId)
                                                 : null,
                                             onChanged: (selectedItem) {
-                                              setState(() {
-                                                filter?.gradeId =
-                                                    selectedItem != null
-                                                        ? selectedItem!.id
-                                                        : null;
-                                                filter?.learnId = null;
-                                              });
+                                              filter?.gradeId =
+                                                  selectedItem != null
+                                                      ? selectedItem!.id
+                                                      : null;
+                                              filter?.learnId = null;
+
+                                              if (selectedItem == null ||
+                                                  (filter!.branchId != null &&
+                                                      filter!.gradeId !=
+                                                          null && isEnableDomainSubdomainSubjectSearch) ||
+                                                  (filter!.branchId != null &&
+                                                      filter!.gradeId != null &&
+                                                      filter!.branchId! > 0 &&
+                                                      filter!.gradeId! > 0 && isEnableDomainSubdomainSubjectSearch)) {
+                                                setState(() {});
+                                              }
                                             },
                                           );
                                         } else {
@@ -513,13 +543,22 @@ class _QuestionListState extends State<QuestionList> {
                                                         filter?.branchId)
                                                 : null,
                                             onChanged: (selectedItem) {
-                                              setState(() {
-                                                filter?.branchId =
-                                                    selectedItem != null
-                                                        ? selectedItem!.id
-                                                        : null;
-                                                filter?.learnId = null;
-                                              });
+                                              filter?.branchId =
+                                                  selectedItem != null
+                                                      ? selectedItem!.id
+                                                      : null;
+                                              filter?.learnId = null;
+
+                                              if (selectedItem == null ||
+                                                  (filter!.branchId != null &&
+                                                      filter!.gradeId !=
+                                                          null && isEnableDomainSubdomainSubjectSearch) ||
+                                                  (filter!.branchId != null &&
+                                                      filter!.gradeId != null &&
+                                                      filter!.branchId! > 0 &&
+                                                      filter!.gradeId! > 0 && isEnableDomainSubdomainSubjectSearch)) {
+                                                setState(() {});
+                                              }
                                             },
                                           );
                                         } else {
@@ -533,60 +572,226 @@ class _QuestionListState extends State<QuestionList> {
                                 const SizedBox(
                                   height: 5,
                                 ),
-                                Wrap(
-                                  alignment: WrapAlignment.start,
-                                  runAlignment: WrapAlignment.start,
-                                  spacing: 5,
-                                  runSpacing: 5,
+                                TextField(
+                                  controller: controllerSearchInQuestion,
+                                  decoration: InputDecoration(
+                                    constraints: BoxConstraints(
+                                        maxHeight: 50,
+                                        maxWidth: MediaQuery.of(context)
+                                                    .size
+                                                    .width <=
+                                                500
+                                            ? MediaQuery.of(context).size.width
+                                            : double.parse(divisionResult
+                                                        .toString()) *
+                                                    AppConstants
+                                                        .lookupObjectWidth +
+                                                (divisionResult - 1) * 5),
+                                    suffixIcon: IconButton(
+                                      tooltip: 'Clear',
+                                      icon: Icon(
+                                        Icons.clear,
+                                        size: Theme.of(context).iconTheme.size,
+                                        color:
+                                            Theme.of(context).iconTheme.color,
+                                      ),
+                                      onPressed: _clearSearchText,
+                                    ),
+                                    alignLabelWithHint: true,
+                                    filled: true,
+                                    fillColor: Colors.transparent,
+                                    labelText: 'If Contain Question',
+                                    labelStyle:
+                                        Theme.of(context).textTheme.titleMedium,
+                                    hintText: 'Search in question...',
+                                    hintStyle:
+                                        Theme.of(context).textTheme.bodySmall,
+                                    contentPadding: const EdgeInsets.all(8),
+                                    isDense: true,
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          const BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(8),
+                                      gapPadding: 4, // Reduced gap padding
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          const BorderSide(color: Colors.blue),
+                                      borderRadius: BorderRadius.circular(8),
+                                      gapPadding: 4,
+                                    ),
+                                  ),
+                                  onEditingComplete: () {
+                                    _onSearchEditingComplete(
+                                        controllerSearchInQuestion!.text, 0);
+                                  },
+                                  onChanged: (value) {
+                                    _onSearchEditingComplete(value, 5);
+                                  },
+                                  onSubmitted: (value) {
+                                    _onSearchEditingComplete(value, 0);
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                if (isEnableDomainSubdomainSubjectSearch)
+                                  Wrap(
+                                    alignment: WrapAlignment.start,
+                                    runAlignment: WrapAlignment.start,
+                                    spacing: 5,
+                                    runSpacing: 5,
+                                    children: [
+                                      LearnHierarchyDrops(
+                                        width: MediaQuery.of(context)
+                                                    .size
+                                                    .width <=
+                                                500
+                                            ? MediaQuery.of(context).size.width
+                                            : double.parse(divisionResult
+                                                        .toString()) *
+                                                    AppConstants
+                                                        .lookupObjectWidth +
+                                                (divisionResult - 1) * 5,
+                                        height: 5 * 50,
+                                        showAchievements: false,
+                                        selectedGrade: filter?.gradeId,
+                                        selectedBranch: filter?.branchId,
+                                        selectedLocation:
+                                            tblUserMain?.locationId,
+                                        selectedLearnId: filter?.learnId,
+                                        onChangedLearnId: (fSelectedLearnId) {
+                                          setState(() {
+                                            filter?.learnId = fSelectedLearnId;
+                                          });
+                                        },
+                                        onChangedAchievements:
+                                            (List<int> selectedAchievements) {},
+                                      ),
+                                    ],
+                                  ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    LearnHierarchyDrops(
-                                      width: MediaQuery.of(context)
-                                                  .size
-                                                  .width <=
-                                              500
-                                          ? MediaQuery.of(context).size.width
-                                          : double.parse(divisionResult
-                                                      .toString()) *
-                                                  AppConstants
-                                                      .lookupObjectWidth +
-                                              (divisionResult - 1) * 5,
-                                      height: 5 * 50,
-                                      showAchievements: false,
-                                      selectedGrade: filter?.gradeId,
-                                      selectedBranch: filter?.branchId,
-                                      selectedLocation: tblUserMain?.locationId,
-                                      selectedLearnId: filter?.learnId,
-                                      onChangedLearnId: (fSelectedLearnId) {
+                                    Checkbox(
+                                      value:
+                                          isEnableDomainSubdomainSubjectSearch,
+                                      onChanged: (newValue) {
                                         setState(() {
-                                          filter?.learnId = fSelectedLearnId;
+                                          isEnableDomainSubdomainSubjectSearch =
+                                              newValue ?? false;
                                         });
                                       },
-                                      onChangedAchievements:
-                                          (List<int> selectedAchievements) {},
                                     ),
-                                    TextField(
-                                      controller: controllerSearchInQuestion,
-                                      decoration: InputDecoration(
-                                        hintText: 'Search in question...',
-                                        border: InputBorder.none,
-                                        labelStyle: Theme.of(context).textTheme.bodySmall,
-                                        suffixIcon: IconButton(
-                                          tooltip:'Clear',
-                                          icon: Icon(Icons.clear,size: Theme.of(context).iconTheme.size,color:Theme.of(context).iconTheme.color ,),
-                                          onPressed: _clearSearchText,
-                                        ),
-                                      ),
-                                      onEditingComplete: () {
-                                        _onSearchEditingComplete(controllerSearchInQuestion!.text,0);
-                                      },
-                                      onChanged: (value) {
-                                        _onSearchEditingComplete(value,5);
-                                      },
-                                      onSubmitted: (value) {
-                                        _onSearchEditingComplete(value,0);
-                                      },
+                                    Text(
+                                      '${isEnableDomainSubdomainSubjectSearch == true ? 'Enabled' : 'Disabled'} Domain/SubDomain/Subject Search',
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
                                     ),
                                   ],
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Checkbox(
+                                      value:
+                                      isMyFavoriteQuestion,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          isMyFavoriteQuestion =
+                                              newValue ?? false;
+                                        });
+                                      },
+                                    ),
+                                    Text(
+                                      'My Favorite Question',
+                                      style:
+                                      Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Checkbox(
+                                      value:
+                                      searchInEgitimax,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          searchInEgitimax =
+                                              newValue ?? false;
+                                        });
+                                      },
+                                    ),
+                                    Text(
+                                      'Search In Egitimax',
+                                      style:
+                                      Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width <=
+                                          500
+                                      ? MediaQuery.of(context).size.width
+                                      : double.parse(
+                                                  divisionResult.toString()) *
+                                              AppConstants.lookupObjectWidth +
+                                          (divisionResult - 1) * 5,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              filter!.difficultyLev = null;
+                                              filter!.academicYear = null;
+                                              filter!.gradeId = null;
+                                              filter!.branchId = null;
+                                              filter!.learnId = null;
+                                              filter!.questionPlainText = null;
+                                            });
+                                          },
+                                          child: Text(
+                                            'Temizle',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium,
+                                          )),
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            setState(() {});
+                                          },
+                                          child: Text(
+                                            'Ara',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium,
+                                          )),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -602,32 +807,73 @@ class _QuestionListState extends State<QuestionList> {
                   },
                   headers: [
                     DatatableHeader(
-                        text: "Id",
-                        value: "Id",
+                        text: "Question",
+                        value: "QuestionPlainText",
                         show: true,
                         sortable: true,
-                        textAlign: TextAlign.center),
-                    DatatableHeader(
-                        text: "Academic Year",
-                        value: "AcademicYearName",
-                        show: true,
-                        sortable: true,
-                        textAlign: TextAlign.center),
-                    DatatableHeader(
-                        text: "Difficulty Level",
-                        value: "DifficultyLevName",
-                        show: true,
-                        sortable: true,
-                        textAlign: TextAlign.center),
-                    DatatableHeader(
-                        text: "Grade",
-                        value: "GradeName",
-                        show: true,
-                        sortable: true,
-                        textAlign: TextAlign.center),
+                        textAlign: TextAlign.center,
+                        sourceBuilder: (value, row) {
+                          return TextButton(
+                            onPressed: () {
+                              Message.showInformationalMessage(
+                                context,
+                                title: Text(
+                                  'Question Details',
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
+                                ),
+                                content: SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.75,
+                                  // Remove the height setting to let the content determine its own height
+                                  child: SingleChildScrollView(
+                                    child: QuestionOptionsWithSolution(
+                                        questionId: row['Id']),
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, 'Cancel'),
+                                    child: Icon(
+                                      Icons.cancel_outlined,
+                                      size: Theme.of(context).iconTheme.size,
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context, 'OK');
+                                    },
+                                    child: Icon(
+                                      Icons.check_circle_outline,
+                                      size: Theme.of(context).iconTheme.size,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.50,
+                              child: Text(
+                                value,
+                                textAlign: TextAlign.start,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          );
+                        }),
                     DatatableHeader(
                         text: "Branch",
                         value: "BranchName",
+                        show: true,
+                        sortable: true,
+                        textAlign: TextAlign.center),
+
+                    DatatableHeader(
+                        text: "Grade",
+                        value: "GradeName",
                         show: true,
                         sortable: true,
                         textAlign: TextAlign.center),
@@ -639,11 +885,25 @@ class _QuestionListState extends State<QuestionList> {
                         sortable: true,
                         textAlign: TextAlign.center),
                     DatatableHeader(
-                        text: "Question",
-                        value: "QuestionPlainText",
+                        text: "Difficulty Level",
+                        value: "DifficultyLevName",
                         show: true,
                         sortable: true,
                         textAlign: TextAlign.center),
+
+/*                    DatatableHeader(
+                        text: "Id",
+                        value: "Id",
+                        show: true,
+                        sortable: true,
+                        textAlign: TextAlign.center),
+                    DatatableHeader(
+                        text: "Academic Year",
+                        value: "AcademicYearName",
+                        show: true,
+                        sortable: true,
+                        textAlign: TextAlign.center),
+
                     DatatableHeader(
                         text: "Is Public",
                         value: "IsPublicName",
@@ -673,14 +933,14 @@ class _QuestionListState extends State<QuestionList> {
                         value: "CreatedOn",
                         show: true,
                         sortable: true,
-                        textAlign: TextAlign.center),
+                        textAlign: TextAlign.center),*/
 
                     //DatatableHeader(text: "Question Text", value: "QuestionText", show: true, sortable: true, textAlign: TextAlign.center),
                     //DatatableHeader( text: "Question Token", value: "QuestionToken", show: true,  sortable: true,  textAlign: TextAlign.center),
                     //DatatableHeader( text: "Relation Id", value: "RelationId", show: true,  sortable: true,  textAlign: TextAlign.center),
                     //DatatableHeader(text: "Resolution", value: "Resolution", show: true, sortable: true, textAlign: TextAlign.center),
 
-                    DatatableHeader(
+                    /*                 DatatableHeader(
                         text: "Updated By",
                         value: "UpdatedByNameSurname",
                         show: true,
@@ -697,149 +957,161 @@ class _QuestionListState extends State<QuestionList> {
                         value: "StatusName",
                         show: true,
                         sortable: true,
-                        textAlign: TextAlign.center),
+                        textAlign: TextAlign.center),*/
+
                     DatatableHeader(
                         text: "Actions",
                         value: "Actions",
                         show: true,
                         sortable: false,
+                        textAlign: TextAlign.center,
                         sourceBuilder: (value, row) {
-                          return DropdownButton<String>(
-                            hint: const Text('İşlem Seçin'),
-                            items: <String>['Ekle', 'Sil', 'Güncelle', 'Detay']
-                                .map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Row(
-                                  children: [
-                                    if (value == 'Ekle')
-                                      Icon(
-                                        Icons.add,
-                                        size: Theme.of(context).iconTheme.size,
-                                        color:
-                                            Theme.of(context).iconTheme.color,
-                                      ),
-                                    if (value == 'Sil')
-                                      Icon(
-                                        Icons.delete,
-                                        size: Theme.of(context).iconTheme.size,
-                                        color:
-                                            Theme.of(context).iconTheme.color,
-                                      ),
-                                    if (value == 'Güncelle')
-                                      Icon(
-                                        Icons.edit,
-                                        size: Theme.of(context).iconTheme.size,
-                                        color:
-                                            Theme.of(context).iconTheme.color,
-                                      ),
-                                    if (value == 'Detay')
-                                      Icon(
-                                        Icons.description_outlined,
-                                        size: Theme.of(context).iconTheme.size,
-                                        color:
-                                            Theme.of(context).iconTheme.color,
-                                      ),
-                                    const SizedBox(width: 5),
-                                    Text(
-                                      value,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (String? selectedValue) {
-                              var mo = QuestionPageModel(context: context);
-                              mo.userId = widget.userId;
-
-                              mo.selectedPageIndex = 2;
-
-                              if (selectedValue == 'Ekle') {
-                                mo.questionId = BigInt.zero;
-                              } else if (selectedValue == 'Sil') {
-                                Message.showWarningMessage(context,
-                                    title: Text('Question Delete',
+                          return Container(
+                            alignment: Alignment.center,
+                            child: DropdownButton<String>(
+                              underline: Container(),
+                              hint: const Text('İşlem Seçin'),
+                              items: <String>['Sil', 'Güncelle', 'Detay']
+                                  .map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Row(
+                                    children: [
+                                      if (value == 'Ekle')
+                                        Icon(
+                                          Icons.add,
+                                          size:
+                                              Theme.of(context).iconTheme.size,
+                                          color:
+                                              Theme.of(context).iconTheme.color,
+                                        ),
+                                      if (value == 'Sil')
+                                        Icon(
+                                          Icons.delete,
+                                          size:
+                                              Theme.of(context).iconTheme.size,
+                                          color:
+                                              Theme.of(context).iconTheme.color,
+                                        ),
+                                      if (value == 'Güncelle')
+                                        Icon(
+                                          Icons.edit,
+                                          size:
+                                              Theme.of(context).iconTheme.size,
+                                          color:
+                                              Theme.of(context).iconTheme.color,
+                                        ),
+                                      if (value == 'Detay')
+                                        Icon(
+                                          Icons.description_outlined,
+                                          size:
+                                              Theme.of(context).iconTheme.size,
+                                          color:
+                                              Theme.of(context).iconTheme.color,
+                                        ),
+                                      const SizedBox(width: 5),
+                                      Text(
+                                        value,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .titleMedium),
-                                    content: Text(
-                                        'Do you want to delete question ?',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, 'Cancel'),
-                                        child: Icon(Icons.cancel_outlined,
-                                            size: Theme.of(context)
-                                                .iconTheme
-                                                .size),
+                                            .bodyMedium,
                                       ),
-                                      TextButton(
-                                        onPressed: () {
-                                          deleteQuestion(row['Id'], context);
-                                          Navigator.pop(context, 'OK');
-                                        },
-                                        child: Icon(Icons.check_circle_outline,
-                                            size: Theme.of(context)
-                                                .iconTheme
-                                                .size),
-                                      ),
-                                    ]);
-                              } else if (selectedValue == 'Güncelle') {
-                                mo.questionId = row['Id'];
-                              } else if (selectedValue == 'Detay') {
-                                Message.showInformationalMessage(context,
-                                    title: Text('Question Details',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium),
-                                    content: SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.75,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.75,
-                                      child: SingleChildScrollView(
-                                        child: QuestionOptionsWithSolution(
-                                            questionId: row['Id']),
-                                      ),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, 'Cancel'),
-                                        child: Icon(Icons.cancel_outlined,
-                                            size: Theme.of(context)
-                                                .iconTheme
-                                                .size),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context, 'OK');
-                                        },
-                                        child: Icon(Icons.check_circle_outline,
-                                            size: Theme.of(context)
-                                                .iconTheme
-                                                .size),
-                                      ),
-                                    ]);
-                              }
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String? selectedValue) {
+                                var mo = QuestionPageModel(context: context);
+                                mo.userId = widget.userId;
 
-                              if (selectedValue == 'Güncelle' ||
-                                  selectedValue == 'Ekle') {
-                                RouteManager().addRoute('/QuestionPage',
-                                    (context) => QuestionPage(mo: mo));
-                                RouteManager().navigateTo('/QuestionPage');
-                              }
-                            },
+                                mo.selectedPageIndex = 2;
+
+                                if (selectedValue == 'Ekle') {
+                                  mo.questionId = BigInt.zero;
+                                } else if (selectedValue == 'Sil') {
+                                  Message.showWarningMessage(context,
+                                      title: Text('Question Delete',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium),
+                                      content: Text(
+                                          'Do you want to delete question ?',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, 'Cancel'),
+                                          child: Icon(Icons.cancel_outlined,
+                                              size: Theme.of(context)
+                                                  .iconTheme
+                                                  .size),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            deleteQuestion(row['Id'], context);
+                                            Navigator.pop(context, 'OK');
+                                          },
+                                          child: Icon(
+                                              Icons.check_circle_outline,
+                                              size: Theme.of(context)
+                                                  .iconTheme
+                                                  .size),
+                                        ),
+                                      ]);
+                                } else if (selectedValue == 'Güncelle') {
+                                  mo.questionId = row['Id'];
+                                } else if (selectedValue == 'Detay') {
+                                  Message.showInformationalMessage(context,
+                                      title: Text('Question Details',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium),
+                                      content: SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.75,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.75,
+                                        child: SingleChildScrollView(
+                                          child: QuestionOptionsWithSolution(
+                                              questionId: row['Id']),
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, 'Cancel'),
+                                          child: Icon(Icons.cancel_outlined,
+                                              size: Theme.of(context)
+                                                  .iconTheme
+                                                  .size),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context, 'OK');
+                                          },
+                                          child: Icon(
+                                              Icons.check_circle_outline,
+                                              size: Theme.of(context)
+                                                  .iconTheme
+                                                  .size),
+                                        ),
+                                      ]);
+                                }
+
+                                if (selectedValue == 'Güncelle' ||
+                                    selectedValue == 'Ekle') {
+                                  RouteManager().addRoute('/QuestionPage',
+                                      (context) => QuestionPage(mo: mo));
+                                  RouteManager().navigateTo('/QuestionPage');
+                                }
+                              },
+                            ),
                           );
-                        },
-                        textAlign: TextAlign.center)
+                        })
                   ],
                   source: source,
                   selectedItems: widget.selectedItems ?? [],
