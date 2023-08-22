@@ -303,6 +303,7 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
       _actions.addAll(widget.actions!);
     }
 
+    if(false)
     _actions.add(SearchButton(
       searchButtonStatusInit: widget.searchButtonStatusInit,
       searchButtonStatus: (v) {

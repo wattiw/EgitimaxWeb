@@ -57,6 +57,9 @@ class _QuestionListState extends State<QuestionList> {
   bool isEnableDomainSubdomainSubjectSearch = true;
   bool isMyFavoriteQuestion = false;
   bool searchInEgitimax = false;
+
+  bool runDbSearchRequest = true;
+  List<ViewQueQuestionMain>? tableData;
   TextEditingController? controllerSearchInQuestion;
 
   @override
@@ -97,9 +100,9 @@ class _QuestionListState extends State<QuestionList> {
   }
 
   Future<void> loadDefaults() async {
-    tblUserMain = await appRepository.getTblUserMain(widget.userId);
-
     if (!isLoadFirst) {
+      tblUserMain = await appRepository.getTblUserMain(widget.userId);
+
       filter!.userId = widget.userId;
 
       var defaultAcademicYear = await appRepository.getAllTblUtilAcademicYear();
@@ -121,10 +124,13 @@ class _QuestionListState extends State<QuestionList> {
       isLoadFirst = true;
     }
 
-    var pageCount =
-        await appRepository.getAllWithPageCountByFilterViewQueQuestionMain(
-            widget.userId, currentPerPage, filter);
-    pages = List.generate(pageCount ?? 10, (index) => index + 1);
+    if (runDbSearchRequest) {
+      var pageCount =
+          await appRepository.getAllWithPageCountByFilterViewQueQuestionMain(
+              widget.userId, currentPerPage, filter);
+      pages = List.generate(pageCount ?? 10, (index) => index + 1);
+
+    }
   }
 
   @override
@@ -138,8 +144,12 @@ class _QuestionListState extends State<QuestionList> {
           return Center(child: Text('Error: ${snapshotLoadDefaults.error}'));
         } else {
           return FutureBuilder<List<ViewQueQuestionMain>?>(
-            future: appRepository.getAllWithPageByFilterViewQueQuestionMain(
-                widget.userId, currentPerPage, currentPage, filter),
+            future: runDbSearchRequest != true
+                ? Future.delayed(const Duration(seconds: 0), () {
+                    return tableData;
+                  })
+                : appRepository.getAllWithPageByFilterViewQueQuestionMain(
+                    widget.userId, currentPerPage, currentPage, filter),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -166,6 +176,10 @@ class _QuestionListState extends State<QuestionList> {
                     }
                   }
                 }
+
+                runDbSearchRequest = false;
+                tableData = snapshot.data;
+
                 return ResponsiveDatatableHelper(
                   searchKey: 'QuestionPlainText',
                   tableKey: 'Id',
@@ -471,12 +485,13 @@ class _QuestionListState extends State<QuestionList> {
 
                                               if (selectedItem == null ||
                                                   (filter!.branchId != null &&
-                                                      filter!.gradeId !=
-                                                          null && isEnableDomainSubdomainSubjectSearch) ||
+                                                      filter!.gradeId != null &&
+                                                      isEnableDomainSubdomainSubjectSearch) ||
                                                   (filter!.branchId != null &&
                                                       filter!.gradeId != null &&
                                                       filter!.branchId! > 0 &&
-                                                      filter!.gradeId! > 0 && isEnableDomainSubdomainSubjectSearch)) {
+                                                      filter!.gradeId! > 0 &&
+                                                      isEnableDomainSubdomainSubjectSearch)) {
                                                 setState(() {});
                                               }
                                             },
@@ -551,12 +566,13 @@ class _QuestionListState extends State<QuestionList> {
 
                                               if (selectedItem == null ||
                                                   (filter!.branchId != null &&
-                                                      filter!.gradeId !=
-                                                          null && isEnableDomainSubdomainSubjectSearch) ||
+                                                      filter!.gradeId != null &&
+                                                      isEnableDomainSubdomainSubjectSearch) ||
                                                   (filter!.branchId != null &&
                                                       filter!.gradeId != null &&
                                                       filter!.branchId! > 0 &&
-                                                      filter!.gradeId! > 0 && isEnableDomainSubdomainSubjectSearch)) {
+                                                      filter!.gradeId! > 0 &&
+                                                      isEnableDomainSubdomainSubjectSearch)) {
                                                 setState(() {});
                                               }
                                             },
@@ -600,7 +616,7 @@ class _QuestionListState extends State<QuestionList> {
                                     alignLabelWithHint: true,
                                     filled: true,
                                     fillColor: Colors.transparent,
-                                    labelText: 'If Contain Question',
+                                    labelText: 'Question',
                                     labelStyle:
                                         Theme.of(context).textTheme.titleMedium,
                                     hintText: 'Search in question...',
@@ -704,8 +720,7 @@ class _QuestionListState extends State<QuestionList> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Checkbox(
-                                      value:
-                                      isMyFavoriteQuestion,
+                                      value: isMyFavoriteQuestion,
                                       onChanged: (newValue) {
                                         setState(() {
                                           isMyFavoriteQuestion =
@@ -716,7 +731,7 @@ class _QuestionListState extends State<QuestionList> {
                                     Text(
                                       'My Favorite Question',
                                       style:
-                                      Theme.of(context).textTheme.bodySmall,
+                                          Theme.of(context).textTheme.bodySmall,
                                     ),
                                   ],
                                 ),
@@ -729,19 +744,17 @@ class _QuestionListState extends State<QuestionList> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Checkbox(
-                                      value:
-                                      searchInEgitimax,
+                                      value: searchInEgitimax,
                                       onChanged: (newValue) {
                                         setState(() {
-                                          searchInEgitimax =
-                                              newValue ?? false;
+                                          searchInEgitimax = newValue ?? false;
                                         });
                                       },
                                     ),
                                     Text(
                                       'Search In Egitimax',
                                       style:
-                                      Theme.of(context).textTheme.bodySmall,
+                                          Theme.of(context).textTheme.bodySmall,
                                     ),
                                   ],
                                 ),
@@ -766,6 +779,7 @@ class _QuestionListState extends State<QuestionList> {
                                       ElevatedButton(
                                           onPressed: () {
                                             setState(() {
+                                              runDbSearchRequest = true;
                                               filter!.difficultyLev = null;
                                               filter!.academicYear = null;
                                               filter!.gradeId = null;
@@ -782,6 +796,7 @@ class _QuestionListState extends State<QuestionList> {
                                           )),
                                       ElevatedButton(
                                           onPressed: () {
+                                            runDbSearchRequest = true;
                                             setState(() {});
                                           },
                                           child: Text(
