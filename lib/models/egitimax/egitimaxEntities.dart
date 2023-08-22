@@ -3136,7 +3136,9 @@ class ViewQueQuestionMain {
   String? relationId ;
   String? questionToken ;
   String? questionText ;
+  String? questionPlainText ;
   String? resolution ;
+  String? resolutionPlainText ;
   int? isPublic ;
   String? isPublicName ;
   int? status ;
@@ -3167,7 +3169,9 @@ class ViewQueQuestionMain {
     this.relationId,
     this.questionToken,
     this.questionText,
+    this.questionPlainText,
     this.resolution,
+    this.resolutionPlainText,
     this.isPublic,
     this.isPublicName,
     this.status,
@@ -3199,7 +3203,9 @@ class ViewQueQuestionMain {
     relationId = json['relationId'] as String?;
     questionToken = json['questionToken'] as String?;
     questionText = json['questionText'] as String?;
+    questionPlainText = json['questionPlainText'] as String?;
     resolution = json['resolution'] as String?;
+    resolutionPlainText = json['resolutionPlainText'] as String?;
     isPublic = json['isPublic'] as int?;
     isPublicName = json['isPublicName'] as String?;
     status = json['status'] as int?;
@@ -3232,7 +3238,9 @@ class ViewQueQuestionMain {
     data['RelationId'] = relationId;
     data['QuestionToken'] = questionToken;
     data['QuestionText'] = questionText;
+    data['QuestionPlainText'] = questionPlainText;
     data['Resolution'] = resolution;
+    data['ResolutionPlainText'] = resolutionPlainText;
     data['IsPublic'] = isPublic;
     data['IsPublicName'] = isPublicName;
     data['Status'] = status;

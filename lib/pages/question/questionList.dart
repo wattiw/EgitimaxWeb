@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:egitimax/models/egitimax/egitimaxEntities.dart';
 import 'package:egitimax/models/question/questionPageModel.dart';
 import 'package:egitimax/pages/question/questionPage.dart';
@@ -8,6 +10,8 @@ import 'package:egitimax/utils/helper/routeManager.dart';
 import 'package:egitimax/utils/widget/collapseChild.dart';
 import 'package:egitimax/utils/widget/dropdownSearch.dart';
 import 'package:egitimax/utils/widget/learnHierarchyDrops.dart';
+import 'package:egitimax/utils/widget/message.dart';
+import 'package:egitimax/utils/widget/questionOptionsWithSolution.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_table/responsive_table.dart';
 
@@ -50,14 +54,41 @@ class _QuestionListState extends State<QuestionList> {
   SearchButtonStatus? searchButtonStatusInit;
 
   bool isLoadFirst = false;
+  TextEditingController? controllerSearchInQuestion;
 
   @override
   void initState() {
     super.initState();
+    controllerSearchInQuestion = TextEditingController(text: '');
     filter = ViewQueQuestionMain(id: BigInt.zero);
     currentPerPage = widget.currentPerPage;
     currentPage = widget.currentPage;
     loadDefaults();
+  }
+
+  Timer? _textEditingTimer;
+
+  void _onSearchEditingComplete(String value,int seconds) {
+    _textEditingTimer?.cancel();
+    _textEditingTimer = Timer( Duration(seconds: seconds), () {
+      setState(() {
+        filter!.questionPlainText = value;
+      });
+    });
+  }
+
+  void _clearSearchText() {
+    setState(() {
+      controllerSearchInQuestion!.clear();
+      _textEditingTimer?.cancel();
+    });
+  }
+
+
+  @override
+  void dispose() {
+    _textEditingTimer?.cancel(); // Timer'ı temizle
+    super.dispose();
   }
 
   Future<void> loadDefaults() async {
@@ -117,8 +148,21 @@ class _QuestionListState extends State<QuestionList> {
                   }).toList();
                 }
 
+                //QuestionPlainText  ilk 25 kareter al sadece;
+                if (source != null) {
+                  for (var entry in source) {
+                    if (entry.containsKey('QuestionPlainText')) {
+                      var value = entry['QuestionPlainText'];
+                      if (value is String) {
+                        if (value.length > 25) {
+                          entry['QuestionPlainText'] = value.substring(0, 25);
+                        }
+                      }
+                    }
+                  }
+                }
                 return ResponsiveDatatableHelper(
-                  searchKey: 'QuestionToken',
+                  searchKey: 'QuestionPlainText',
                   tableKey: 'Id',
                   perPages: const [10, 20, 30, 40, 50, 100],
                   currentPerPage: currentPerPage,
@@ -134,19 +178,18 @@ class _QuestionListState extends State<QuestionList> {
                         : const Text(''),
                   ),
                   actions: [
-                    Expanded(flex: 1,child: Container()),
+                    Expanded(flex: 1, child: Container()),
                     Flexible(
                       flex: 0,
                       child: TextButton.icon(
                         onPressed: () {
-
-                          var mo=QuestionPageModel(context: context);
-                          mo.userId=widget.userId;
-                          mo.selectedPageIndex=2;
-                          mo.questionId=BigInt.zero;
-                          RouteManager().addRoute('/QuestionPage', (context) => QuestionPage( mo:mo));
+                          var mo = QuestionPageModel(context: context);
+                          mo.userId = widget.userId;
+                          mo.selectedPageIndex = 2;
+                          mo.questionId = BigInt.zero;
+                          RouteManager().addRoute('/QuestionPage',
+                              (context) => QuestionPage(mo: mo));
                           RouteManager().navigateTo('/QuestionPage');
-
                         },
                         icon: const Icon(Icons.add),
                         label: Text(
@@ -161,14 +204,16 @@ class _QuestionListState extends State<QuestionList> {
                       ),
                     ),
                   ],
-                  currentPage: pages.contains(currentPage) ? currentPage : pages.last,
-                  onChangedPerPageAndPage: (currentPerPageInput, currentPageInput) {
+                  currentPage:
+                      pages.contains(currentPage) ? currentPage : pages.last,
+                  onChangedPerPageAndPage:
+                      (currentPerPageInput, currentPageInput) {
                     currentPerPage = currentPerPageInput;
                     currentPage = currentPageInput;
-                    loadDefaults();
                     if (widget.settings != null) {
                       widget.settings!(currentPerPage, currentPage);
                     }
+                    setState(() {});
                   },
                   filterLookups: [
                     LayoutBuilder(
@@ -518,7 +563,29 @@ class _QuestionListState extends State<QuestionList> {
                                       },
                                       onChangedAchievements:
                                           (List<int> selectedAchievements) {},
-                                    )
+                                    ),
+                                    TextField(
+                                      controller: controllerSearchInQuestion,
+                                      decoration: InputDecoration(
+                                        hintText: 'Search in question...',
+                                        border: InputBorder.none,
+                                        labelStyle: Theme.of(context).textTheme.bodySmall,
+                                        suffixIcon: IconButton(
+                                          tooltip:'Clear',
+                                          icon: Icon(Icons.clear,size: Theme.of(context).iconTheme.size,color:Theme.of(context).iconTheme.color ,),
+                                          onPressed: _clearSearchText,
+                                        ),
+                                      ),
+                                      onEditingComplete: () {
+                                        _onSearchEditingComplete(controllerSearchInQuestion!.text,0);
+                                      },
+                                      onChanged: (value) {
+                                        _onSearchEditingComplete(value,5);
+                                      },
+                                      onSubmitted: (value) {
+                                        _onSearchEditingComplete(value,0);
+                                      },
+                                    ),
                                   ],
                                 ),
                               ],
@@ -535,20 +602,14 @@ class _QuestionListState extends State<QuestionList> {
                   },
                   headers: [
                     DatatableHeader(
+                        text: "Id",
+                        value: "Id",
+                        show: true,
+                        sortable: true,
+                        textAlign: TextAlign.center),
+                    DatatableHeader(
                         text: "Academic Year",
                         value: "AcademicYearName",
-                        show: true,
-                        sortable: true,
-                        textAlign: TextAlign.center),
-                    DatatableHeader(
-                        text: "Created By",
-                        value: "CreatedByNameSurname",
-                        show: true,
-                        sortable: true,
-                        textAlign: TextAlign.center),
-                    DatatableHeader(
-                        text: "Created On",
-                        value: "CreatedOn",
                         show: true,
                         sortable: true,
                         textAlign: TextAlign.center),
@@ -565,8 +626,21 @@ class _QuestionListState extends State<QuestionList> {
                         sortable: true,
                         textAlign: TextAlign.center),
                     DatatableHeader(
-                        text: "Id",
-                        value: "Id",
+                        text: "Branch",
+                        value: "BranchName",
+                        show: true,
+                        sortable: true,
+                        textAlign: TextAlign.center),
+
+                    DatatableHeader(
+                        text: "Learn",
+                        value: "LearnNameChain",
+                        show: true,
+                        sortable: true,
+                        textAlign: TextAlign.center),
+                    DatatableHeader(
+                        text: "Question",
+                        value: "QuestionPlainText",
                         show: true,
                         sortable: true,
                         textAlign: TextAlign.center),
@@ -577,8 +651,8 @@ class _QuestionListState extends State<QuestionList> {
                         sortable: true,
                         textAlign: TextAlign.center),
                     DatatableHeader(
-                        text: "Learn",
-                        value: "LearnNameChain",
+                        text: "User Id",
+                        value: "UserNameSurname",
                         show: true,
                         sortable: true,
                         textAlign: TextAlign.center),
@@ -588,26 +662,24 @@ class _QuestionListState extends State<QuestionList> {
                         show: true,
                         sortable: true,
                         textAlign: TextAlign.center),
+                    DatatableHeader(
+                        text: "Created By",
+                        value: "CreatedByNameSurname",
+                        show: true,
+                        sortable: true,
+                        textAlign: TextAlign.center),
+                    DatatableHeader(
+                        text: "Created On",
+                        value: "CreatedOn",
+                        show: true,
+                        sortable: true,
+                        textAlign: TextAlign.center),
+
                     //DatatableHeader(text: "Question Text", value: "QuestionText", show: true, sortable: true, textAlign: TextAlign.center),
-                    DatatableHeader(
-                        text: "Question Token",
-                        value: "QuestionToken",
-                        show: true,
-                        sortable: true,
-                        textAlign: TextAlign.center),
-                    DatatableHeader(
-                        text: "Relation Id",
-                        value: "RelationId",
-                        show: true,
-                        sortable: true,
-                        textAlign: TextAlign.center),
+                    //DatatableHeader( text: "Question Token", value: "QuestionToken", show: true,  sortable: true,  textAlign: TextAlign.center),
+                    //DatatableHeader( text: "Relation Id", value: "RelationId", show: true,  sortable: true,  textAlign: TextAlign.center),
                     //DatatableHeader(text: "Resolution", value: "Resolution", show: true, sortable: true, textAlign: TextAlign.center),
-                    DatatableHeader(
-                        text: "Status",
-                        value: "StatusName",
-                        show: true,
-                        sortable: true,
-                        textAlign: TextAlign.center),
+
                     DatatableHeader(
                         text: "Updated By",
                         value: "UpdatedByNameSurname",
@@ -621,8 +693,8 @@ class _QuestionListState extends State<QuestionList> {
                         sortable: true,
                         textAlign: TextAlign.center),
                     DatatableHeader(
-                        text: "User Id",
-                        value: "UserNameSurname",
+                        text: "Status",
+                        value: "StatusName",
                         show: true,
                         sortable: true,
                         textAlign: TextAlign.center),
@@ -632,38 +704,138 @@ class _QuestionListState extends State<QuestionList> {
                         show: true,
                         sortable: false,
                         sourceBuilder: (value, row) {
-                          return  DropdownButton<String>(
+                          return DropdownButton<String>(
                             hint: const Text('İşlem Seçin'),
-                            items: <String>['Ekle', 'Sil', 'Güncelle'].map((String value) {
+                            items: <String>['Ekle', 'Sil', 'Güncelle', 'Detay']
+                                .map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
                                 child: Row(
                                   children: [
-                                    if (value == 'Ekle') const Icon(Icons.add),
-                                    if (value == 'Sil') const Icon(Icons.delete),
-                                    if (value == 'Güncelle') const Icon(Icons.edit),
-                                    const SizedBox(width: 8), // Simgeden biraz boşluk
-                                    Text(value),
+                                    if (value == 'Ekle')
+                                      Icon(
+                                        Icons.add,
+                                        size: Theme.of(context).iconTheme.size,
+                                        color:
+                                            Theme.of(context).iconTheme.color,
+                                      ),
+                                    if (value == 'Sil')
+                                      Icon(
+                                        Icons.delete,
+                                        size: Theme.of(context).iconTheme.size,
+                                        color:
+                                            Theme.of(context).iconTheme.color,
+                                      ),
+                                    if (value == 'Güncelle')
+                                      Icon(
+                                        Icons.edit,
+                                        size: Theme.of(context).iconTheme.size,
+                                        color:
+                                            Theme.of(context).iconTheme.color,
+                                      ),
+                                    if (value == 'Detay')
+                                      Icon(
+                                        Icons.description_outlined,
+                                        size: Theme.of(context).iconTheme.size,
+                                        color:
+                                            Theme.of(context).iconTheme.color,
+                                      ),
+                                    const SizedBox(width: 5),
+                                    Text(
+                                      value,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium,
+                                    ),
                                   ],
                                 ),
                               );
                             }).toList(),
                             onChanged: (String? selectedValue) {
+                              var mo = QuestionPageModel(context: context);
+                              mo.userId = widget.userId;
 
-                              var mo=QuestionPageModel(context: context);
-                              mo.userId=widget.userId;
-
-                              mo.selectedPageIndex=2;
+                              mo.selectedPageIndex = 2;
 
                               if (selectedValue == 'Ekle') {
-                                mo.questionId=BigInt.zero;
+                                mo.questionId = BigInt.zero;
                               } else if (selectedValue == 'Sil') {
-
+                                Message.showWarningMessage(context,
+                                    title: Text('Question Delete',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium),
+                                    content: Text(
+                                        'Do you want to delete question ?',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, 'Cancel'),
+                                        child: Icon(Icons.cancel_outlined,
+                                            size: Theme.of(context)
+                                                .iconTheme
+                                                .size),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          deleteQuestion(row['Id'], context);
+                                          Navigator.pop(context, 'OK');
+                                        },
+                                        child: Icon(Icons.check_circle_outline,
+                                            size: Theme.of(context)
+                                                .iconTheme
+                                                .size),
+                                      ),
+                                    ]);
                               } else if (selectedValue == 'Güncelle') {
-                                mo.questionId=row['Id'];
+                                mo.questionId = row['Id'];
+                              } else if (selectedValue == 'Detay') {
+                                Message.showInformationalMessage(context,
+                                    title: Text('Question Details',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium),
+                                    content: SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.75,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.75,
+                                      child: SingleChildScrollView(
+                                        child: QuestionOptionsWithSolution(
+                                            questionId: row['Id']),
+                                      ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, 'Cancel'),
+                                        child: Icon(Icons.cancel_outlined,
+                                            size: Theme.of(context)
+                                                .iconTheme
+                                                .size),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, 'OK');
+                                        },
+                                        child: Icon(Icons.check_circle_outline,
+                                            size: Theme.of(context)
+                                                .iconTheme
+                                                .size),
+                                      ),
+                                    ]);
                               }
-                              RouteManager().addRoute('/QuestionPage', (context) => QuestionPage( mo:mo));
-                              RouteManager().navigateTo('/QuestionPage');
+
+                              if (selectedValue == 'Güncelle' ||
+                                  selectedValue == 'Ekle') {
+                                RouteManager().addRoute('/QuestionPage',
+                                    (context) => QuestionPage(mo: mo));
+                                RouteManager().navigateTo('/QuestionPage');
+                              }
                             },
                           );
                         },
@@ -678,6 +850,13 @@ class _QuestionListState extends State<QuestionList> {
                       widget.onChangedSelectedItems!(newSelectedItems);
                     }
                   },
+                  dropContainer: (data) {
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(40.0, 10, 10, 10),
+                      child:
+                          QuestionOptionsWithSolution(questionId: data['Id']),
+                    );
+                  },
                 );
               }
             },
@@ -685,5 +864,26 @@ class _QuestionListState extends State<QuestionList> {
         }
       },
     );
+  }
+
+  Future<void> deleteQuestion(BigInt questionId, BuildContext context) async {
+    await appRepository.deleteTblQueQuestionMain(questionId);
+
+    var questionOptions =
+        await appRepository.getByQuestionIdTblQueQuestionOption(questionId);
+    if (questionOptions != null && questionOptions.isNotEmpty) {
+      for (var op in questionOptions) {
+        await appRepository.deleteTblQueQuestionOption(op.id);
+      }
+    }
+    var questionAchievement =
+        await appRepository.getByQuestionIdTblQueQuestionAchvMap(questionId);
+    if (questionAchievement != null && questionAchievement.isNotEmpty) {
+      for (var ach in questionAchievement) {
+        await appRepository.deleteTblQueQuestionAchvMap(ach.id);
+      }
+    }
+
+    setState(() {});
   }
 }

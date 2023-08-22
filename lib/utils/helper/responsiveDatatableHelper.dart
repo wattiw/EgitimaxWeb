@@ -29,9 +29,10 @@ class ResponsiveDatatableHelper extends StatefulWidget {
       this.actions,
       this.filterFields,
       this.filterLookups,
-        this.searchButtonStatusInit,
+      this.searchButtonStatusInit,
       this.searchButtonStatus,
-      this.rowActions})
+      this.rowActions,
+      this.dropContainer})
       : super(key: key);
 
   final String tableKey;
@@ -57,9 +58,10 @@ class ResponsiveDatatableHelper extends StatefulWidget {
   List<Widget>? actions;
   final List<String>? filterFields;
   List<Widget>? filterLookups;
-  SearchButtonStatus?  searchButtonStatusInit;
+  SearchButtonStatus? searchButtonStatusInit;
   final void Function(SearchButtonStatus)? searchButtonStatus;
   Widget? rowActions;
+  Widget Function(Map<String, dynamic>)? dropContainer;
 
   @override
   _ResponsiveDatatableHelperState createState() =>
@@ -163,7 +165,7 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
 
     _expanded = List.generate(_currentPerPage!, (index) => false);
 
-    searchButtonStatus=widget.searchButtonStatusInit;
+    searchButtonStatus = widget.searchButtonStatusInit;
 
     setState(() => _isLoading = true);
 
@@ -300,25 +302,21 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
     }
 
     _actions.add(SearchButton(
-      searchButtonStatusInit:widget.searchButtonStatusInit,
+      searchButtonStatusInit: widget.searchButtonStatusInit,
       searchButtonStatus: (v) {
         setState(() {
           if (v == SearchButtonStatus.Filter) {
-            searchButtonStatus=v;
+            searchButtonStatus = v;
           } else if (v == SearchButtonStatus.Search) {
-            searchButtonStatus=v;
+            searchButtonStatus = v;
           } else if (v == SearchButtonStatus.None) {
-            searchButtonStatus=v;
-          } else {
-
-          }
+            searchButtonStatus = v;
+          } else {}
         });
 
-        if(widget.searchButtonStatus!=null)
-          {
-            widget.searchButtonStatus!(v);
-          }
-
+        if (widget.searchButtonStatus != null) {
+          widget.searchButtonStatus!(v);
+        }
       },
     ));
 
@@ -331,15 +329,17 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
             padding: EdgeInsets.fromLTRB(20, 20, 20, 1),
             child: Column(
               children: [
-                if((searchButtonStatus==SearchButtonStatus.Filter || _source.isEmpty) && searchButtonStatus!=SearchButtonStatus.Search)
-                Wrap(
-                  spacing: 5,
-                  runSpacing: 5,
-                  children: widget.filterLookups ?? [],
-                ),
-                if(searchButtonStatus==SearchButtonStatus.Search)
-                Row(
-                  children: [
+                if ((searchButtonStatus == SearchButtonStatus.Filter ||
+                        _source.isEmpty) &&
+                    searchButtonStatus != SearchButtonStatus.Search)
+                  Wrap(
+                    spacing: 5,
+                    runSpacing: 5,
+                    children: widget.filterLookups ?? [],
+                  ),
+                if (searchButtonStatus == SearchButtonStatus.Search)
+                  Row(
+                    children: [
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: DropdownButton<String>(
@@ -399,256 +399,263 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
                           _filterData(value);
                         },
                       )),
-                  ],
-                ),
+                    ],
+                  ),
               ],
             ),
           ),
+          Container(
+            margin: const EdgeInsets.all(0),
+            padding: const EdgeInsets.all(0),
+            constraints: const BoxConstraints(
+              maxHeight: 700,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: ResponsiveDatatable(
+                title: widget.title,
+                reponseScreenSizes: const [ScreenSize.xs],
+                actions: _actions ?? [],
+                headers: _headers,
+                source: _source,
+                selecteds: _selecteds,
+                showSelect: _showSelect,
+                autoHeight: false,
+                dropContainer: (data) {
 
-            Container(
-              margin: const EdgeInsets.all(0),
-              padding: const EdgeInsets.all(0),
-              constraints: const BoxConstraints(
-                maxHeight: 700,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: ResponsiveDatatable(
-                  title: widget.title,
-                  reponseScreenSizes: const [ScreenSize.xs],
-                  actions: _actions ?? [],
-                  headers: _headers,
-                  source: _source,
-                  selecteds: _selecteds,
-                  showSelect: _showSelect,
-                  autoHeight: false,
-                  dropContainer: (data) {
-                    return _DropDownContainer(
-                      data: data,
-                      headers: _headers,
-                    );
-                  },
-                  onChangedRow: (value, header) {},
-                  onSubmittedRow: (value, header) {},
-                  onTabRow: (data) {
-                    if (widget.onTabRow != null) {
-                      widget.onTabRow!(data);
+                  if(widget.dropContainer!=null)
+                    {
+                      return widget.dropContainer!(data);
                     }
-                  },
-                  onSort: (value) {
-                    setState(() => _isLoading = true);
+                  return _DropDownContainer(
+                    data: data,
+                    headers: _headers,
+                  );
+                },
+                onChangedRow: (value, header) {},
+                onSubmittedRow: (value, header) {},
+                onTabRow: (data) {
+                  if (widget.onTabRow != null) {
+                    widget.onTabRow!(data);
+                  }
+                },
+                onSort: (value) {
+                  setState(() => _isLoading = true);
 
-                    setState(() {
-                      _sortColumn = value;
-                      _sortAscending = !_sortAscending;
+                  setState(() {
+                    _sortColumn = value;
+                    _sortAscending = !_sortAscending;
 
-                      _sourceFiltered.sort((a, b) {
-                        final aValue = a["$_sortColumn"];
-                        final bValue = b["$_sortColumn"];
+                    _sourceFiltered.sort((a, b) {
+                      final aValue = a["$_sortColumn"];
+                      final bValue = b["$_sortColumn"];
 
-                        if (aValue == null && bValue == null) {
-                          return 0;
-                        } else if (aValue == null) {
-                          return _sortAscending ? 1 : -1;
-                        } else if (bValue == null) {
-                          return _sortAscending ? -1 : 1;
-                        }
+                      if (aValue == null && bValue == null) {
+                        return 0;
+                      } else if (aValue == null) {
+                        return _sortAscending ? 1 : -1;
+                      } else if (bValue == null) {
+                        return _sortAscending ? -1 : 1;
+                      }
 
-                        return _sortAscending
-                            ? bValue.compareTo(aValue)
-                            : aValue.compareTo(bValue);
-                      });
-
-                      var _rangeTop = _currentPerPage! < _sourceFiltered.length
-                          ? _currentPerPage!
-                          : _sourceFiltered.length;
-                      _source = _sourceFiltered.getRange(0, _rangeTop).toList();
-                      _searchKey = value;
-
-                      _isLoading = false;
+                      return _sortAscending
+                          ? bValue.compareTo(aValue)
+                          : aValue.compareTo(bValue);
                     });
 
-                    if (widget.onSort != null) {
-                      widget.onSort!(value);
-                    }
-                  },
-                  expanded: _expanded,
-                  sortAscending: _sortAscending,
-                  sortColumn: _sortColumn,
-                  isLoading: _isLoading,
-                  onSelect: (value, item) {
-                    if (widget.singleSelectionIsActive == true) {
-                      if (value!) {
-                        _selecteds.clear();
-                        _selecteds.add(item);
-                      } else {
-                        _selecteds.removeAt(_selecteds.indexOf(item));
-                      }
+                    var _rangeTop = _currentPerPage! < _sourceFiltered.length
+                        ? _currentPerPage!
+                        : _sourceFiltered.length;
+                    _source = _sourceFiltered.getRange(0, _rangeTop).toList();
+                    _searchKey = value;
+
+                    _isLoading = false;
+                  });
+
+                  if (widget.onSort != null) {
+                    widget.onSort!(value);
+                  }
+                },
+                expanded: _expanded,
+                sortAscending: _sortAscending,
+                sortColumn: _sortColumn,
+                isLoading: _isLoading,
+                onSelect: (value, item) {
+                  if (widget.singleSelectionIsActive == true) {
+                    if (value!) {
+                      _selecteds.clear();
+                      _selecteds.add(item);
                     } else {
-                      if (value!) {
-                        _selecteds.add(item);
-                      } else {
-                        _selecteds.removeAt(_selecteds.indexOf(item));
-                      }
+                      _selecteds.removeAt(_selecteds.indexOf(item));
                     }
-
-                    if (widget.onSelect != null) {
-                      widget.onSelect!(value, item);
-                    }
-
-                    if (widget.onChangedSelectedItems != null) {
-                      widget.onChangedSelectedItems!(_selecteds);
-                    }
-
-                    setState(() {});
-                  },
-                  onSelectAll: (value) {
-                    if (widget.singleSelectionIsActive == true) {
-                      if (_selecteds.isNotEmpty) {
-                        _selecteds = [_selecteds.last].cast();
-                      }
+                  } else {
+                    if (value!) {
+                      _selecteds.add(item);
                     } else {
-                      if (value!) {
-                        _selecteds =
-                            _source.map((entry) => entry).toList().cast();
-                      } else {
-                        _selecteds.clear();
-                      }
+                      _selecteds.removeAt(_selecteds.indexOf(item));
                     }
+                  }
 
-                    if (widget.onSelectAll != null) {
-                      widget.onSelectAll!(value);
+                  if (widget.onSelect != null) {
+                    widget.onSelect!(value, item);
+                  }
+
+                  if (widget.onChangedSelectedItems != null) {
+                    widget.onChangedSelectedItems!(_selecteds);
+                  }
+
+                  setState(() {});
+                },
+                onSelectAll: (value) {
+                  if (widget.singleSelectionIsActive == true) {
+                    if (_selecteds.isNotEmpty) {
+                      _selecteds = [_selecteds.last].cast();
                     }
-
-                    if (widget.onChangedSelectedItems != null) {
-                      widget.onChangedSelectedItems!(_selecteds);
+                  } else {
+                    if (value!) {
+                      _selecteds =
+                          _source.map((entry) => entry).toList().cast();
+                    } else {
+                      _selecteds.clear();
                     }
+                  }
 
-                    setState(() {});
-                  },
-                  footers: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: const Text(""),
-                    ),
-                    if (_perPages.isNotEmpty)
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: DropdownButton<int>(
-                          value: _currentPerPage,
-                          items: _perPages
-                              .map((e) => DropdownMenuItem<int>(
-                                    value: e,
-                                    child: Text("$e"),
-                                  ))
-                              .toList(),
-                          onChanged: (dynamic value) {
-                            setState(() {
-                              _currentPerPage = value;
-                              _currentPage = 1;
-                              _resetData();
-                              if (widget.onChangedCurrentPerPage != null) {
-                                widget.onChangedCurrentPerPage!(
-                                    _currentPerPage ?? 10);
-                              }
-                              if (widget.onChangedPerPageAndPage != null) {
-                                widget.onChangedPerPageAndPage!(
-                                    _currentPerPage ?? 10, _currentExPage);
-                              }
-                            });
-                          },
-                          isExpanded: false,
-                        ),
-                      ),
-                    if (false)
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: const Text("Page"),
-                      ),
-                    if (_pages.isNotEmpty)
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: DropdownButton<int>(
-                          value: _currentExPage,
-                          items: _pages
-                              .map((e) => DropdownMenuItem<int>(
-                                    value: e,
-                                    child: Text("$e"),
-                                  ))
-                              .toList(),
-                          onChanged: (dynamic value) {
-                            setState(() {
-                              _currentExPage = value;
-                              if (widget.onChangedCurrentPage != null) {
-                                widget.onChangedCurrentPage!(_currentExPage);
-                              }
-                              if (widget.onChangedPerPageAndPage != null) {
-                                widget.onChangedPerPageAndPage!(
-                                    _currentPerPage ?? 10, _currentExPage);
-                              }
+                  if (widget.onSelectAll != null) {
+                    widget.onSelectAll!(value);
+                  }
 
-                              _resetData();
-                            });
-                          },
-                          isExpanded: false,
-                        ),
-                      ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Text(
-                          "${_sourceFiltered.length} : $_currentExPage/ ${_pages.length}"),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_back_ios,
-                        size: Theme.of(context).iconTheme.size,
-                      ),
-                      onPressed: () {
-                        int newPageId = _currentExPage - 1;
-                        if (_pages.contains(newPageId)) {
-                          _currentExPage = newPageId;
-                          if (widget.onChangedPerPageAndPage != null) {
-                            widget.onChangedPerPageAndPage!(
-                                _currentPerPage ?? 10, _currentExPage);
-                          }
-                        }
-                      },
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_forward_ios,
-                        size: Theme.of(context).iconTheme.size,
-                      ),
-                      onPressed: () {
-                        int newPageId = _currentExPage + 1;
-                        if (_pages.contains(newPageId)) {
-                          _currentExPage = newPageId;
-                          if (widget.onChangedPerPageAndPage != null) {
-                            widget.onChangedPerPageAndPage!(
-                                _currentPerPage ?? 10, _currentExPage);
-                          }
-                        }
-                      },
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                    )
-                  ],
-                  rowDecoration:const BoxDecoration(),
-                  headerDecoration: const BoxDecoration(
-                      color: Colors.transparent,
-                      border: Border(
-                          bottom: BorderSide(color: Colors.blue, width: 1))),
-                  selectedDecoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(color: Colors.grey[100]!, width: 1)),
-                    color: Colors.blue[100],
+                  if (widget.onChangedSelectedItems != null) {
+                    widget.onChangedSelectedItems!(_selecteds);
+                  }
+
+                  setState(() {});
+                },
+                footers: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: const Text(""),
                   ),
-                  headerTextStyle: Theme.of(context).textTheme.titleMedium,
-                  rowTextStyle: Theme.of(context).textTheme.bodyMedium,
-                  selectedTextStyle: Theme.of(context).textTheme.bodyMedium,
+                  if (_perPages.isNotEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: DropdownButton<int>(
+                        value: _currentPerPage,
+                        items: _perPages
+                            .map((e) => DropdownMenuItem<int>(
+                                  value: e,
+                                  child: Text("$e"),
+                                ))
+                            .toList(),
+                        onChanged: (dynamic value) {
+                          setState(() {
+                            _currentPerPage = value;
+                            _currentPage = 1;
+                            _currentExPage = _currentPage;
+
+                            _resetData();
+
+                            if (widget.onChangedCurrentPerPage != null) {
+                              widget.onChangedCurrentPerPage!(
+                                  _currentPerPage ?? 10);
+                            }
+                            if (widget.onChangedPerPageAndPage != null) {
+                              widget.onChangedPerPageAndPage!(
+                                  _currentPerPage ?? 10, _currentExPage);
+                            }
+                          });
+                        },
+                        isExpanded: false,
+                      ),
+                    ),
+                  if (false)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: const Text("Page"),
+                    ),
+                  if (_pages.isNotEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: DropdownButton<int>(
+                        value: _currentExPage,
+                        items: _pages
+                            .map((e) => DropdownMenuItem<int>(
+                                  value: e,
+                                  child: Text("$e"),
+                                ))
+                            .toList(),
+                        onChanged: (dynamic value) {
+                          setState(() {
+                            _currentExPage = value;
+                            if (widget.onChangedCurrentPage != null) {
+                              widget.onChangedCurrentPage!(_currentExPage);
+                            }
+                            if (widget.onChangedPerPageAndPage != null) {
+                              widget.onChangedPerPageAndPage!(
+                                  _currentPerPage ?? 10, _currentExPage);
+                            }
+
+                            _resetData();
+                          });
+                        },
+                        isExpanded: false,
+                      ),
+                    ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Text(
+                        "${_sourceFiltered.length} : $_currentExPage/ ${_pages.length}"),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                      size: Theme.of(context).iconTheme.size,
+                    ),
+                    onPressed: () {
+                      int newPageId = _currentExPage - 1;
+                      if (_pages.contains(newPageId)) {
+                        _currentExPage = newPageId;
+                        if (widget.onChangedPerPageAndPage != null) {
+                          widget.onChangedPerPageAndPage!(
+                              _currentPerPage ?? 10, _currentExPage);
+                        }
+                      }
+                    },
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.arrow_forward_ios,
+                      size: Theme.of(context).iconTheme.size,
+                    ),
+                    onPressed: () {
+                      int newPageId = _currentExPage + 1;
+                      if (_pages.contains(newPageId)) {
+                        _currentExPage = newPageId;
+                        if (widget.onChangedPerPageAndPage != null) {
+                          widget.onChangedPerPageAndPage!(
+                              _currentPerPage ?? 10, _currentExPage);
+                        }
+                      }
+                    },
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                  )
+                ],
+                rowDecoration: const BoxDecoration(),
+                headerDecoration: const BoxDecoration(
+                    color: Colors.transparent,
+                    border: Border(
+                        bottom: BorderSide(color: Colors.blue, width: 1))),
+                selectedDecoration: BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(color: Colors.grey[100]!, width: 1)),
+                  color: Colors.blue[100],
                 ),
+                headerTextStyle: Theme.of(context).textTheme.titleMedium,
+                rowTextStyle: Theme.of(context).textTheme.bodyMedium,
+                selectedTextStyle: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
+          ),
         ]));
   }
 }
@@ -674,50 +681,42 @@ class _DropDownContainer extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey.shade300),
         ),
-        child: CollapseChild(
-          prefixIcon: const Icon(Icons.details_rounded),
-          buttonStyle: CollapseButtonStyle(
-              showText: 'Show Details',
-              hideText: 'Hide Details',
-              textStyle: Theme.of(context).textTheme.titleMedium,
-              iconColor: Theme.of(context).iconTheme.color),
-          child: Column(
-            children: data.entries
-                .where((element) => keys!.containsKey(element.key))
-                .map<Widget>((entry) {
-              return Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  border:
-                      Border(bottom: BorderSide(color: Colors.grey.shade300)),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 120,
-                      child: Text(
-                        '${keys![entry.key.toString()]}',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Text(
-                      ':',
+        child: Column(
+          children: data.entries
+              .where((element) => keys!.containsKey(element.key))
+              .map<Widget>((entry) {
+            return Container(
+              padding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                border:
+                Border(bottom: BorderSide(color: Colors.grey.shade300)),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 120,
+                    child: Text(
+                      '${keys![entry.key.toString()]}',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                    Expanded(
-                      child: Text(
-                        entry.value.toString(),
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
+                  ),
+                  const SizedBox(width: 16),
+                  Text(
+                    ':',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  Expanded(
+                    child: Text(
+                      entry.value.toString(),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                  ],
-                ),
-              );
-            }).toList(),
-          ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
         ),
       ),
     );
@@ -732,8 +731,12 @@ enum SearchButtonStatus {
 
 class SearchButton extends StatefulWidget {
   final void Function(SearchButtonStatus)? searchButtonStatus;
-   SearchButtonStatus?  searchButtonStatusInit;
-   SearchButton({super.key,required this.searchButtonStatus,this.searchButtonStatusInit});
+  SearchButtonStatus? searchButtonStatusInit;
+
+  SearchButton(
+      {super.key,
+      required this.searchButtonStatus,
+      this.searchButtonStatusInit});
 
   @override
   _SearchButtonState createState() => _SearchButtonState();

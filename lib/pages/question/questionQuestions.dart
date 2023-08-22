@@ -6,9 +6,7 @@ import 'package:egitimax/utils/provider/imager.dart';
 import 'package:flutter/material.dart';
 
 class QuestionQuestions extends StatefulWidget {
-  QuestionQuestions(
-      {super.key,
-      required this.mo});
+  QuestionQuestions({super.key, required this.mo});
 
   QuestionPageModel mo;
 
@@ -20,8 +18,6 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
   bool floating = false;
   bool pinned = false;
   bool snap = false;
-
-
 
   @override
   void initState() {
@@ -55,7 +51,8 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
             surfaceTintColor: widget.mo.theme.colorScheme.surface,
             actions: [
               IconButton(
-                icon: Icon(Icons.settings, size: widget.mo.theme.iconTheme.size),
+                icon:
+                    Icon(Icons.settings, size: widget.mo.theme.iconTheme.size),
                 onPressed: () {
                   questionQuestionsKey.currentState?.openEndDrawer();
                 },
@@ -65,7 +62,7 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
             pinned: pinned,
             snap: snap,
             floating: floating,
-            expandedHeight: kToolbarHeight * 3,
+            expandedHeight: kToolbarHeight * 1,
             flexibleSpace: FutureBuilder(
               future: Future.delayed(const Duration(seconds: 0), () {
                 return Imager.get(
@@ -152,8 +149,10 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
         selectedItems: widget.mo.selectedItems ?? [],
         onChangedSelectedItems: (newSelectedItems) {
           widget.mo.selectedItems = newSelectedItems;
-          dynamic questionId = newSelectedItems.isNotEmpty ? newSelectedItems[0]["Id"] : BigInt.zero;
-          widget.mo.questionId=questionId;
+          dynamic questionId = newSelectedItems.isNotEmpty
+              ? newSelectedItems[0]["Id"]
+              : BigInt.zero;
+          widget.mo.questionId = questionId;
         },
         settings: (int newCurrentPerPage, int newCurrentPage) {
           widget.mo.currentPerPage = newCurrentPerPage;
@@ -165,11 +164,13 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
   }
 
   Drawer getDrawer() {
-    double transformScale = double.parse(widget.mo.theme.iconTheme.size != null &&
-            widget.mo.theme.iconTheme.size != 0
-        ? (widget.mo.theme.iconTheme.size! / (widget.mo.theme.iconTheme.size! * 1.5))
-            .toString()
-        : 1.toString());
+    double transformScale = double.parse(
+        widget.mo.theme.iconTheme.size != null &&
+                widget.mo.theme.iconTheme.size != 0
+            ? (widget.mo.theme.iconTheme.size! /
+                    (widget.mo.theme.iconTheme.size! * 1.5))
+                .toString()
+            : 1.toString());
     var endDrawerScaffold = Drawer(
       width: double.infinity,
       child: SafeArea(
@@ -202,8 +203,8 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
                   },
                 ),
               ),
-              title:
-                  Text('Floating', style: widget.mo.theme.textTheme.titleMedium),
+              title: Text('Floating',
+                  style: widget.mo.theme.textTheme.titleMedium),
             ),
             ListTile(
               titleTextStyle: widget.mo.theme.textTheme.titleMedium,
@@ -219,7 +220,8 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
                   },
                 ),
               ),
-              title: Text('Pinned', style: widget.mo.theme.textTheme.titleMedium),
+              title:
+                  Text('Pinned', style: widget.mo.theme.textTheme.titleMedium),
             ),
             ListTile(
               titleTextStyle: widget.mo.theme.textTheme.titleMedium,

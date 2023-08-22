@@ -7,6 +7,10 @@ class AppConstants {
   //lib/utils/helper/api.dart
   //static  String apiBaseUrl = 'http://localhost:5001/';
   static  String apiBaseUrl = 'http://138.68.82.103:9090/';
+  static  String webSocketClientManagerUrl = 'ws://138.68.82.103:100/ws';
+  //static  String webSocketClientManagerUrl = 'ws://localhost:5002/ws';
+  static  String editorClientManagerUrl = 'http://138.68.82.103:100/';
+  //static  String editorClientManagerUrl = 'http://localhost:5002/';
   static  String apiUsername = 'info@egitimax.com';
   static  String apiPassword = 'password';
   static  int apiDebugPrintExceptionActive = 1;

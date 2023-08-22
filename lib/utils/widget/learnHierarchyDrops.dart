@@ -74,6 +74,7 @@ class _LearnHierarchyDropsState extends State<LearnHierarchyDrops> {
           } else if (snapshot.hasData) {
             if(snapshot.data!=null && snapshot.data!.isNotEmpty)
               {
+
                 return LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
                     double wrapWidth = constraints.maxWidth;
@@ -82,154 +83,151 @@ class _LearnHierarchyDropsState extends State<LearnHierarchyDrops> {
                       width: widget.width ?? (MediaQuery.of(context).size.width < 500
                               ? constraints.maxWidth //MediaQuery.of(context).size.width
                               : divisionResult*AppConstants.lookupObjectWidth),
-                      height: widget.height ?? double.parse('40') * totalItem,
-                      child: Expanded(
-                        flex: 1,
-                        child: ListView.builder(
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (context, index) {
-                            if (snapshot.data![index] != null && snapshot.data![index].type == 'ct_achv')
-                            {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 5),
-                                child: FutureBuilder<List<TblLearnMain>?>(
-                                  future: appRepository.getChildrenTblLearnMain(
-                                      snapshot.data![index].parentId!),
-                                  builder: (context, checkedBoxSnapshot) {
-                                    if (checkedBoxSnapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const Center(
-                                          child: CircularProgressIndicator());
-                                    } else if (checkedBoxSnapshot.hasError) {
-                                      return Center(
-                                          child: Text(
-                                              "Error: ${checkedBoxSnapshot.error}"));
-                                    } else if (checkedBoxSnapshot.hasData) {
-                                      if (checkedBoxSnapshot.data!.isEmpty ||
-                                          widget.showAchievements == false) {
-                                        return Container();
-                                      }
-                                      List<TblLearnMain> filteredSelectedItems =
-                                      checkedBoxSnapshot.data!
-                                          .where((element) =>
-                                      element.type == 'ct_achv' &&
-                                          selectedAchievementIds
-                                              .contains(element.id))
-                                          .toList();
-
-                                      totalItem =
-                                          totalItem + checkedBoxSnapshot.data!.length;
-                                      return Padding(
-                                        padding:
-                                        const EdgeInsets.symmetric(vertical: 5),
-                                        child: CheckboxList<TblLearnMain>(
-                                          items: checkedBoxSnapshot.data!
-                                              .where((element) =>
-                                          element.type == 'ct_achv')
-                                              .toList(),
-                                          selectedItems: filteredSelectedItems,
-                                          onChanged: (selectedItems) {
-                                            selectedAchievementIds = selectedItems
-                                                .where((element) =>
-                                            element.type == 'ct_achv')
-                                                .map((element) => element.id)
-                                                .toList();
-
-                                            if (widget.onChangedAchievements != null) {
-                                              widget.onChangedAchievements!(
-                                                  selectedAchievementIds);
-                                            }
-                                          },
-                                          getTitle: (item) {
-                                            return item.itemCode ?? '';
-                                          },
-                                          getSubtitle: (item) {
-                                            return "${item.name}";
-                                          },
-                                          boxDecoration: BoxDecoration(
-                                            color: Colors.transparent,
-                                            border: Border.all(color: Colors.grey),
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
-                                        ),
-                                      );
-                                    } else {
-                                      return const Center(
-                                          child: Text("No data found."));
-                                    }
-                                  },
-                                ),
-                              );
-                            } else {
-                              return FutureBuilder<List<TblLearnMain>?>(
-                                future: snapshot.data![index].parentId == null
-                                    ? appRepository.getParentsTblLearnMain(
-                                  widget.selectedBranch!,
-                                  widget.selectedGrade!,
-                                  widget.selectedLocation!,
-                                )
-                                    : appRepository.getChildrenTblLearnMain(
+                      height: widget.height ?? double.parse('20') * totalItem,
+                      child:ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          if (snapshot.data![index] != null && snapshot.data![index].type == 'ct_achv')
+                          {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 1),
+                              child: FutureBuilder<List<TblLearnMain>?>(
+                                future: appRepository.getChildrenTblLearnMain(
                                     snapshot.data![index].parentId!),
-                                builder: (context, dropDownSnapshot) {
-                                  if (dropDownSnapshot.connectionState ==
+                                builder: (context, checkedBoxSnapshot) {
+                                  if (checkedBoxSnapshot.connectionState ==
                                       ConnectionState.waiting) {
                                     return const Center(
                                         child: CircularProgressIndicator());
-                                  } else if (dropDownSnapshot.hasError) {
+                                  } else if (checkedBoxSnapshot.hasError) {
                                     return Center(
-                                        child:
-                                        Text("Error: ${dropDownSnapshot.error}"));
-                                  } else if (dropDownSnapshot.hasData) {
-                                    if (dropDownSnapshot.data!.isEmpty) {
+                                        child: Text(
+                                            "Error: ${checkedBoxSnapshot.error}"));
+                                  } else if (checkedBoxSnapshot.hasData) {
+                                    if (checkedBoxSnapshot.data!.isEmpty ||
+                                        widget.showAchievements == false) {
                                       return Container();
                                     }
-                                    totalItem =dropDownSnapshot.data!=null &&  dropDownSnapshot.data!.isNotEmpty ? dropDownSnapshot.data!.length :1;
+                                    List<TblLearnMain> filteredSelectedItems =
+                                    checkedBoxSnapshot.data!
+                                        .where((element) =>
+                                    element.type == 'ct_achv' &&
+                                        selectedAchievementIds
+                                            .contains(element.id))
+                                        .toList();
+
+                                    totalItem =
+                                        totalItem + checkedBoxSnapshot.data!.length;
                                     return Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 5),
-                                      child: DropdownSearchHelper
-                                          .singleSelectionDropdown<TblLearnMain>(
-                                        context: context,
-                                        labelText: dropDownSnapshot.data!.first.type,
-                                        hintText:
-                                        'Please select ${dropDownSnapshot.data!.first.type}!',
-                                        searchBoxLabelText: 'Search',
-                                        showSearchBox: true,
-                                        items: dropDownSnapshot.data!,
-                                        maxWidth: DropdownSearchHelper.getDropdownWidth(
-                                          context,
-                                          dropDownSnapshot.data!
-                                              .map((item) => item.name ?? '')
-                                              .toList(),
+                                      padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                      child: CheckboxList<TblLearnMain>(
+                                        items: checkedBoxSnapshot.data!
+                                            .where((element) =>
+                                        element.type == 'ct_achv')
+                                            .toList(),
+                                        selectedItems: filteredSelectedItems,
+                                        onChanged: (selectedItems) {
+                                          selectedAchievementIds = selectedItems
+                                              .where((element) =>
+                                          element.type == 'ct_achv')
+                                              .map((element) => element.id)
+                                              .toList();
+
+                                          if (widget.onChangedAchievements != null) {
+                                            widget.onChangedAchievements!(
+                                                selectedAchievementIds);
+                                          }
+                                        },
+                                        getTitle: (item) {
+                                          return item.itemCode ?? '';
+                                        },
+                                        getSubtitle: (item) {
+                                          return "${item.name}";
+                                        },
+                                        boxDecoration: BoxDecoration(
+                                          color: Colors.transparent,
+                                          border: Border.all(color: Colors.grey),
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
-                                        itemAsString: (selectedItem) {
-                                          return selectedItem.name.toString();
-                                        },
-                                        selectedItem:
-                                        snapshot.data![index].selectedId != null
-                                            ? dropDownSnapshot.data!.firstWhere(
-                                                (element) =>
-                                            element.id ==
-                                                snapshot
-                                                    .data![index].selectedId)
-                                            : null,
-                                        onChanged: (selectedItem) {
-                                          setState(() {
-                                            selectedLearnId = selectedItem!.id;
-                                            if (widget.onChangedLearnId != null) {
-                                              widget.onChangedLearnId!(selectedLearnId);
-                                            }
-                                          });
-                                        },
                                       ),
                                     );
                                   } else {
-                                    return const Center(child: Text("No data found."));
+                                    return const Center(
+                                        child: Text("No data found."));
                                   }
                                 },
-                              );
-                            }
-                          },
-                        ),
+                              ),
+                            );
+                          } else {
+                            return FutureBuilder<List<TblLearnMain>?>(
+                              future: snapshot.data![index].parentId == null
+                                  ? appRepository.getParentsTblLearnMain(
+                                widget.selectedBranch!,
+                                widget.selectedGrade!,
+                                widget.selectedLocation!,
+                              )
+                                  : appRepository.getChildrenTblLearnMain(
+                                  snapshot.data![index].parentId!),
+                              builder: (context, dropDownSnapshot) {
+                                if (dropDownSnapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                } else if (dropDownSnapshot.hasError) {
+                                  return Center(
+                                      child:
+                                      Text("Error: ${dropDownSnapshot.error}"));
+                                } else if (dropDownSnapshot.hasData) {
+                                  if (dropDownSnapshot.data!.isEmpty) {
+                                    return Container();
+                                  }
+                                  totalItem =dropDownSnapshot.data!=null &&  dropDownSnapshot.data!.isNotEmpty ? dropDownSnapshot.data!.length :1;
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 5),
+                                    child: DropdownSearchHelper
+                                        .singleSelectionDropdown<TblLearnMain>(
+                                      context: context,
+                                      labelText: dropDownSnapshot.data!.first.type,
+                                      hintText:
+                                      'Please select ${dropDownSnapshot.data!.first.type}!',
+                                      searchBoxLabelText: 'Search',
+                                      showSearchBox: true,
+                                      items: dropDownSnapshot.data!,
+                                      maxWidth: DropdownSearchHelper.getDropdownWidth(
+                                        context,
+                                        dropDownSnapshot.data!
+                                            .map((item) => item.name ?? '')
+                                            .toList(),
+                                      ),
+                                      itemAsString: (selectedItem) {
+                                        return selectedItem.name.toString();
+                                      },
+                                      selectedItem:
+                                      snapshot.data![index].selectedId != null
+                                          ? dropDownSnapshot.data!.firstWhere(
+                                              (element) =>
+                                          element.id ==
+                                              snapshot
+                                                  .data![index].selectedId)
+                                          : null,
+                                      onChanged: (selectedItem) {
+                                        setState(() {
+                                          selectedLearnId = selectedItem!.id;
+                                          if (widget.onChangedLearnId != null) {
+                                            widget.onChangedLearnId!(selectedLearnId);
+                                          }
+                                        });
+                                      },
+                                    ),
+                                  );
+                                } else {
+                                  return const Center(child: Text("No data found."));
+                                }
+                              },
+                            );
+                          }
+                        },
                       ),
                     );
                   },
