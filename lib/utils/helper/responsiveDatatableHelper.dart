@@ -261,67 +261,28 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
 
   @override
   Widget build(BuildContext context) {
-    var filters = Wrap(
-      children: _distinctFilterValues.keys.map((key) {
-        return Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DropdownSearchHelper.singleSelectionDropdown<String>(
-                clearButtonProps: const ClearButtonProps(),
-                context: context,
-                labelText:
-                    _headers.firstWhere((element) => element.value == key).text,
-                hintText:
-                    'Please select ${_headers.firstWhere((element) => element.value == key).text} !',
-                searchBoxLabelText: 'Search',
-                showSearchBox: true,
-                items:
-                    _distinctFilterValues[key]!.map((value) => value).toList(),
-                maxWidth: DropdownSearchHelper.getDropdownWidth(
-                    context,
-                    _distinctFilterValues[key]!
-                        .map((item) => item ?? '')
-                        .toList()),
-                itemAsString: (selectedItem) {
-                  return selectedItem.toString();
-                },
-                selectedItem: _distinctFilterKeyValue[key],
-                onChanged: (selectedItem) {
-                  _onMultiFilterDropdownChanged(key, selectedItem);
-                },
-              ),
-            ],
-          ),
-        );
-      }).toList(),
-    );
-
     List<Widget>? _actions = List.empty(growable: true);
     if (widget.actions != null && widget.actions!.isNotEmpty) {
       _actions.addAll(widget.actions!);
     }
+      _actions.add(SearchButton(
+        searchButtonStatusInit: widget.searchButtonStatusInit,
+        searchButtonStatus: (v) {
+          setState(() {
+            if (v == SearchButtonStatus.Filter) {
+              searchButtonStatus = v;
+            } else if (v == SearchButtonStatus.Search) {
+              searchButtonStatus = v;
+            } else if (v == SearchButtonStatus.None) {
+              searchButtonStatus = v;
+            } else {}
+          });
 
-    if(false)
-    _actions.add(SearchButton(
-      searchButtonStatusInit: widget.searchButtonStatusInit,
-      searchButtonStatus: (v) {
-        setState(() {
-          if (v == SearchButtonStatus.Filter) {
-            searchButtonStatus = v;
-          } else if (v == SearchButtonStatus.Search) {
-            searchButtonStatus = v;
-          } else if (v == SearchButtonStatus.None) {
-            searchButtonStatus = v;
-          } else {}
-        });
-
-        if (widget.searchButtonStatus != null) {
-          widget.searchButtonStatus!(v);
-        }
-      },
-    ));
+          if (widget.searchButtonStatus != null) {
+            widget.searchButtonStatus!(v);
+          }
+        },
+      ));
 
     return SingleChildScrollView(
         child: Column(
@@ -424,13 +385,12 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
                 selecteds: _selecteds,
                 showSelect: _showSelect,
                 autoHeight: false,
-                isExpandRows:widget.dropContainerIsActive==true ? true :false,
+                isExpandRows:
+                    widget.dropContainerIsActive == true ? true : false,
                 dropContainer: (data) {
-
-                  if(widget.dropContainer!=null)
-                    {
-                      return widget.dropContainer!(data);
-                    }
+                  if (widget.dropContainer != null) {
+                    return widget.dropContainer!(data);
+                  }
                   return _DropDownContainer(
                     data: data,
                     headers: _headers,
@@ -556,7 +516,7 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
                             _currentPage = 1;
                             _currentExPage = _currentPage;
 
-                            _resetData();
+                            // _resetData();
 
                             if (widget.onChangedCurrentPerPage != null) {
                               widget.onChangedCurrentPerPage!(
@@ -598,7 +558,7 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
                                   _currentPerPage ?? 10, _currentExPage);
                             }
 
-                            _resetData();
+                            // _resetData();
                           });
                         },
                         isExpanded: false,
@@ -662,6 +622,45 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
           ),
         ]));
   }
+
+  void getDynamicDropDownFilter(BuildContext context) {
+    var filters = Wrap(
+      children: _distinctFilterValues.keys.map((key) {
+        return Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DropdownSearchHelper.singleSelectionDropdown<String>(
+                clearButtonProps: const ClearButtonProps(),
+                context: context,
+                labelText:
+                    _headers.firstWhere((element) => element.value == key).text,
+                hintText:
+                    'Please select ${_headers.firstWhere((element) => element.value == key).text} !',
+                searchBoxLabelText: 'Search',
+                showSearchBox: true,
+                items:
+                    _distinctFilterValues[key]!.map((value) => value).toList(),
+                maxWidth: DropdownSearchHelper.getDropdownWidth(
+                    context,
+                    _distinctFilterValues[key]!
+                        .map((item) => item ?? '')
+                        .toList()),
+                itemAsString: (selectedItem) {
+                  return selectedItem.toString();
+                },
+                selectedItem: _distinctFilterKeyValue[key],
+                onChanged: (selectedItem) {
+                  _onMultiFilterDropdownChanged(key, selectedItem);
+                },
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
 }
 
 class _DropDownContainer extends StatelessWidget {
@@ -690,11 +689,9 @@ class _DropDownContainer extends StatelessWidget {
               .where((element) => keys!.containsKey(element.key))
               .map<Widget>((entry) {
             return Container(
-              padding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                border:
-                Border(bottom: BorderSide(color: Colors.grey.shade300)),
+                border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -762,7 +759,7 @@ class _SearchButtonState extends State<SearchButton> {
     return Row(
       children: [
         IconButton(
-    tooltip:'Filter',
+          tooltip: 'Filter',
           icon: Icon(
             _getButtonIcon(),
             size: Theme.of(context).iconTheme.size,

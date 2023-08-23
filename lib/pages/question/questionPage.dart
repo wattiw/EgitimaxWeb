@@ -1,4 +1,5 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:egitimax/models/common/userData.dart';
 import 'package:egitimax/models/question/questionPageModel.dart';
 import 'package:egitimax/pages/question/questionQuestion.dart';
 import 'package:egitimax/pages/question/questionQuestions.dart';
@@ -6,6 +7,7 @@ import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:egitimax/utils/helper/routeManager.dart';
 import 'package:egitimax/utils/widget/layoutPage.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class QuestionPage extends StatefulWidget {
   QuestionPage({super.key,this.mo});
@@ -28,8 +30,6 @@ class _QuestionPageState extends State<QuestionPage> {
         mo=widget.mo!;
       }else{
       mo=QuestionPageModel(context: context);
-      mo.userId=BigInt.parse('1');
-      mo.questionId=BigInt.parse('0');
       mo.selectedPageIndex=1;
     }
 
@@ -171,10 +171,10 @@ class _QuestionPageState extends State<QuestionPage> {
     var itemsConvexAppBar = [
       TabItem(icon: Icons.home, title: mo.lang.libPagesHomeHomePage_home),
       TabItem(
-          icon: Icons.question_mark_outlined,
+          icon: Icons.library_books_outlined,
           title: mo.lang.libPagesQuestionQuestionPage_questionList),
       TabItem(
-          icon:mo.questionId>BigInt.zero ? Icons.edit_note : Icons.add, title: mo.lang.libPagesQuestionQuestionPage_question,),
+          icon:mo.questionId>BigInt.zero ? Icons.edit_note_sharp : Icons.add, title: mo.lang.libPagesQuestionQuestionPage_question,),
       TabItem(
           icon: Icons.arrow_back,
           title: mo.lang.libPagesQuestionQuestionPage_back),

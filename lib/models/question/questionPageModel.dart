@@ -1,4 +1,5 @@
 import 'package:egitimax/repositories/appRepository.dart';
+import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:egitimax/utils/helper/localeManager.dart';
 import 'package:egitimax/utils/helper/routeManager.dart';
 import 'package:egitimax/utils/widget/deviceInfo.dart';
@@ -9,7 +10,7 @@ import 'package:provider/provider.dart';
 class QuestionPageModel {
   BuildContext context;
   String? currentTitle;
-  late BigInt userId = BigInt.zero;
+  late BigInt userId = AppConstants.loggedInUserId;
   late BigInt questionId = BigInt.zero;
   late RouteManager routeManager;
   late AppRepository appRepository;

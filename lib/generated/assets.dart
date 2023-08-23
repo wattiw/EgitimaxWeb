@@ -2,6 +2,7 @@
 class Assets {
   Assets._();
 
+  static const String commonEnums = 'lib/models/common/enums.dart';
   static const String commonStepItem = 'lib/models/common/stepItem.dart';
   static const String commonUserData = 'lib/models/common/userData.dart';
   static const String constantAppConstants = 'lib/utils/constant/appConstants.dart';
@@ -43,6 +44,7 @@ class Assets {
   static const String questionReceivedQuestionStatus = 'lib/models/question/receivedQuestionStatus.dart';
   static const String repositoriesAppRepository = 'lib/repositories/appRepository.dart';
   static const String widgetCheckboxList = 'lib/utils/widget/checkboxList.dart';
+  static const String widgetCheckboxRow = 'lib/utils/widget/checkboxRow.dart';
   static const String widgetCollapseChild = 'lib/utils/widget/collapseChild.dart';
   static const String widgetDeviceInfo = 'lib/utils/widget/deviceInfo.dart';
   static const String widgetDropdownSearch = 'lib/utils/widget/dropdownSearch.dart';

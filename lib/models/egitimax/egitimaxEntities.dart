@@ -3156,6 +3156,7 @@ class ViewQueQuestionMain {
   String? createdByNameSurname ;
   String? updatedByNameSurname ;
   String? branchName ;
+  int? myFavorite ;
 
   ViewQueQuestionMain({
     required  this.id,
@@ -3189,6 +3190,7 @@ class ViewQueQuestionMain {
     this.createdByNameSurname,
     this.updatedByNameSurname,
     this.branchName,
+    this.myFavorite,
   });
 
   ViewQueQuestionMain.fromJson(Map<String, dynamic> json) {
@@ -3223,6 +3225,7 @@ class ViewQueQuestionMain {
     createdByNameSurname = json['createdByNameSurname'] as String?;
     updatedByNameSurname = json['updatedByNameSurname'] as String?;
     branchName = json['branchName'] as String?;
+    myFavorite = json['myFavorite'] as int?;
   }
 
   Map<String, dynamic> toMap() {
@@ -3258,6 +3261,7 @@ class ViewQueQuestionMain {
     data['CreatedByNameSurname'] = createdByNameSurname;
     data['UpdatedByNameSurname'] = updatedByNameSurname;
     data['BranchName'] = branchName;
+    data['MyFavorite'] = myFavorite;
     return data;
   }
 }

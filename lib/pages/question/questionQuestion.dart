@@ -86,6 +86,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
       debugPrint("QuestionQuestion_initState");
     }
 
+
     currentStepButtonNames['Back'] = stepButtonDescriptions[1]!;
     currentStepButtonNames['Next'] = stepButtonDescriptions[2]!;
     currentStepButtonNames['Save'] = stepButtonDescriptions[3]!;
@@ -97,41 +98,47 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
   }
 
   Future<void> loadQuestion() async {
-    tblUserMain =
-        await widget.mo.appRepository.getTblUserMain(widget.mo.userId);
+    tblUserMain = await widget.mo.appRepository.getTblUserMain(widget.mo.userId);
 
-    if (widget.mo.questionId != null &&
-        widget.mo.questionId != BigInt.parse('0') &&
-        widget.mo.userId != BigInt.parse('0')) {
-      tblQueQuestionMain = await widget.mo.appRepository
-          .getTblQueQuestionMain(widget.mo.questionId);
-      tblQueQuestionOptions = await widget.mo.appRepository
-          .getByQuestionIdTblQueQuestionOption(widget.mo.questionId);
-      tblQueQuestionAchvMaps = await widget.mo.appRepository
-          .getByQuestionIdTblQueQuestionAchvMap(widget.mo.questionId);
+    if (widget.mo.questionId != null && widget.mo.questionId != BigInt.parse('0') &&  widget.mo.userId != BigInt.parse('0')) {
+      tblQueQuestionMain = await widget.mo.appRepository.getTblQueQuestionMain(widget.mo.questionId);
 
-      selectedAchievementIds = tblQueQuestionAchvMaps != null
-          ? tblQueQuestionAchvMaps!.map((e) => e.achvId).toList().cast<int>()
-          : null;
-
-      selectedLocation = tblQueQuestionMain?.locationId ?? 0;
-      selectedAcademicYear = tblQueQuestionMain?.academicYear ?? 0;
-      selectedDifficultyLevel = tblQueQuestionMain?.difficultyLev ?? 0;
-      selectedGrade = tblQueQuestionMain?.gradeId ?? 0;
-
-      if(tblQueQuestionMain?.learnId!=null)
+      if(tblUserMain!=null && tblQueQuestionMain!=null &&
+          (tblQueQuestionMain!.userId==tblUserMain!.id ||tblQueQuestionMain!.userId==tblUserMain!.refUser ))
         {
-          var selectedLearn = await widget.mo.appRepository
-              .getTblLearnMain(tblQueQuestionMain?.learnId ?? 0);
 
-          if(selectedLearn!=null)
+          tblQueQuestionOptions = await widget.mo.appRepository
+              .getByQuestionIdTblQueQuestionOption(widget.mo.questionId);
+          tblQueQuestionAchvMaps = await widget.mo.appRepository
+              .getByQuestionIdTblQueQuestionAchvMap(widget.mo.questionId);
+
+          selectedAchievementIds = tblQueQuestionAchvMaps != null
+              ? tblQueQuestionAchvMaps!.map((e) => e.achvId).toList().cast<int>()
+              : null;
+
+          selectedLocation = tblQueQuestionMain?.locationId ?? 0;
+          selectedAcademicYear = tblQueQuestionMain?.academicYear ?? 0;
+          selectedDifficultyLevel = tblQueQuestionMain?.difficultyLev ?? 0;
+          selectedGrade = tblQueQuestionMain?.gradeId ?? 0;
+
+          if(tblQueQuestionMain?.learnId!=null)
           {
-            selectedLearnId = selectedLearn?.id;
-            selectedBranch = selectedLearn!.branchId!;
+            var selectedLearn = await widget.mo.appRepository
+                .getTblLearnMain(tblQueQuestionMain?.learnId ?? 0);
+
+            if(selectedLearn!=null)
+            {
+              selectedLearnId = selectedLearn?.id;
+              selectedBranch = selectedLearn!.branchId!;
+            }
+
+
           }
+        }else{
+        widget.mo.questionId=BigInt.zero;
+        return loadQuestion();
+      }
 
-
-        }
 
     } else {
       openQuestionEditor=true;

@@ -2,6 +2,8 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 
 class AppConstants {
   //General
+  static  BigInt loggedInUserId = BigInt.zero;
+  static  String loggedInUserName = 'Any';
   static  double lookupObjectWidth = 200;
 
   //lib/utils/helper/api.dart

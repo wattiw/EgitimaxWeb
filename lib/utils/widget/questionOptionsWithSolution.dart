@@ -57,7 +57,7 @@ class QuestionOptionsWithSolution extends StatelessWidget {
               return Column(
                 children: [
                   const Divider(
-                    color: Colors.grey,
+                    color: Colors.transparent,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,

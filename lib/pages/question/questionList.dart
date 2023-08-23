@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:egitimax/models/common/enums.dart';
 import 'package:egitimax/models/egitimax/egitimaxEntities.dart';
 import 'package:egitimax/models/question/questionPageModel.dart';
 import 'package:egitimax/pages/question/questionPage.dart';
@@ -7,6 +8,7 @@ import 'package:egitimax/repositories/appRepository.dart';
 import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:egitimax/utils/helper/responsiveDatatableHelper.dart';
 import 'package:egitimax/utils/helper/routeManager.dart';
+import 'package:egitimax/utils/widget/checkboxRow.dart';
 import 'package:egitimax/utils/widget/collapseChild.dart';
 import 'package:egitimax/utils/widget/dropdownSearch.dart';
 import 'package:egitimax/utils/widget/learnHierarchyDrops.dart';
@@ -100,10 +102,9 @@ class _QuestionListState extends State<QuestionList> {
   }
 
   Future<void> loadDefaults() async {
+
     if (!isLoadFirst) {
       tblUserMain = await appRepository.getTblUserMain(widget.userId);
-
-      filter!.userId = widget.userId;
 
       var defaultAcademicYear = await appRepository.getAllTblUtilAcademicYear();
       if (defaultAcademicYear != null && defaultAcademicYear.isNotEmpty) {
@@ -125,6 +126,24 @@ class _QuestionListState extends State<QuestionList> {
     }
 
     if (runDbSearchRequest) {
+
+      if(searchInEgitimax==true)
+        {
+          filter!.userId=null;
+        }
+      else
+        {
+          filter!.userId=tblUserMain!.refUser??tblUserMain!.id;
+        }
+
+      if(isMyFavoriteQuestion==true)
+      {
+        filter!.myFavorite=1;
+      }
+      else
+      {
+        filter!.myFavorite=0;
+      }
       var pageCount =
           await appRepository.getAllWithPageCountByFilterViewQueQuestionMain(
               widget.userId, currentPerPage, filter);
@@ -149,7 +168,7 @@ class _QuestionListState extends State<QuestionList> {
                     return tableData;
                   })
                 : appRepository.getAllWithPageByFilterViewQueQuestionMain(
-                    widget.userId, currentPerPage, currentPage, filter),
+                widget.userId, currentPerPage, currentPage, filter),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -240,7 +259,9 @@ class _QuestionListState extends State<QuestionList> {
                     if (widget.settings != null) {
                       widget.settings!(currentPerPage, currentPage);
                     }
-                    setState(() {});
+                    setState(() {
+                      runDbSearchRequest=true;
+                    });
                   },
                   filterLookups: [
                     LayoutBuilder(
@@ -689,77 +710,42 @@ class _QuestionListState extends State<QuestionList> {
                                 const SizedBox(
                                   height: 5,
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Checkbox(
-                                      value:
-                                          isEnableDomainSubdomainSubjectSearch,
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          isEnableDomainSubdomainSubjectSearch =
-                                              newValue ?? false;
-                                        });
-                                      },
-                                    ),
-                                    Text(
+                                CheckboxRow(
+                                  label:
                                       '${isEnableDomainSubdomainSubjectSearch == true ? 'Enabled' : 'Disabled'} Domain/SubDomain/Subject Search',
-                                      style:
-                                          Theme.of(context).textTheme.bodySmall,
-                                    ),
-                                  ],
+                                  initialValue:
+                                      isEnableDomainSubdomainSubjectSearch,
+                                  onChanged: (newValue) {
+                                    isEnableDomainSubdomainSubjectSearch =
+                                        newValue ?? false;
+                                  },
                                 ),
                                 const SizedBox(
                                   height: 5,
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Checkbox(
-                                      value: isMyFavoriteQuestion,
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          isMyFavoriteQuestion =
-                                              newValue ?? false;
-                                        });
-                                      },
-                                    ),
-                                    Text(
-                                      'My Favorite Question',
-                                      style:
-                                          Theme.of(context).textTheme.bodySmall,
-                                    ),
-                                  ],
+                                CheckboxRow(
+                                  label: 'My Favorite Questions',
+                                  initialValue:
+                                  isMyFavoriteQuestion,
+                                  onChanged: (newValue) {
+                                    isMyFavoriteQuestion =
+                                        newValue ?? false;
+                                  },
                                 ),
                                 const SizedBox(
                                   height: 5,
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Checkbox(
-                                      value: searchInEgitimax,
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          searchInEgitimax = newValue ?? false;
-                                        });
-                                      },
-                                    ),
-                                    Text(
-                                      'Search In Egitimax',
-                                      style:
-                                          Theme.of(context).textTheme.bodySmall,
-                                    ),
-                                  ],
+                                CheckboxRow(
+                                  label:   'Search In Egitimax',
+                                  initialValue:
+                                  searchInEgitimax,
+                                  onChanged: (newValue) {
+                                    searchInEgitimax =
+                                        newValue ?? false;
+                                  },
                                 ),
                                 const SizedBox(
-                                  height: 5,
+                                  height: 10,
                                 ),
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width <=
@@ -821,6 +807,12 @@ class _QuestionListState extends State<QuestionList> {
                     searchButtonStatusInit = _searchButtonStatus;
                   },
                   headers: [
+                    DatatableHeader(
+                        text: "Id",
+                        value: "Id",
+                        show: true,
+                        sortable: true,
+                        textAlign: TextAlign.center),
                     DatatableHeader(
                         text: "Question",
                         value: "QuestionPlainText",
@@ -885,14 +877,12 @@ class _QuestionListState extends State<QuestionList> {
                         show: true,
                         sortable: true,
                         textAlign: TextAlign.center),
-
                     DatatableHeader(
                         text: "Grade",
                         value: "GradeName",
                         show: true,
                         sortable: true,
                         textAlign: TextAlign.center),
-
                     DatatableHeader(
                         text: "Learn",
                         value: "LearnNameChain",
@@ -906,12 +896,7 @@ class _QuestionListState extends State<QuestionList> {
                         sortable: true,
                         textAlign: TextAlign.center),
 
-/*                    DatatableHeader(
-                        text: "Id",
-                        value: "Id",
-                        show: true,
-                        sortable: true,
-                        textAlign: TextAlign.center),
+/*
                     DatatableHeader(
                         text: "Academic Year",
                         value: "AcademicYearName",
@@ -925,12 +910,7 @@ class _QuestionListState extends State<QuestionList> {
                         show: true,
                         sortable: true,
                         textAlign: TextAlign.center),
-                    DatatableHeader(
-                        text: "User Id",
-                        value: "UserNameSurname",
-                        show: true,
-                        sortable: true,
-                        textAlign: TextAlign.center),
+
                     DatatableHeader(
                         text: "Location",
                         value: "LocationNameChain",
@@ -981,18 +961,27 @@ class _QuestionListState extends State<QuestionList> {
                         sortable: false,
                         textAlign: TextAlign.center,
                         sourceBuilder: (value, row) {
+
+                          var actionList= <QuestionTableAction>[QuestionTableAction.details];
+
+                          if(row['UserId']== tblUserMain!.refUser || row['UserId']== widget.userId)
+                            {
+                              actionList.addAll([QuestionTableAction.delete, QuestionTableAction.update]);
+                            }
+
                           return Container(
                             alignment: Alignment.center,
-                            child: DropdownButton<String>(
+                            child: DropdownButton<QuestionTableAction>(
                               underline: Container(),
                               hint: const Text('İşlem Seçin'),
-                              items: <String>['Sil', 'Güncelle', 'Detay']
-                                  .map((String value) {
-                                return DropdownMenuItem<String>(
+                              items: actionList
+                                  .map((QuestionTableAction value) {
+
+                                return DropdownMenuItem<QuestionTableAction>(
                                   value: value,
                                   child: Row(
                                     children: [
-                                      if (value == 'Ekle')
+                                      if (value == QuestionTableAction.create)
                                         Icon(
                                           Icons.add,
                                           size:
@@ -1000,7 +989,7 @@ class _QuestionListState extends State<QuestionList> {
                                           color:
                                               Theme.of(context).iconTheme.color,
                                         ),
-                                      if (value == 'Sil')
+                                      if (value == QuestionTableAction.delete)
                                         Icon(
                                           Icons.delete,
                                           size:
@@ -1008,7 +997,7 @@ class _QuestionListState extends State<QuestionList> {
                                           color:
                                               Theme.of(context).iconTheme.color,
                                         ),
-                                      if (value == 'Güncelle')
+                                      if (value == QuestionTableAction.update)
                                         Icon(
                                           Icons.edit,
                                           size:
@@ -1016,7 +1005,7 @@ class _QuestionListState extends State<QuestionList> {
                                           color:
                                               Theme.of(context).iconTheme.color,
                                         ),
-                                      if (value == 'Detay')
+                                      if (value == QuestionTableAction.details)
                                         Icon(
                                           Icons.description_outlined,
                                           size:
@@ -1026,7 +1015,7 @@ class _QuestionListState extends State<QuestionList> {
                                         ),
                                       const SizedBox(width: 5),
                                       Text(
-                                        value,
+                                        value.getValue,//Buraya Dil dosyası komutu eklenecek
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium,
@@ -1035,15 +1024,15 @@ class _QuestionListState extends State<QuestionList> {
                                   ),
                                 );
                               }).toList(),
-                              onChanged: (String? selectedValue) {
+                              onChanged: (QuestionTableAction? selectedValue) {
                                 var mo = QuestionPageModel(context: context);
                                 mo.userId = widget.userId;
 
                                 mo.selectedPageIndex = 2;
 
-                                if (selectedValue == 'Ekle') {
+                                if (selectedValue == QuestionTableAction.create) {
                                   mo.questionId = BigInt.zero;
-                                } else if (selectedValue == 'Sil') {
+                                } else if (selectedValue ==  QuestionTableAction.delete) {
                                   Message.showWarningMessage(context,
                                       title: Text('Question Delete',
                                           style: Theme.of(context)
@@ -1075,9 +1064,9 @@ class _QuestionListState extends State<QuestionList> {
                                                   .size),
                                         ),
                                       ]);
-                                } else if (selectedValue == 'Güncelle') {
+                                } else if (selectedValue ==  QuestionTableAction.update) {
                                   mo.questionId = row['Id'];
-                                } else if (selectedValue == 'Detay') {
+                                } else if (selectedValue ==  QuestionTableAction.details) {
                                   Message.showInformationalMessage(context,
                                       title: Text('Question Details',
                                           style: Theme.of(context)
@@ -1117,8 +1106,8 @@ class _QuestionListState extends State<QuestionList> {
                                       ]);
                                 }
 
-                                if (selectedValue == 'Güncelle' ||
-                                    selectedValue == 'Ekle') {
+                                if (selectedValue ==  QuestionTableAction.update ||
+                                    selectedValue ==  QuestionTableAction.create) {
                                   RouteManager().addRoute('/QuestionPage',
                                       (context) => QuestionPage(mo: mo));
                                   RouteManager().navigateTo('/QuestionPage');
@@ -1174,3 +1163,4 @@ class _QuestionListState extends State<QuestionList> {
     setState(() {});
   }
 }
+
