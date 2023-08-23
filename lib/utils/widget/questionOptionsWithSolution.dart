@@ -356,8 +356,8 @@ class QuestionOptionsWithSolution extends StatelessWidget {
                 buttonStyle: CollapseButtonStyle(
                   textStyle: Theme.of(context).textTheme.titleMedium,
                   iconColor: Theme.of(context).iconTheme.color,
-                  showText: 'Show Question And Options',
-                  hideText: 'Hide Question And Options',
+                  showText: Text('Show Question And Options',style: Theme.of(context).textTheme.titleMedium,) ,
+                  hideText: Text('Hide Question And Options',style: Theme.of(context).textTheme.titleMedium,) ,
                 ),
                 prefixIcon: const Icon(Icons.question_mark_outlined),
                 child: qAndOps,
@@ -374,8 +374,8 @@ class QuestionOptionsWithSolution extends StatelessWidget {
                 buttonStyle: CollapseButtonStyle(
                   textStyle: Theme.of(context).textTheme.titleMedium,
                   iconColor: Theme.of(context).iconTheme.color,
-                  showText: 'Show Question Details',
-                  hideText: 'Hide Question Details',
+                  showText: Text('Show Question Details',style: Theme.of(context).textTheme.titleMedium,) ,
+                  hideText: Text('Hide Question Details',style: Theme.of(context).textTheme.titleMedium,) ,
                 ),
                 prefixIcon: const Icon(Icons.line_style),
                 child: Column(children: questionDetails),

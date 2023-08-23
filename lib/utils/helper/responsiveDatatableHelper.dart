@@ -265,36 +265,35 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
     if (widget.actions != null && widget.actions!.isNotEmpty) {
       _actions.addAll(widget.actions!);
     }
-      _actions.add(SearchButton(
-        searchButtonStatusInit: widget.searchButtonStatusInit,
-        searchButtonStatus: (v) {
-          setState(() {
-            if (v == SearchButtonStatus.Filter) {
-              searchButtonStatus = v;
-            } else if (v == SearchButtonStatus.Search) {
-              searchButtonStatus = v;
-            } else if (v == SearchButtonStatus.None) {
-              searchButtonStatus = v;
-            } else {}
-          });
+      // _actions.add(SearchButton(
+      //   searchButtonStatusInit: widget.searchButtonStatusInit,
+      //   searchButtonStatus: (v) {
+      //     setState(() {
+      //       if (v == SearchButtonStatus.Filter) {
+      //         searchButtonStatus = v;
+      //       } else if (v == SearchButtonStatus.Search) {
+      //         searchButtonStatus = v;
+      //       } else if (v == SearchButtonStatus.None) {
+      //         searchButtonStatus = v;
+      //       } else {}
+      //     });
+      //
+      //     if (widget.searchButtonStatus != null) {
+      //       widget.searchButtonStatus!(v);
+      //     }
+      //   },
+      // ));
 
-          if (widget.searchButtonStatus != null) {
-            widget.searchButtonStatus!(v);
-          }
-        },
-      ));
-
-    return SingleChildScrollView(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(20, 20, 20, 1),
+            padding: EdgeInsets.fromLTRB(5, 5, 5, 1),
             child: Column(
               children: [
                 if ((searchButtonStatus == SearchButtonStatus.Filter ||
-                        _source.isEmpty) &&
+                    _source.isEmpty) &&
                     searchButtonStatus != SearchButtonStatus.Search)
                   Wrap(
                     spacing: 5,
@@ -310,9 +309,9 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
                           value: widget.searchKey,
                           items: _headers
                               .map((e) => DropdownMenuItem<String>(
-                                    value: e.value,
-                                    child: Text(e.text),
-                                  ))
+                            value: e.value,
+                            child: Text(e.text),
+                          ))
                               .toList(),
                           onChanged: (value) {
                             setState(() {
@@ -325,44 +324,44 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
                           },
                           isExpanded: false,
                           underline:
-                              Container(), // Çizgiyi kaldırmak için bu satırı ekleyin
+                          Container(), // Çizgiyi kaldırmak için bu satırı ekleyin
                         ),
                       ),
                       Expanded(
                           child: TextField(
-                        controller: searchTextController,
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText:
+                            controller: searchTextController,
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText:
                                 'Enter search term based on ${_headers.firstWhere((element) => element.value == _searchKey!).text.replaceAll(RegExp('[\\W_]+'), ' ')}',
-                            prefixIcon: IconButton(
-                                icon: Icon(
-                                  Icons.cancel,
-                                  color: Theme.of(context).iconTheme.color,
-                                  size: Theme.of(context).iconTheme.size,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isSearch = false;
-                                  });
-                                  _initializeData();
-                                }),
-                            suffixIcon: IconButton(
-                                icon: Icon(
-                                  Icons.search,
-                                  size: Theme.of(context).iconTheme.size,
-                                  color: Theme.of(context).iconTheme.color,
-                                ),
-                                onPressed: () {
-                                  if (searchTextController!.text != null &&
-                                      searchTextController!.text != '') {
-                                    _filterData(searchTextController!.text);
-                                  }
-                                })),
-                        onSubmitted: (value) {
-                          _filterData(value);
-                        },
-                      )),
+                                prefixIcon: IconButton(
+                                    icon: Icon(
+                                      Icons.cancel,
+                                      color: Theme.of(context).iconTheme.color,
+                                      size: Theme.of(context).iconTheme.size,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _isSearch = false;
+                                      });
+                                      _initializeData();
+                                    }),
+                                suffixIcon: IconButton(
+                                    icon: Icon(
+                                      Icons.search,
+                                      size: Theme.of(context).iconTheme.size,
+                                      color: Theme.of(context).iconTheme.color,
+                                    ),
+                                    onPressed: () {
+                                      if (searchTextController!.text != null &&
+                                          searchTextController!.text != '') {
+                                        _filterData(searchTextController!.text);
+                                      }
+                                    })),
+                            onSubmitted: (value) {
+                              _filterData(value);
+                            },
+                          )),
                     ],
                   ),
               ],
@@ -371,11 +370,11 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
           Container(
             margin: const EdgeInsets.all(0),
             padding: const EdgeInsets.all(0),
-            constraints: const BoxConstraints(
-              maxHeight: 700,
+            constraints:  BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height*(2/3),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(5.0),
+              padding: const EdgeInsets.fromLTRB(5,5,5,10),
               child: ResponsiveDatatable(
                 title: widget.title,
                 reponseScreenSizes: const [ScreenSize.xs],
@@ -386,7 +385,7 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
                 showSelect: _showSelect,
                 autoHeight: false,
                 isExpandRows:
-                    widget.dropContainerIsActive == true ? true : false,
+                widget.dropContainerIsActive == true ? true : false,
                 dropContainer: (data) {
                   if (widget.dropContainer != null) {
                     return widget.dropContainer!(data);
@@ -506,9 +505,9 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
                         value: _currentPerPage,
                         items: _perPages
                             .map((e) => DropdownMenuItem<int>(
-                                  value: e,
-                                  child: Text("$e"),
-                                ))
+                          value: e,
+                          child: Text("$e"),
+                        ))
                             .toList(),
                         onChanged: (dynamic value) {
                           setState(() {
@@ -543,9 +542,9 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
                         value: _currentExPage,
                         items: _pages
                             .map((e) => DropdownMenuItem<int>(
-                                  value: e,
-                                  child: Text("$e"),
-                                ))
+                          value: e,
+                          child: Text("$e"),
+                        ))
                             .toList(),
                         onChanged: (dynamic value) {
                           setState(() {
@@ -620,7 +619,7 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
               ),
             ),
           ),
-        ]));
+        ]);
   }
 
   void getDynamicDropDownFilter(BuildContext context) {

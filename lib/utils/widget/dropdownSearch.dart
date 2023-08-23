@@ -78,7 +78,7 @@ class DropdownSearchHelper {
             ),
             baseStyle: theme?.textTheme.bodyMedium,
           ),
-      clearButtonProps: clearButtonProps ??  ClearButtonProps(isVisible: true,onPressed:(){
+      clearButtonProps: clearButtonProps ??  ClearButtonProps(iconSize: Theme.of(context).iconTheme.size!*0.75 ?? 14,color: Theme.of(context).iconTheme.color ,isVisible: true,onPressed:(){
         if(onChanged!=null)
           {
             selectedItem=null;
@@ -190,7 +190,7 @@ class DropdownSearchHelper {
             ),
             baseStyle: theme?.textTheme.bodyMedium,
           ),
-      clearButtonProps: clearButtonProps ??  ClearButtonProps(isVisible: true,onPressed:(){
+      clearButtonProps: clearButtonProps ??  ClearButtonProps(iconSize: Theme.of(context).iconTheme.size!*0.75 ?? 14,color: Theme.of(context).iconTheme.color ,isVisible: true,onPressed:(){
         if(onChanged!=null)
         {
           selectedItems=[];

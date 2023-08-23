@@ -121,10 +121,10 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
                     scrollDirection: Axis.vertical,
                     child: Container(
                       width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
+                      height: MediaQuery.of(context).size.height*1.5,
                       constraints: BoxConstraints(
                         maxWidth: MediaQuery.of(context).size.width,
-                        minHeight: MediaQuery.of(context).size.height,
+                        minHeight: MediaQuery.of(context).size.height*1.5,
                       ),
                       child: getBody(),
                     ),

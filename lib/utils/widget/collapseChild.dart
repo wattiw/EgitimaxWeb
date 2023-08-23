@@ -15,8 +15,8 @@ class CollapseChild extends StatefulWidget {
 class CollapseButtonStyle {
   TextStyle? textStyle = const TextStyle();
   Color? iconColor = Colors.grey;
-  final String showText;
-  final String hideText;
+  final Widget? showText;
+  final Widget? hideText;
 
   CollapseButtonStyle({
     this.textStyle,
@@ -59,12 +59,8 @@ class _CollapseChildState extends State<CollapseChild> {
                   children: [
                     if (widget.prefixIcon != null) widget.prefixIcon!,
                     if (widget.prefixIcon != null)   const SizedBox(width: 5),
-                    Text(
-                      isCollapsed
-                          ? widget.buttonStyle.showText
-                          : widget.buttonStyle.hideText,
-                      style: widget.buttonStyle.textStyle,
-                    ),
+                    if (isCollapsed) widget.buttonStyle.showText??Container(),
+                    if (!isCollapsed) widget.buttonStyle.hideText??Container(),
                   ],
                 ),
                 Icon(

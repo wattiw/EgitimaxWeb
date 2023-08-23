@@ -78,8 +78,8 @@ class WebViewPage extends StatelessWidget {
       buttonStyle: CollapseButtonStyle(
         textStyle: Theme.of(context).textTheme.titleMedium,
         iconColor: Theme.of(context).iconTheme.color,
-        showText: showText??'',
-        hideText: hideText??'',
+        showText: Text(showText??'',style: Theme.of(context).textTheme.titleMedium,) ,
+        hideText: Text(hideText??'',style: Theme.of(context).textTheme.titleMedium,) ,
       ),
       prefixIcon: prefixIcon,
       child: data,

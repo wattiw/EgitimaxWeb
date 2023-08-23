@@ -36,9 +36,9 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromRGBO(55, 91, 145, 1)),
             useMaterial3: true,
             textTheme: const TextTheme(
-              titleLarge: TextStyle(fontSize: 12),
-              titleMedium: TextStyle(fontSize: 10),
-              titleSmall: TextStyle(fontSize: 8),
+              titleLarge: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
+              titleMedium: TextStyle(fontSize: 10,fontWeight: FontWeight.bold),
+              titleSmall: TextStyle(fontSize: 8,fontWeight: FontWeight.bold),
               bodyLarge: TextStyle(fontSize: 12),
               bodyMedium: TextStyle(fontSize: 10),
               bodySmall: TextStyle(fontSize: 8),

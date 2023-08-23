@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 enum Action {
   create,
   createVerified,
@@ -8,9 +10,8 @@ enum Action {
   remove,
   removeVerified,
 }
-
 extension ActionExtension on Action {
-  int get getValue {
+  int getValue(BuildContext context) {
     switch (this) {
       case Action.create:
         return 1;
@@ -34,8 +35,6 @@ extension ActionExtension on Action {
   }
 }
 
-
-
 enum QuestionTableAction {
   create,
   update,
@@ -43,9 +42,8 @@ enum QuestionTableAction {
   remove,
   details
 }
-
 extension QuestionTableActionExtension on QuestionTableAction {
-  String get getValue {
+  String  getValue(BuildContext context) {
     switch (this) {
       case QuestionTableAction.create:
         return 'Create';
@@ -61,4 +59,37 @@ extension QuestionTableActionExtension on QuestionTableAction {
         return '';
     }
   }
+}
+
+enum QuestionTableType {
+  myFavoriteQuestion,
+  myQuestion,
+  allPublicQuestion,
+}
+extension QuestionTableTypeExtension on QuestionTableType {
+  String getValue(BuildContext context) {
+    switch (this) {
+      case QuestionTableType.myFavoriteQuestion:
+        return 'My Favorite Questions';
+      case QuestionTableType.myQuestion:
+        return 'My Questions';
+      case QuestionTableType.allPublicQuestion:
+        return 'Public Eğitimax Question';
+      default:
+        return '';
+    }
+  }
+}
+extension QuestionTableTypeListExtension on QuestionTableType {
+  static List<QuestionTypeKeyValuePair> getKeyValuePairs(BuildContext context) {
+    return QuestionTableType.values
+        .map((type) => QuestionTypeKeyValuePair(type, type.getValue(context)))
+        .toList();
+  }
+}
+class QuestionTypeKeyValuePair {
+  final QuestionTableType type;
+  final String displayValue;
+
+  QuestionTypeKeyValuePair(this.type, this.displayValue);
 }

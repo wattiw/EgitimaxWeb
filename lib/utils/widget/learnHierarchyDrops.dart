@@ -36,7 +36,7 @@ class LearnHierarchyDrops extends StatefulWidget {
 }
 
 class _LearnHierarchyDropsState extends State<LearnHierarchyDrops> {
-  int totalItem = 5;
+  int totalItem = 1;
 
   late int selectedLearnId;
   late List<int> selectedAchievementIds;
@@ -63,6 +63,13 @@ class _LearnHierarchyDropsState extends State<LearnHierarchyDrops> {
       return FutureBuilder<List<LearnHierarchy>?>(
         future: appRepository.getLearnHierarchyTblLearnMain(selectedLearnId),
         builder: (context, snapshot) {
+
+          totalItem =snapshot.data!=null &&  snapshot.data!.isNotEmpty ? snapshot.data!.length :1;
+
+          if(totalItem>=2) {
+            totalItem++;
+          }
+
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError)
@@ -83,7 +90,7 @@ class _LearnHierarchyDropsState extends State<LearnHierarchyDrops> {
                       width: widget.width ?? (MediaQuery.of(context).size.width < 500
                               ? constraints.maxWidth //MediaQuery.of(context).size.width
                               : divisionResult*AppConstants.lookupObjectWidth),
-                      height: widget.height ?? double.parse('20') * totalItem,
+                      height: widget.height ?? double.parse( ( totalItem> 1 ?'40' :'40'))*totalItem ,
                       child:ListView.builder(
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
@@ -182,8 +189,7 @@ class _LearnHierarchyDropsState extends State<LearnHierarchyDrops> {
                                   if (dropDownSnapshot.data!.isEmpty) {
                                     return Container();
                                   }
-                                  totalItem =dropDownSnapshot.data!=null &&  dropDownSnapshot.data!.isNotEmpty ? dropDownSnapshot.data!.length :1;
-                                  return Padding(
+                                    return Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 5),
                                     child: DropdownSearchHelper
                                         .singleSelectionDropdown<TblLearnMain>(

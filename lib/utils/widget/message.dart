@@ -22,10 +22,10 @@ class Message {
     VerticalDirection? actionsOverflowDirection,
     double? actionsOverflowButtonSpacing,
     EdgeInsetsGeometry? buttonPadding,
-    Color? backgroundColor=Colors.white,
+    Color? backgroundColor = Colors.white,
     double? elevation,
     Color? shadowColor,
-    Color? surfaceTintColor=Colors.white,
+    Color? surfaceTintColor = Colors.white,
     String? semanticLabel,
     EdgeInsets insetPadding = EdgeInsets.zero,
     Clip clipBehavior = Clip.none,
@@ -42,15 +42,28 @@ class Message {
       builder: (BuildContext context) {
         return AlertDialog(
           icon: icon ??
-               Row(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                   Icon(
-                    Icons.info,
-                    color: Colors.black,
-                      size:theme.iconTheme.size
+                  Row(
+                    children: [
+                      Icon(Icons.info,
+                          color: Colors.black, size: theme.iconTheme.size),
+                      const SizedBox(width: 5.0),
+                      Text(
+                        lang.libUtilsWidgetMessage_general,
+                        style: theme.textTheme.titleMedium,
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 5.0),
-                  Text(lang.libUtilsWidgetMessage_general,style:theme.textTheme.titleMedium,),
+                  IconButton(
+                    icon: Icon(
+                      Icons.clear,
+                      size: Theme.of(context).iconTheme.size,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                  )
                 ],
               ),
           iconPadding: iconPadding,
@@ -65,11 +78,13 @@ class Message {
               [
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'Cancel'),
-                  child:  Icon(Icons.cancel_outlined ,size:theme.iconTheme.size),
+                  child:
+                      Icon(Icons.cancel_outlined, size: theme.iconTheme.size),
                 ),
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'OK'),
-                  child:  Icon(Icons.check_circle_outline,size:theme.iconTheme.size),
+                  child: Icon(Icons.check_circle_outline,
+                      size: theme.iconTheme.size),
                 ),
               ],
           actionsPadding: actionsPadding,
@@ -111,10 +126,10 @@ class Message {
     VerticalDirection? actionsOverflowDirection,
     double? actionsOverflowButtonSpacing,
     EdgeInsetsGeometry? buttonPadding,
-    Color? backgroundColor=Colors.white,
+    Color? backgroundColor = Colors.white,
     double? elevation,
     Color? shadowColor,
-    Color? surfaceTintColor=Colors.white,
+    Color? surfaceTintColor = Colors.white,
     String? semanticLabel,
     EdgeInsets insetPadding = EdgeInsets.zero,
     Clip clipBehavior = Clip.none,
@@ -122,7 +137,6 @@ class Message {
     AlignmentGeometry? alignment,
     bool scrollable = false,
   }) {
-
     var lang = AppLocalizations.of(context)!;
     final localeModel = Provider.of<LocaleManager>(context, listen: false);
     var theme = Theme.of(context);
@@ -130,53 +144,74 @@ class Message {
     return showDialog<String>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          icon: icon ??
-               Row(
-                children: [
-                   Icon(
-                    Icons.info,
-                    color: Colors.blue,size:theme.iconTheme.size
+        return Column(
+          children: [
+            AlertDialog(
+              icon: icon ??
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.info,
+                              color: Theme.of(context).iconTheme.color,
+                              size: theme.iconTheme.size),
+                          const SizedBox(width: 5.0),
+                          Text(
+                            lang.libUtilsWidgetMessage_information,
+                            style: theme.textTheme.titleMedium,
+                          ),
+                        ],
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.clear,
+                          size: Theme.of(context).iconTheme.size,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
+                        onPressed: () => Navigator.pop(context, 'Cancel'),
+                      )
+                    ],
                   ),
-                  const SizedBox(width: 5.0),
-                  Text(lang.libUtilsWidgetMessage_information,style:theme.textTheme.titleMedium,),
-                ],
-              ),
-          iconPadding: iconPadding,
-          iconColor: iconColor,
-          title: title,
-          titlePadding: titlePadding,
-          titleTextStyle: titleTextStyle,
-          content: content,
-          contentPadding: contentPadding,
-          contentTextStyle: contentTextStyle,
-          actions: actions ??
-              [
-                TextButton(
-                  onPressed: () => Navigator.pop(context, 'Cancel'),
-                  child:  Icon(Icons.cancel_outlined,size:theme.iconTheme.size),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pop(context, 'OK'),
-                  child:  Icon(Icons.check_circle_outline,size:theme.iconTheme.size),
-                ),
-              ],
-          actionsPadding: actionsPadding,
-          actionsAlignment: actionsAlignment,
-          actionsOverflowAlignment: actionsOverflowAlignment,
-          actionsOverflowDirection: actionsOverflowDirection,
-          actionsOverflowButtonSpacing: actionsOverflowButtonSpacing,
-          buttonPadding: buttonPadding,
-          backgroundColor: backgroundColor,
-          elevation: elevation,
-          shadowColor: shadowColor,
-          surfaceTintColor: surfaceTintColor,
-          semanticLabel: semanticLabel,
-          insetPadding: insetPadding,
-          clipBehavior: clipBehavior,
-          shape: shape,
-          alignment: alignment,
-          scrollable: scrollable,
+              iconPadding: iconPadding,
+              iconColor: iconColor,
+              title: title,
+              titlePadding: titlePadding,
+              titleTextStyle: titleTextStyle,
+              content: content,
+              contentPadding: contentPadding,
+              contentTextStyle: contentTextStyle,
+              actions: actions ??
+                  [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                      child: Icon(Icons.cancel_outlined,
+                          size: theme.iconTheme.size),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'OK'),
+                      child: Icon(Icons.check_circle_outline,
+                          size: theme.iconTheme.size),
+                    ),
+                  ],
+              actionsPadding: actionsPadding,
+              actionsAlignment: actionsAlignment,
+              actionsOverflowAlignment: actionsOverflowAlignment,
+              actionsOverflowDirection: actionsOverflowDirection,
+              actionsOverflowButtonSpacing: actionsOverflowButtonSpacing,
+              buttonPadding: buttonPadding,
+              backgroundColor: backgroundColor,
+              elevation: elevation,
+              shadowColor: shadowColor,
+              surfaceTintColor: surfaceTintColor,
+              semanticLabel: semanticLabel,
+              insetPadding: insetPadding,
+              clipBehavior: clipBehavior,
+              shape: shape,
+              alignment: alignment,
+              scrollable: scrollable,
+            ),
+          ],
         );
       },
     );
@@ -200,10 +235,10 @@ class Message {
     VerticalDirection? actionsOverflowDirection,
     double? actionsOverflowButtonSpacing,
     EdgeInsetsGeometry? buttonPadding,
-    Color? backgroundColor=Colors.white,
+    Color? backgroundColor = Colors.white,
     double? elevation,
     Color? shadowColor,
-    Color? surfaceTintColor=Colors.white,
+    Color? surfaceTintColor = Colors.white,
     String? semanticLabel,
     EdgeInsets insetPadding = EdgeInsets.zero,
     Clip clipBehavior = Clip.none,
@@ -220,14 +255,28 @@ class Message {
       builder: (BuildContext context) {
         return AlertDialog(
           icon: icon ??
-               Row(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                   Icon(
-                    Icons.warning,
-                    color: Colors.redAccent,size:theme.iconTheme.size
+                  Row(
+                    children: [
+                      Icon(Icons.warning,
+                          color: Colors.redAccent, size: theme.iconTheme.size),
+                      const SizedBox(width: 5.0),
+                      Text(
+                        lang.libUtilsWidgetMessage_warning,
+                        style: theme.textTheme.titleMedium,
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 5.0),
-                  Text(lang.libUtilsWidgetMessage_warning,style:theme.textTheme.titleMedium,),
+                  IconButton(
+                    icon: Icon(
+                      Icons.clear,
+                      size: Theme.of(context).iconTheme.size,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                  )
                 ],
               ),
           iconPadding: iconPadding,
@@ -242,11 +291,13 @@ class Message {
               [
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'Cancel'),
-                  child:  Icon(Icons.cancel_outlined,size:theme.iconTheme.size),
+                  child:
+                      Icon(Icons.cancel_outlined, size: theme.iconTheme.size),
                 ),
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'OK'),
-                  child:  Icon(Icons.check_circle_outline,size:theme.iconTheme.size),
+                  child: Icon(Icons.check_circle_outline,
+                      size: theme.iconTheme.size),
                 ),
               ],
           actionsPadding: actionsPadding,
@@ -288,10 +339,10 @@ class Message {
     VerticalDirection? actionsOverflowDirection,
     double? actionsOverflowButtonSpacing,
     EdgeInsetsGeometry? buttonPadding,
-    Color? backgroundColor=Colors.white,
+    Color? backgroundColor = Colors.white,
     double? elevation,
     Color? shadowColor,
-    Color? surfaceTintColor=Colors.white,
+    Color? surfaceTintColor = Colors.white,
     String? semanticLabel,
     EdgeInsets insetPadding = EdgeInsets.zero,
     Clip clipBehavior = Clip.none,
@@ -299,7 +350,6 @@ class Message {
     AlignmentGeometry? alignment,
     bool scrollable = false,
   }) {
-
     var lang = AppLocalizations.of(context)!;
     final localeModel = Provider.of<LocaleManager>(context, listen: false);
     var theme = Theme.of(context);
@@ -309,14 +359,27 @@ class Message {
       builder: (BuildContext context) {
         return AlertDialog(
           icon: icon ??
-               Row(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                   Icon(
-                    Icons.checklist_outlined,
-                    color: Colors.deepPurpleAccent,size:theme.iconTheme.size
-                  ),
-                  const SizedBox(width: 5.0),
-                  Text(lang.libUtilsWidgetMessage_confirmation,style:theme.textTheme.titleMedium,),
+                  Row(children: [
+                    Icon(Icons.checklist_outlined,
+                        color: Colors.deepPurpleAccent,
+                        size: theme.iconTheme.size),
+                    const SizedBox(width: 5.0),
+                    Text(
+                      lang.libUtilsWidgetMessage_confirmation,
+                      style: theme.textTheme.titleMedium,
+                    ),
+                  ]),
+                  IconButton(
+                    icon: Icon(
+                      Icons.clear,
+                      size: Theme.of(context).iconTheme.size,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                  )
                 ],
               ),
           iconPadding: iconPadding,
@@ -331,11 +394,13 @@ class Message {
               [
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'Cancel'),
-                  child:  Icon(Icons.cancel_outlined,size:theme.iconTheme.size),
+                  child:
+                      Icon(Icons.cancel_outlined, size: theme.iconTheme.size),
                 ),
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'OK'),
-                  child:  Icon(Icons.check_circle_outline,size:theme.iconTheme.size),
+                  child: Icon(Icons.check_circle_outline,
+                      size: theme.iconTheme.size),
                 ),
               ],
           actionsPadding: actionsPadding,
@@ -377,10 +442,10 @@ class Message {
     VerticalDirection? actionsOverflowDirection,
     double? actionsOverflowButtonSpacing,
     EdgeInsetsGeometry? buttonPadding,
-    Color? backgroundColor=Colors.white,
+    Color? backgroundColor = Colors.white,
     double? elevation,
     Color? shadowColor,
-    Color? surfaceTintColor=Colors.white,
+    Color? surfaceTintColor = Colors.white,
     String? semanticLabel,
     EdgeInsets insetPadding = EdgeInsets.zero,
     Clip clipBehavior = Clip.none,
@@ -388,7 +453,6 @@ class Message {
     AlignmentGeometry? alignment,
     bool scrollable = false,
   }) {
-
     var lang = AppLocalizations.of(context)!;
     final localeModel = Provider.of<LocaleManager>(context, listen: false);
     var theme = Theme.of(context);
@@ -398,14 +462,28 @@ class Message {
       builder: (BuildContext context) {
         return AlertDialog(
           icon: icon ??
-               Row(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                   Icon(
-                    Icons.task,
-                    color: Colors.amber,size:theme.iconTheme.size
+                  Row(
+                    children: [
+                      Icon(Icons.task,
+                          color: Colors.amber, size: theme.iconTheme.size),
+                      const SizedBox(width: 5.0),
+                      Text(
+                        lang.libUtilsWidgetMessage_request,
+                        style: theme.textTheme.titleMedium,
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 5.0),
-                  Text(lang.libUtilsWidgetMessage_request,style:theme.textTheme.titleMedium,),
+                  IconButton(
+                    icon: Icon(
+                      Icons.clear,
+                      size: Theme.of(context).iconTheme.size,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                  )
                 ],
               ),
           iconPadding: iconPadding,
@@ -420,11 +498,13 @@ class Message {
               [
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'Cancel'),
-                  child:  Icon(Icons.cancel_outlined,size:theme.iconTheme.size),
+                  child:
+                      Icon(Icons.cancel_outlined, size: theme.iconTheme.size),
                 ),
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'OK'),
-                  child:  Icon(Icons.check_circle_outline,size:theme.iconTheme.size),
+                  child: Icon(Icons.check_circle_outline,
+                      size: theme.iconTheme.size),
                 ),
               ],
           actionsPadding: actionsPadding,
@@ -466,10 +546,10 @@ class Message {
     VerticalDirection? actionsOverflowDirection,
     double? actionsOverflowButtonSpacing,
     EdgeInsetsGeometry? buttonPadding,
-    Color? backgroundColor=Colors.white,
+    Color? backgroundColor = Colors.white,
     double? elevation,
     Color? shadowColor,
-    Color? surfaceTintColor=Colors.white,
+    Color? surfaceTintColor = Colors.white,
     String? semanticLabel,
     EdgeInsets insetPadding = EdgeInsets.zero,
     Clip clipBehavior = Clip.none,
@@ -477,7 +557,6 @@ class Message {
     AlignmentGeometry? alignment,
     bool scrollable = false,
   }) {
-
     var lang = AppLocalizations.of(context)!;
     final localeModel = Provider.of<LocaleManager>(context, listen: false);
     var theme = Theme.of(context);
@@ -487,14 +566,28 @@ class Message {
       builder: (BuildContext context) {
         return AlertDialog(
           icon: icon ??
-               Row(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                   Icon(
-                    Icons.error_outline,
-                    color: Colors.red,size:theme.iconTheme.size
+                  Row(
+                    children: [
+                      Icon(Icons.error_outline,
+                          color: Colors.red, size: theme.iconTheme.size),
+                      const SizedBox(width: 5.0),
+                      Text(
+                        lang.libUtilsWidgetMessage_error,
+                        style: theme.textTheme.titleMedium,
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 5.0),
-                  Text(lang.libUtilsWidgetMessage_error,style:theme.textTheme.titleMedium,),
+                  IconButton(
+                    icon: Icon(
+                      Icons.clear,
+                      size: Theme.of(context).iconTheme.size,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                  )
                 ],
               ),
           iconPadding: iconPadding,
@@ -509,11 +602,13 @@ class Message {
               [
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'Cancel'),
-                  child:  Icon(Icons.cancel_outlined,size:theme.iconTheme.size),
+                  child:
+                      Icon(Icons.cancel_outlined, size: theme.iconTheme.size),
                 ),
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'OK'),
-                  child:  Icon(Icons.check_circle_outline,size:theme.iconTheme.size),
+                  child: Icon(Icons.check_circle_outline,
+                      size: theme.iconTheme.size),
                 ),
               ],
           actionsPadding: actionsPadding,
