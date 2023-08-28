@@ -18,7 +18,7 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
   bool floating = false;
   bool pinned = false;
   bool snap = false;
-
+  ScrollController scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
@@ -40,103 +40,91 @@ class _QuestionQuestionsState extends State<QuestionQuestions> {
     }
     GlobalKey<ScaffoldState> questionQuestionsKey = GlobalKey<ScaffoldState>();
 
-    return Scaffold(
-      key: questionQuestionsKey,
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            backgroundColor: widget.mo.theme.colorScheme.background,
-            foregroundColor: widget.mo.theme.colorScheme.secondary,
-            shadowColor: widget.mo.theme.colorScheme.shadow,
-            surfaceTintColor: widget.mo.theme.colorScheme.surface,
-            actions: [
-              IconButton(
-                icon:
-                    Icon(Icons.settings, size: widget.mo.theme.iconTheme.size),
-                onPressed: () {
-                  questionQuestionsKey.currentState?.openEndDrawer();
-                },
-              ),
-            ],
-            automaticallyImplyLeading: false,
-            pinned: pinned,
-            snap: snap,
-            floating: floating,
-            expandedHeight: kToolbarHeight * 1,
-            flexibleSpace: FutureBuilder(
-              future: Future.delayed(const Duration(seconds: 0), () {
-                return Imager.get(
-                    'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
-              }),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return const Center(
-                    child: Text('Error loading image'),
-                  );
-                } else {
-                  return Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: snapshot.data!,
-                        fit: BoxFit.cover,
-                      ),
-                      color: widget.mo.theme.colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Text(
-                                widget.mo.currentTitle ?? '',
-                                style: widget.mo.theme.textTheme.titleMedium,
-                              )
-                            ],
-                          ),
+    return Container(
+      margin: const EdgeInsets.fromLTRB(10,5,10,5),
+      child: Scaffold(
+        key: questionQuestionsKey,
+        body: CustomScrollView(
+          controller: scrollController,
+          slivers: <Widget>[
+            SliverAppBar(
+              backgroundColor: widget.mo.theme.colorScheme.background,
+              foregroundColor: widget.mo.theme.colorScheme.secondary,
+              shadowColor: widget.mo.theme.colorScheme.shadow,
+              surfaceTintColor: widget.mo.theme.colorScheme.surface,
+              actions: [
+                IconButton(
+                  icon:
+                      Icon(Icons.settings, size: widget.mo.theme.iconTheme.size),
+                  onPressed: () {
+                    questionQuestionsKey.currentState?.openEndDrawer();
+                  },
+                ),
+              ],
+              automaticallyImplyLeading: false,
+              pinned: pinned,
+              snap: snap,
+              floating: floating,
+              expandedHeight: kToolbarHeight * 1,
+              flexibleSpace: FutureBuilder(
+                future: Future.delayed(const Duration(seconds: 0), () {
+                  return Imager.get(
+                      'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
+                }),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return const Center(
+                      child: Text('Error loading image'),
+                    );
+                  } else {
+                    return Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: snapshot.data!,
+                          fit: BoxFit.cover,
                         ),
-                      ],
-                    ),
-                  );
-                }
-              },
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.all(5.0),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height*1.5,
-                      constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width,
-                        minHeight: MediaQuery.of(context).size.height*1.5,
+                        color: widget.mo.theme.colorScheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      child: getBody(),
-                    ),
-                  );
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Text(
+                                  widget.mo.currentTitle ?? '',
+                                  style: widget.mo.theme.textTheme.titleMedium,
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
                 },
-                childCount: 1,
               ),
             ),
-          ),
-        ],
+            SliverFillViewport(delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                return getBody();
+              },
+              childCount: 1,
+            ),),
+          ],
+        ),
+        endDrawer: getDrawer(),
       ),
-      endDrawer: getDrawer(),
     );
   }
 

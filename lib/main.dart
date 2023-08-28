@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
               bodySmall: TextStyle(fontSize: 8),
             ),
             iconTheme: const IconThemeData(
-              size:20,
+              size:16,
               color:  Color.fromRGBO(55, 91, 145, 1)
             ),
             buttonTheme: const ButtonThemeData(

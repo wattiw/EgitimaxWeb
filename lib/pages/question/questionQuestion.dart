@@ -31,8 +31,10 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
   bool floating = false;
   bool pinned = false;
   bool snap = false;
+  ScrollController scrollController = ScrollController();
+
   StepperType stepperType = StepperType.vertical;
-  StepperList stepper = StepperList.classic;
+  StepperList stepper = StepperList.icon;
 
   Map<int, String> stepButtonDescriptions = {
     1: "Back",
@@ -177,103 +179,92 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
     GlobalKey<ScaffoldState> questionQuestionKey = GlobalKey<ScaffoldState>();
 
     stepItems = getStepItems();
-    return Scaffold(
-      key: questionQuestionKey,
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            backgroundColor: widget.mo.theme.colorScheme.background,
-            foregroundColor: widget.mo.theme.colorScheme.secondary,
-            shadowColor: widget.mo.theme.colorScheme.shadow,
-            surfaceTintColor: widget.mo.theme.colorScheme.surface,
-            actions: [
-              IconButton(
-                icon:
-                    Icon(Icons.settings, size: widget.mo.theme.iconTheme.size),
-                onPressed: () {
-                  questionQuestionKey.currentState?.openEndDrawer();
-                },
-              ),
-            ],
-            automaticallyImplyLeading: false,
-            pinned: pinned,
-            snap: snap,
-            floating: floating,
-            expandedHeight: kToolbarHeight * 1,
-            flexibleSpace: FutureBuilder(
-              future: Future.delayed(const Duration(seconds: 0), () {
-                return Imager.get(
-                    'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
-              }),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return const Center(
-                    child: Text('Error loading image'),
-                  );
-                } else {
-                  return Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: snapshot.data!,
-                        fit: BoxFit.cover,
-                      ),
-                      color: widget.mo.theme.colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Text(
-                                widget.mo.currentTitle ?? '',
-                                style: widget.mo.theme.textTheme.titleMedium,
-                              )
-                            ],
-                          ),
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(10,5,10,5),
+      child: Scaffold(
+        key: questionQuestionKey,
+        body: CustomScrollView(
+          controller: scrollController,
+          slivers: <Widget>[
+            SliverAppBar(
+              backgroundColor: widget.mo.theme.colorScheme.background,
+              foregroundColor: widget.mo.theme.colorScheme.secondary,
+              shadowColor: widget.mo.theme.colorScheme.shadow,
+              surfaceTintColor: widget.mo.theme.colorScheme.surface,
+              actions: [
+                IconButton(
+                  icon:
+                      Icon(Icons.settings, size: widget.mo.theme.iconTheme.size),
+                  onPressed: () {
+                    questionQuestionKey.currentState?.openEndDrawer();
+                  },
+                ),
+              ],
+              automaticallyImplyLeading: false,
+              pinned: pinned,
+              snap: snap,
+              floating: floating,
+              expandedHeight: kToolbarHeight * 1,
+              flexibleSpace: FutureBuilder(
+                future: Future.delayed(const Duration(seconds: 0), () {
+                  return Imager.get(
+                      'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
+                }),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return const Center(
+                      child: Text('Error loading image'),
+                    );
+                  } else {
+                    return Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: snapshot.data!,
+                          fit: BoxFit.cover,
                         ),
-                      ],
-                    ),
-                  );
-                }
-              },
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.all(5.0),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
-                      constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width,
-                        minHeight: MediaQuery.of(context).size.height,
+                        color: widget.mo.theme.colorScheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      child: isLoadedData ? getStepper() : Container(),
-                    ),
-                  );
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Text(
+                                  widget.mo.currentTitle ?? '',
+                                  style: widget.mo.theme.textTheme.titleMedium,
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
                 },
-                childCount: 1,
               ),
             ),
-          ),
-        ],
+            SliverFillViewport(delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                return isLoadedData ? getStepper() : Container();
+              },
+              childCount: 1,
+            ),),
+          ],
+        ),
+        endDrawer: getDrawer(),
       ),
-      endDrawer: getDrawer(),
     );
   }
 
@@ -1058,6 +1049,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
       child: Column(
         children: [
           IconStepper(
+            alignment: MediaQuery.of(context).size.width>=500 ? Alignment.center:Alignment.center,
             stepColor: widget.mo.theme.colorScheme.primaryContainer,
             lineColor: widget.mo.theme.colorScheme.primary,
             activeStepColor: widget.mo.theme.colorScheme.onPrimaryContainer,
@@ -1086,7 +1078,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment:MediaQuery.of(context).size.width>=500 ?   MainAxisAlignment.center:MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(

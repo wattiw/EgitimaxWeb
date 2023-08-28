@@ -289,7 +289,7 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
         mainAxisSize: MainAxisSize.max,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(5, 5, 5, 1),
+            padding: const EdgeInsets.fromLTRB(5, 5, 5, 1),
             child: Column(
               children: [
                 if ((searchButtonStatus == SearchButtonStatus.Filter ||
@@ -374,7 +374,7 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
               maxHeight: MediaQuery.of(context).size.height*(2/3),
             ),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(5,5,5,10),
+              padding: const EdgeInsets.fromLTRB(5,5,5,5),
               child: ResponsiveDatatable(
                 title: widget.title,
                 reponseScreenSizes: const [ScreenSize.xs],
@@ -631,7 +631,7 @@ class _ResponsiveDatatableHelperState extends State<ResponsiveDatatableHelper> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DropdownSearchHelper.singleSelectionDropdown<String>(
-                clearButtonProps: const ClearButtonProps(),
+                clearButtonProps:null,
                 context: context,
                 labelText:
                     _headers.firstWhere((element) => element.value == key).text,
