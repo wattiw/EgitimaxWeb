@@ -1160,22 +1160,13 @@ class _QuestionListState extends State<QuestionList> {
                                                             .iconTheme
                                                             .size,
                                                       ),
-                                                      label:
-                                                          MediaQuery.of(context)
-                                                                      .size
-                                                                      .width >
-                                                                  500
-                                                              ? Text(
-                                                                  'Temizle',
-                                                                  style: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .titleMedium,
-                                                                )
-                                                              : const SizedBox(
-                                                                  width: 0,
-                                                                  height: 0,
-                                                                ),
+                                                      label:Text(
+                                                        'Temizle',
+                                                        style: Theme.of(
+                                                            context)
+                                                            .textTheme
+                                                            .titleMedium,
+                                                      ),
                                                     ),
                                                     TextButton.icon(
                                                       onPressed: () {
@@ -1192,22 +1183,13 @@ class _QuestionListState extends State<QuestionList> {
                                                             .iconTheme
                                                             .size,
                                                       ),
-                                                      label:
-                                                          MediaQuery.of(context)
-                                                                      .size
-                                                                      .width >
-                                                                  500
-                                                              ? Text(
-                                                                  'Ara',
-                                                                  style: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .titleMedium,
-                                                                )
-                                                              : const SizedBox(
-                                                                  width: 0,
-                                                                  height: 0,
-                                                                ),
+                                                      label:Text(
+                                                        'Ara',
+                                                        style: Theme.of(
+                                                            context)
+                                                            .textTheme
+                                                            .titleMedium,
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
