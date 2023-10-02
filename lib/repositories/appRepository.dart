@@ -1340,6 +1340,66 @@ class AppRepository {
     TblUtilLocationType result = TblUtilLocationType.fromJson(jsonDecode);
     return result;
   }
+
+
+///TblQuizLike
+
+  Future<List<TblQuizLike>?> getAllTblQuizLike() async {
+    var jsonDecode =
+    await Api.request('TblQuizLike/GetAll', method: HttpMethod.get);
+    if (jsonDecode == null) {
+      return null;
+    }
+    List<TblQuizLike> result = [];
+    for (var jsonItem in jsonDecode) {
+      result.add(TblQuizLike.fromJson(jsonItem));
+    }
+    return result;
+  }
+
+  Future<TblQuizLike?> getTblQuizLike(int id) async {
+    var jsonDecode =
+    await Api.request('TblQuizLike/Get/$id', method: HttpMethod.get);
+    if (jsonDecode == null) {
+      return null;
+    }
+    TblQuizLike result = TblQuizLike.fromJson(jsonDecode);
+    return result;
+  }
+
+  Future<TblQuizLike?> insertTblQuizLike(
+      TblQuizLike tblQuizLike) async {
+    var jsonDecode = await Api.request('TblQuizLike/Insert',
+        method: HttpMethod.post, data: tblQuizLike.toMap());
+    if (jsonDecode == null) {
+      return null;
+    }
+    TblQuizLike result = TblQuizLike.fromJson(jsonDecode);
+    return result;
+  }
+
+  Future<TblQuizLike?> updateTblQuizLike(
+      TblQuizLike tblQuizLike) async {
+    var jsonDecode = await Api.request('TblQuizLike/Update',
+        method: HttpMethod.put, data: tblQuizLike.toMap());
+    if (jsonDecode == null) {
+      return null;
+    }
+    TblQuizLike result = TblQuizLike.fromJson(jsonDecode);
+    return result;
+  }
+
+  Future<TblQuizLike?> deleteTblQuizLike(int id) async {
+    var jsonDecode = await Api.request('TblQuizLike/Delete/$id',
+        method: HttpMethod.delete);
+    if (jsonDecode == null) {
+      return null;
+    }
+    TblQuizLike result = TblQuizLike.fromJson(jsonDecode);
+    return result;
+  }
+
+
 }
 
 extension AppRepositoryExtension on AppRepository {

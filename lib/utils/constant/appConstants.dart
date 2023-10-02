@@ -53,4 +53,8 @@ class AppConstants {
   static  int questionPageDebugPrintExceptionActive = 1;
   static  int questionPageDebugPrintActive = 1;
 
+  //lib/pages/quiz/quizPage.dart
+  static  int quizPageDebugPrintExceptionActive = 1;
+  static  int quizPageDebugPrintActive = 1;
+
 }

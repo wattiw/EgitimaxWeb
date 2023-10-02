@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:egitimax/models/common/stepItem.dart';
 import 'package:egitimax/models/egitimax/egitimaxEntities.dart';
-import 'package:egitimax/models/question/questionPageModel.dart';
 import 'package:egitimax/models/question/receivedQuestionStatus.dart';
+import 'package:egitimax/models/quiz/quizPageModel.dart';
 import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:egitimax/utils/helper/webSocketClientManager.dart';
 
@@ -18,16 +18,16 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 import 'package:uuid/uuid_util.dart';
 
-class QuestionQuestion extends StatefulWidget {
-  QuestionQuestion({super.key, required this.mo});
+class Quiz extends StatefulWidget {
+  Quiz({super.key, required this.mo});
 
-  QuestionPageModel mo;
+  QuizPageModel mo;
 
   @override
-  State<QuestionQuestion> createState() => _QuestionQuestionState();
+  State<Quiz> createState() => _QuizState();
 }
 
-class _QuestionQuestionState extends State<QuestionQuestion> {
+class _QuizState extends State<Quiz> {
   bool floating = false;
   bool pinned = false;
   bool snap = false;
@@ -67,7 +67,7 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
   String? questionEditorUrl;
   String? questionToken;
 
-  bool openQuestionEditor=false;
+  bool openQuestionEditor = false;
   late WebSocketClientManager webSocketClientManager;
 
   @override
@@ -75,62 +75,57 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
     super.initState();
 
     if (AppConstants.questionPageDebugPrintActive == 1) {
-      debugPrint("QuestionQuestion_initState");
+      debugPrint("Quiz_initState");
     }
-
-
 
     loadQuestion();
     webSocketClientManager =
         WebSocketClientManager(AppConstants.webSocketClientManagerUrl);
-
   }
 
   Future<void> loadQuestion() async {
-    tblUserMain = await widget.mo.appRepository.getTblUserMain(widget.mo.userId);
+    tblUserMain =
+        await widget.mo.appRepository.getTblUserMain(widget.mo.userId);
 
-    if (widget.mo.questionId != null && widget.mo.questionId != BigInt.parse('0') &&  widget.mo.userId != BigInt.parse('0')) {
-      tblQueQuestionMain = await widget.mo.appRepository.getTblQueQuestionMain(widget.mo.questionId);
+    if (widget.mo.questionId != null &&
+        widget.mo.questionId != BigInt.parse('0') &&
+        widget.mo.userId != BigInt.parse('0')) {
+      tblQueQuestionMain = await widget.mo.appRepository
+          .getTblQueQuestionMain(widget.mo.questionId);
 
-      if(tblUserMain!=null && tblQueQuestionMain!=null &&
-          (tblQueQuestionMain!.userId==tblUserMain!.id ||tblQueQuestionMain!.userId==tblUserMain!.refUser ))
-        {
+      if (tblUserMain != null &&
+          tblQueQuestionMain != null &&
+          (tblQueQuestionMain!.userId == tblUserMain!.id ||
+              tblQueQuestionMain!.userId == tblUserMain!.refUser)) {
+        tblQueQuestionOptions = await widget.mo.appRepository
+            .getByQuestionIdTblQueQuestionOption(widget.mo.questionId);
+        tblQueQuestionAchvMaps = await widget.mo.appRepository
+            .getByQuestionIdTblQueQuestionAchvMap(widget.mo.questionId);
 
-          tblQueQuestionOptions = await widget.mo.appRepository
-              .getByQuestionIdTblQueQuestionOption(widget.mo.questionId);
-          tblQueQuestionAchvMaps = await widget.mo.appRepository
-              .getByQuestionIdTblQueQuestionAchvMap(widget.mo.questionId);
+        selectedAchievementIds = tblQueQuestionAchvMaps != null
+            ? tblQueQuestionAchvMaps!.map((e) => e.achvId).toList().cast<int>()
+            : null;
 
-          selectedAchievementIds = tblQueQuestionAchvMaps != null
-              ? tblQueQuestionAchvMaps!.map((e) => e.achvId).toList().cast<int>()
-              : null;
+        selectedLocation = tblQueQuestionMain?.locationId ?? 0;
+        selectedAcademicYear = tblQueQuestionMain?.academicYear ?? 0;
+        selectedDifficultyLevel = tblQueQuestionMain?.difficultyLev ?? 0;
+        selectedGrade = tblQueQuestionMain?.gradeId ?? 0;
 
-          selectedLocation = tblQueQuestionMain?.locationId ?? 0;
-          selectedAcademicYear = tblQueQuestionMain?.academicYear ?? 0;
-          selectedDifficultyLevel = tblQueQuestionMain?.difficultyLev ?? 0;
-          selectedGrade = tblQueQuestionMain?.gradeId ?? 0;
+        if (tblQueQuestionMain?.learnId != null) {
+          var selectedLearn = await widget.mo.appRepository
+              .getTblLearnMain(tblQueQuestionMain?.learnId ?? 0);
 
-          if(tblQueQuestionMain?.learnId!=null)
-          {
-            var selectedLearn = await widget.mo.appRepository
-                .getTblLearnMain(tblQueQuestionMain?.learnId ?? 0);
-
-            if(selectedLearn!=null)
-            {
-              selectedLearnId = selectedLearn?.id;
-              selectedBranch = selectedLearn!.branchId!;
-            }
-
-
+          if (selectedLearn != null) {
+            selectedLearnId = selectedLearn?.id;
+            selectedBranch = selectedLearn!.branchId!;
           }
-        }else{
-        widget.mo.questionId=BigInt.zero;
+        }
+      } else {
+        widget.mo.questionId = BigInt.zero;
         return loadQuestion();
       }
-
-
     } else {
-      openQuestionEditor=true;
+      openQuestionEditor = true;
       tblQueQuestionMain = TblQueQuestionMain(id: BigInt.parse('0'));
       selectedLocation = tblUserMain?.locationId ?? 0;
 
@@ -161,16 +156,16 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
   @override
   Widget build(BuildContext context) {
     if (AppConstants.questionPageDebugPrintActive == 1) {
-      debugPrint("QuestionQuestion_build");
+      debugPrint("Quiz_build");
     }
-    GlobalKey<ScaffoldState> questionQuestionKey = GlobalKey<ScaffoldState>();
+    GlobalKey<ScaffoldState> QuizKey = GlobalKey<ScaffoldState>();
 
     stepItems = getStepItems();
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(10,5,10,5),
+      margin: const EdgeInsets.fromLTRB(10, 5, 10, 5),
       child: Scaffold(
-        key: questionQuestionKey,
+        key: QuizKey,
         body: CustomScrollView(
           controller: scrollController,
           slivers: <Widget>[
@@ -181,10 +176,10 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
               surfaceTintColor: widget.mo.theme.colorScheme.surface,
               actions: [
                 IconButton(
-                  icon:
-                      Icon(Icons.settings, size: widget.mo.theme.iconTheme.size),
+                  icon: Icon(Icons.settings,
+                      size: widget.mo.theme.iconTheme.size),
                   onPressed: () {
-                    questionQuestionKey.currentState?.openEndDrawer();
+                    QuizKey.currentState?.openEndDrawer();
                   },
                 ),
               ],
@@ -242,12 +237,14 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                 },
               ),
             ),
-            SliverFillViewport(delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                return isLoadedData ? getStepper() : Container();
-              },
-              childCount: 1,
-            ),),
+            SliverFillViewport(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return isLoadedData ? getStepper() : Container();
+                },
+                childCount: 1,
+              ),
+            ),
           ],
         ),
         endDrawer: getDrawer(),
@@ -753,10 +750,12 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
                                 setState(() {
                                   openQuestionEditor = newValue ?? false;
                                 });
-
                               },
                             ),
-                            Text('Edit question with editor',style: Theme.of(context).textTheme.bodyMedium,),
+                            Text(
+                              'Edit question with editor',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
                           ],
                         ),
                       ],
@@ -824,6 +823,60 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
         ),
         imagePath:
             'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
+
+    var step3 = StepItem(
+        icon: Icons.fact_check,
+        stepState: StepState.indexed,
+        isActive: true,
+        title: 'Summary And Submit',
+        subtitle: 'Please check and submit !',
+        content: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  double wrapWidth = constraints.maxWidth;
+                  int divisionResult =
+                  wrapWidth ~/ AppConstants.lookupObjectWidth > 4
+                      ? 4
+                      : wrapWidth ~/ AppConstants.lookupObjectWidth;
+                  return Align(
+                    alignment: Alignment.topLeft,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Wrap(
+                          alignment: WrapAlignment.start,
+                          runAlignment: WrapAlignment.start,
+                          spacing: 5,
+                          runSpacing: 5,
+                          children: [
+                            if (tblQueQuestionMain != null)
+                              Column(
+                                children: [
+                                  QuestionOptionsWithSolution(
+                                      questionId: tblQueQuestionMain!.id)
+                                ],
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                  return Text('Wrap Width: $wrapWidth');
+                },
+              ),
+            ],
+          ),
+        ),
+        imagePath:
+        'https://www.shutterstock.com/image-illustration/infinite-question-marks-one-out-260nw-761999845.jpg');
 
     stepItems = [step1, step2];
 
@@ -1036,7 +1089,9 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
       child: Column(
         children: [
           IconStepper(
-            alignment: MediaQuery.of(context).size.width>=500 ? Alignment.center:Alignment.center,
+            alignment: MediaQuery.of(context).size.width >= 500
+                ? Alignment.center
+                : Alignment.center,
             stepColor: widget.mo.theme.colorScheme.primaryContainer,
             lineColor: widget.mo.theme.colorScheme.primary,
             activeStepColor: widget.mo.theme.colorScheme.onPrimaryContainer,
@@ -1065,7 +1120,9 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(
-              mainAxisAlignment:MediaQuery.of(context).size.width>=500 ?   MainAxisAlignment.center:MainAxisAlignment.center,
+              mainAxisAlignment: MediaQuery.of(context).size.width >= 500
+                  ? MainAxisAlignment.center
+                  : MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
@@ -1217,9 +1274,10 @@ class _QuestionQuestionState extends State<QuestionQuestion> {
       }
     }
 
-    questionEditorUrl ="${AppConstants.editorClientManagerUrl}${tblQueQuestionMain?.id}/${tblQueQuestionMain?.userId}/${tblQueQuestionMain?.questionToken}/${widget.mo.localeManager.locale.languageCode}-${widget.mo.localeManager.locale.countryCode}";
+    questionEditorUrl =
+        "${AppConstants.editorClientManagerUrl}${tblQueQuestionMain?.id}/${tblQueQuestionMain?.userId}/${tblQueQuestionMain?.questionToken}/${widget.mo.localeManager.locale.languageCode}-${widget.mo.localeManager.locale.countryCode}";
 
-    if (questionEditorUrl != null && openQuestionEditor==true) {
+    if (questionEditorUrl != null && openQuestionEditor == true) {
       startListenWebSocket();
       await launchEditorURL(questionEditorUrl!);
     }

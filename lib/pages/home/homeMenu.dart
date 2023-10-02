@@ -1,5 +1,6 @@
 import 'package:egitimax/models/question/questionPageModel.dart';
 import 'package:egitimax/pages/question/questionPage.dart';
+import 'package:egitimax/pages/quiz/quizPage.dart';
 import 'package:egitimax/repositories/appRepository.dart';
 import 'package:egitimax/utils/constant/appConstants.dart';
 import 'package:egitimax/utils/helper/localeManager.dart';
@@ -309,7 +310,8 @@ class HomeMenuBody extends StatefulWidget {
 class _HomeMenuBody extends State<HomeMenuBody> {
 
   final Map<String, String> links = {
-    '/QuestionPage':'Question Page'
+    '/QuestionPage':'Question Page',
+    '/QuizPage':'Quiz Page'
   };
 
   int _counter = 0;
@@ -331,6 +333,7 @@ class _HomeMenuBody extends State<HomeMenuBody> {
     GlobalKey<ScaffoldState> homeMenuBodyKey = GlobalKey<ScaffoldState>();
 
     RouteManager().addRoute('/QuestionPage', (context) => QuestionPage());
+    RouteManager().addRoute('/QuizPage', (context) => QuizPage());
 
     return Center(
       child:Wrap(
